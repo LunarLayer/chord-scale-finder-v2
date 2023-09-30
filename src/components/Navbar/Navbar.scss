@@ -1,0 +1,12 @@
+#navbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: space-between;
+  border-bottom: 1px solid black;
+
+  #project-settings {
+    display: flex;
+    gap: 5px;
+  }
+}

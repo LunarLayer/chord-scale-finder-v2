@@ -1,8 +1,40 @@
-# React + Vite
+Warning: Cannot update a component (`FretCountSlider`) while rendering a different component
+click key or fretboard set. fix this first.
+then fix fretboard scroll using new nice code
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+
+
+
+
+
+
+
+
+
+# How does the app work?
+
+>>> Situations:
+
+> App loads:
+Based on windowWidth, the app determines how many notes will fit on the screen/fretboard,
+when the notes are as big as they can be.
+
+<FretboardSlice>:
+- Initialize values: notesGap, notesMinWidth, notesMaxWidth, fretboardPadding based on windowWidth
+- SetFretCap(windowWidth, fretboardPadding, notesGap, notesMinWidth)
+- setFretCount(windowWidth, fretboardPadding, notesGap, notesMaxWidth, state.fretCap)
+- setNotesWidth(notesMaxWidth)
+- setFretboardWidth(fretCount, notesWidth, notesGap)
+
+> User changes the fretCount with the slider
+<FretboardSlice>:
+- setPreferredFretCount(sliderValue)
+- setFretCount(preferredFretCount)
+- 
+- 
+
+
+

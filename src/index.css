@@ -1,0 +1,10 @@
+:root {
+  --large: 900px;
+
+  --selected: purple;
+  --option: rgb(0, 74, 138);
+}
+
+* {
+  font-family: "Krub", sans-serif;
+}
