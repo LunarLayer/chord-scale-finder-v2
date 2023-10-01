@@ -4,13 +4,19 @@ import "./Toolbar.scss";
 
 import Button from "../Button/Button";
 import FretCountSlider from "../FretCountSlider/FretCountSlider";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentViewDisplay1 } from "../../features/ui/uiSlice";
 
-function Toolbar({ activeView, setActiveView }) {
-  function handleClick(clicked) {
-    if (activeView === clicked) {
-      setActiveView("fretboard");
+function Toolbar() {
+  const dispatch = useDispatch();
+  const currentViewDisplay1 = useSelector(
+    (store) => store.ui.currentViewDisplay1
+  );
+  function handleChangeView(view) {
+    if (currentViewDisplay1 === view) {
+      dispatch(setCurrentViewDisplay1("fretboard"));
     } else {
-      setActiveView(clicked);
+      dispatch(setCurrentViewDisplay1(view));
     }
   }
 
@@ -21,8 +27,8 @@ function Toolbar({ activeView, setActiveView }) {
       <div>
         <h4>Key</h4>
         <Button
-          className={`${activeView === "keyChange" ? "active" : ""}`}
-          onClick={() => handleClick("keyChange")}
+          className={`${currentViewDisplay1 === "keyChange" ? "active" : ""}`}
+          onClick={() => handleChangeView("keyChange")}
         >
           C Major
         </Button>
@@ -31,8 +37,10 @@ function Toolbar({ activeView, setActiveView }) {
       <div>
         <h4>Fretboard</h4>
         <Button
-          className={`${activeView === "fretboardSettings" ? "active" : ""}`}
-          onClick={() => handleClick("fretboardSettings")}
+          className={`${
+            currentViewDisplay1 === "fretboardSettings" ? "active" : ""
+          }`}
+          onClick={() => handleChangeView("fretboardSettings")}
         >
           Settings
         </Button>
@@ -45,7 +53,7 @@ function Toolbar({ activeView, setActiveView }) {
         </Button>
       </div>
 
-      <FretCountSlider activeView={activeView} setActiveView={setActiveView} />
+      <FretCountSlider />
     </div>
   );
 }

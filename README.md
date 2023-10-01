@@ -23,18 +23,18 @@ Based on windowWidth, the app determines how many notes will fit on the screen/f
 when the notes are as big as they can be.
 
 <FretboardSlice>:
-- Initialize values: notesGap, notesMinWidth, notesMaxWidth, fretboardPadding based on windowWidth
-- SetFretCap(windowWidth, fretboardPadding, notesGap, notesMinWidth)
-- setFretCount(windowWidth, fretboardPadding, notesGap, notesMaxWidth, state.fretCap)
-- setNotesWidth(notesMaxWidth)
-- setFretboardWidth(fretCount, notesWidth, notesGap)
+- initializes initialState variables based on windowWidth.
 
-> User changes the fretCount with the slider
+
+
+### The Fretboard
+
+>>> Situations:
+
+> User sets preferredFretCount with slider.
 <FretboardSlice>:
-- setPreferredFretCount(sliderValue)
-- setFretCount(preferredFretCount)
-- 
-- 
+- Updates necessary values: fretCount, notesWidth, fretboardWidth
+
 
 
 

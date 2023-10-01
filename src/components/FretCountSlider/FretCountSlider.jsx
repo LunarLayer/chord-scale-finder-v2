@@ -2,16 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { setPreferredFretCount } from "../../features/fretboard/fretboardSlice";
+import { setCurrentViewDisplay1 } from "../../features/ui/uiSlice";
 
-function FretCountSlider({ activeView, setActiveView }) {
+function FretCountSlider() {
   const slider = React.createRef();
 
   const dispatch = useDispatch();
-  const { fretCount, fretCap } = useSelector((store) => store.fretboard);
+
+  const fretCount = useSelector((store) => store.fretboard.fretCount);
+  const fretCap = useSelector((store) => store.fretboard.fretCap);
 
   function handleSliderChanged() {
     dispatch(setPreferredFretCount(parseInt(slider.current.value)));
-    // if (activeView !== "fretboard") setActiveView("fretboard");
+    dispatch(setCurrentViewDisplay1("fretboard"));
   }
 
   return (

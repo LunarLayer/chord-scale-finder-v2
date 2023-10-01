@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setWindowWidth } from "../features/ui/uiSlice";
 
 import debounce from "lodash/debounce";
@@ -15,37 +15,56 @@ import KeyChange from "../components/KeyChange/KeyChange";
 import Navbar from "../components/Navbar/Navbar";
 import ProjectSettings from "../components/ProjectSettings/ProjectSettings";
 import Toolbar from "../components/Toolbar/Toolbar";
+import ChordAndScaleIdentifier from "../components/ChordAndScaleIdentifier/ChordAndScaleIdentifier";
+import ChordProgressionBuilder from "../components/ChordProgressionBuilder/ChordProgressionBuilder";
+import Loader from "../components/Loader/Loader";
 
 function AppLayout() {
   console.log("appLayout");
   const dispatch = useDispatch();
-  const [activeView, setActiveView] = useState("fretboard");
-
-  dispatch(setWindowWidth(getWindowWidth()));
+  const currentViewDisplay1 = useSelector(
+    (store) => store.ui.currentViewDisplay1
+  );
+  const currentViewDisplay2 = useSelector(
+    (store) => store.ui.currentViewDisplay2
+  );
+  const fretboardIsLoading = useSelector(
+    (store) => store.fretboard.fretboardIsLoading
+  );
 
   useEffect(() => {
+    console.log("AppLayout - UseEffect");
     function handleResize() {
       dispatch(setWindowWidth(getWindowWidth()));
     }
-    window.addEventListener("resize", debounce(handleResize, 30));
+    window.addEventListener("resize", debounce(handleResize, 50));
     return () => {
-      window.removeEventListener("resize", debounce(handleResize, 30));
+      window.removeEventListener("resize", debounce(handleResize, 50));
     };
   }, [dispatch]);
 
-  function RenderView({ view }) {
+  function Display1({ view }) {
+    if (fretboardIsLoading) return <Loader />;
     if (view === "fretboard") return <Fretboard />;
     if (view === "fretboardSettings") return <FretboardSettings />;
     if (view === "keyChange") return <KeyChange />;
   }
+  function Display2({ view }) {
+    if (view === "ChordAndScaleIdentifier") return <ChordAndScaleIdentifier />;
+    if (view === "ChordProgressionBuilder") return <ChordProgressionBuilder />;
+  }
+
+  // FretboardSection
+  // ChordSection
 
   return (
     <div className="appLayout">
       <Navbar>
         <ProjectSettings />
       </Navbar>
-      <Toolbar activeView={activeView} setActiveView={setActiveView} />
-      <RenderView view={activeView} />
+      <Toolbar />
+      <Display1 view={currentViewDisplay1} />
+      <Display2 view={currentViewDisplay2} />
     </div>
   );
 }

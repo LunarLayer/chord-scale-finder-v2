@@ -11,7 +11,6 @@ const musicTheorySlice = createSlice({
   reducers: {
     placeholderaddString(state, action) {
       state.balance += action.payload;
-      state.isLoading = false;
     },
     placeholdertuneString: {
       prepare(stringNumber, newRootNote) {

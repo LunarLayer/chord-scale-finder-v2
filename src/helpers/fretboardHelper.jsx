@@ -1,6 +1,20 @@
 import { setFretboardIsScrolling } from "../features/fretboard/fretboardSlice";
 
 export function initFretboardScroll(dispatch, notesWidth, notesGap) {
+  // const pointerScroll = (elem) => {
+  //   let isDrag = false;
+
+  //   const toggleDrag = () => {
+  //     isDrag = !isDrag;
+  //     console.log(isDrag);
+  //   };
+  //   const drag = (ev) => isDrag && (elem.scrollLeft -= ev.movementX);
+
+  //   elem.addEventListener("pointerdown", toggleDrag);
+  //   addEventListener("pointerup", toggleDrag);
+  //   addEventListener("pointermove", drag);
+  // };
+
   let fretboard = document.getElementById("fretboard");
   console.log(fretboard);
   let scrollPositions = { current: 0, cursor: 0 };

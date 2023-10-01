@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import "./Note.scss";
 import { memo } from "react";
 
-const Note = memo(function Note({ note, stringNumber, fret, selected }) {
+function Note({ note, stringNumber, fret, selected }) {
   // const dispatch = useDispatch();
   const notesWidth = useSelector((store) => store.fretboard.notesWidth);
 
@@ -28,7 +28,7 @@ const Note = memo(function Note({ note, stringNumber, fret, selected }) {
       {note}
     </button>
   );
-});
+}
 
 export default Note;
 

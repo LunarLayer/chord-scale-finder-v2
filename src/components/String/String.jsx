@@ -4,8 +4,9 @@ import { useSelector } from "react-redux";
 import "./String.scss";
 
 import Note from "../Note/Note";
+import { memo } from "react";
 
-function String({ stringNumber, notes }) {
+const String = memo(function String({ stringNumber, notes }) {
   const notesGap = useSelector((store) => store.fretboard.notesGap);
 
   return (
@@ -23,7 +24,7 @@ function String({ stringNumber, notes }) {
       })}
     </div>
   );
-}
+});
 
 export default String;
 
