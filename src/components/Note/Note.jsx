@@ -1,16 +1,24 @@
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
-// import { toggleNoteSelected } from "../../features/fretboard/fretboardSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleNoteSelected } from "../../Features/instrument/instrumentSlice";
 
 import "./Note.scss";
 import { memo } from "react";
 
-function Note({ note, stringNumber, fret, selected }) {
-  // const dispatch = useDispatch();
+const Note = memo(function Note({
+  note,
+  hasAccidental,
+  octave,
+  selected,
+  highlighted,
+}) {
+  const accidental = useSelector((store) => store.musicTheory.accidental);
+  const dispatch = useDispatch();
   const notesWidth = useSelector((store) => store.fretboard.notesWidth);
+  const fretWidths = useSelector((store) => store.fretboard.fretWidths);
 
   function handleClick() {
-    // dispatch(toggleNoteSelected(stringNumber, fret));
+    dispatch(toggleNoteSelected(note, octave));
   }
 
   return (
@@ -22,13 +30,14 @@ function Note({ note, stringNumber, fret, selected }) {
         maxHeight: notesWidth,
       }}
       className={`note ${selected === true ? "selected" : ""}`}
-      data-note={note}
+      data-note={`${note}${hasAccidental ? accidental : ""}`}
       onClick={handleClick}
     >
       {note}
+      {hasAccidental ? accidental : null}
     </button>
   );
-}
+});
 
 export default Note;
 

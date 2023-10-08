@@ -1,0 +1,148 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  key: "C",
+  accidental: "#",
+  selectedNotes: [],
+  // prettier-ignore
+  allNotes: [
+    { note: "C", hasAccidental: false, octave: 0, selected: false, highlighted: false },
+    { note: "C", hasAccidental: true,  octave: 0, selected: false, highlighted: false },
+    { note: "D", hasAccidental: false, octave: 0, selected: false, highlighted: false },
+    { note: "D", hasAccidental: true,  octave: 0, selected: false, highlighted: false },
+    { note: "E", hasAccidental: false, octave: 0, selected: false, highlighted: false },
+    { note: "F", hasAccidental: false, octave: 0, selected: false, highlighted: false },
+    { note: "F", hasAccidental: true,  octave: 0, selected: false, highlighted: false },
+    { note: "G", hasAccidental: false, octave: 0, selected: false, highlighted: false },
+    { note: "G", hasAccidental: true,  octave: 0, selected: false, highlighted: false },
+    { note: "A", hasAccidental: false, octave: 0, selected: false, highlighted: false },
+    { note: "A", hasAccidental: true,  octave: 0, selected: false, highlighted: false },
+    { note: "B", hasAccidental: false, octave: 0, selected: false, highlighted: false },
+    { note: "C", hasAccidental: false, octave: 1, selected: false, highlighted: false },
+    { note: "C", hasAccidental: true,  octave: 1, selected: false, highlighted: false },
+    { note: "D", hasAccidental: false, octave: 1, selected: false, highlighted: false },
+    { note: "D", hasAccidental: true,  octave: 1, selected: false, highlighted: false },
+    { note: "E", hasAccidental: false, octave: 1, selected: false, highlighted: false },
+    { note: "F", hasAccidental: false, octave: 1, selected: false, highlighted: false },
+    { note: "F", hasAccidental: true,  octave: 1, selected: false, highlighted: false },
+    { note: "G", hasAccidental: false, octave: 1, selected: false, highlighted: false },
+    { note: "G", hasAccidental: true,  octave: 1, selected: false, highlighted: false },
+    { note: "A", hasAccidental: false, octave: 1, selected: false, highlighted: false },
+    { note: "A", hasAccidental: true,  octave: 1, selected: false, highlighted: false },
+    { note: "B", hasAccidental: false, octave: 1, selected: false, highlighted: false },
+    { note: "C", hasAccidental: false, octave: 2, selected: false, highlighted: false },
+    { note: "C", hasAccidental: true,  octave: 2, selected: false, highlighted: false },
+    { note: "D", hasAccidental: false, octave: 2, selected: false, highlighted: false },
+    { note: "D", hasAccidental: true,  octave: 2, selected: false, highlighted: false },
+    { note: "E", hasAccidental: false, octave: 2, selected: false, highlighted: false },
+    { note: "F", hasAccidental: false, octave: 2, selected: false, highlighted: false },
+    { note: "F", hasAccidental: true,  octave: 2, selected: false, highlighted: false },
+    { note: "G", hasAccidental: false, octave: 2, selected: false, highlighted: false },
+    { note: "G", hasAccidental: true,  octave: 2, selected: false, highlighted: false },
+    { note: "A", hasAccidental: false, octave: 2, selected: false, highlighted: false },
+    { note: "A", hasAccidental: true,  octave: 2, selected: false, highlighted: false },
+    { note: "B", hasAccidental: false, octave: 2, selected: false, highlighted: false },
+    { note: "C", hasAccidental: false, octave: 3, selected: false, highlighted: false },
+    { note: "C", hasAccidental: true,  octave: 3, selected: false, highlighted: false },
+    { note: "D", hasAccidental: false, octave: 3, selected: false, highlighted: false },
+    { note: "D", hasAccidental: true,  octave: 3, selected: false, highlighted: false },
+    { note: "E", hasAccidental: false, octave: 3, selected: false, highlighted: false },
+    { note: "F", hasAccidental: false, octave: 3, selected: false, highlighted: false },
+    { note: "F", hasAccidental: true,  octave: 3, selected: false, highlighted: false },
+    { note: "G", hasAccidental: false, octave: 3, selected: false, highlighted: false },
+    { note: "G", hasAccidental: true,  octave: 3, selected: false, highlighted: false },
+    { note: "A", hasAccidental: false, octave: 3, selected: false, highlighted: false },
+    { note: "A", hasAccidental: true,  octave: 3, selected: false, highlighted: false },
+    { note: "B", hasAccidental: false, octave: 3, selected: false, highlighted: false },
+    { note: "C", hasAccidental: false, octave: 4, selected: false, highlighted: false },
+    { note: "C", hasAccidental: true,  octave: 4, selected: false, highlighted: false },
+    { note: "D", hasAccidental: false, octave: 4, selected: false, highlighted: false },
+    { note: "D", hasAccidental: true,  octave: 4, selected: false, highlighted: false },
+    { note: "E", hasAccidental: false, octave: 4, selected: false, highlighted: false },
+    { note: "F", hasAccidental: false, octave: 4, selected: false, highlighted: false },
+    { note: "F", hasAccidental: true,  octave: 4, selected: false, highlighted: false },
+    { note: "G", hasAccidental: false, octave: 4, selected: false, highlighted: false },
+    { note: "G", hasAccidental: true,  octave: 4, selected: false, highlighted: false },
+    { note: "A", hasAccidental: false, octave: 4, selected: false, highlighted: false },
+    { note: "A", hasAccidental: true,  octave: 4, selected: false, highlighted: false },
+    { note: "B", hasAccidental: false, octave: 4, selected: false, highlighted: false },
+    { note: "C", hasAccidental: false, octave: 5, selected: false, highlighted: false },
+    { note: "C", hasAccidental: true,  octave: 5, selected: false, highlighted: false },
+    { note: "D", hasAccidental: false, octave: 5, selected: false, highlighted: false },
+    { note: "D", hasAccidental: true,  octave: 5, selected: false, highlighted: false },
+    { note: "E", hasAccidental: false, octave: 5, selected: false, highlighted: false },
+    { note: "F", hasAccidental: false, octave: 5, selected: false, highlighted: false },
+    { note: "F", hasAccidental: true,  octave: 5, selected: false, highlighted: false },
+    { note: "G", hasAccidental: false, octave: 5, selected: false, highlighted: false },
+    { note: "G", hasAccidental: true,  octave: 5, selected: false, highlighted: false },
+    { note: "A", hasAccidental: false, octave: 5, selected: false, highlighted: false },
+    { note: "A", hasAccidental: true,  octave: 5, selected: false, highlighted: false },
+    { note: "B", hasAccidental: false, octave: 5, selected: false, highlighted: false },
+    { note: "C", hasAccidental: false, octave: 6, selected: false, highlighted: false },
+    { note: "C", hasAccidental: true,  octave: 6, selected: false, highlighted: false },
+    { note: "D", hasAccidental: false, octave: 6, selected: false, highlighted: false },
+    { note: "D", hasAccidental: true,  octave: 6, selected: false, highlighted: false },
+    { note: "E", hasAccidental: false, octave: 6, selected: false, highlighted: false },
+    { note: "F", hasAccidental: false, octave: 6, selected: false, highlighted: false },
+    { note: "F", hasAccidental: true,  octave: 6, selected: false, highlighted: false },
+    { note: "G", hasAccidental: false, octave: 6, selected: false, highlighted: false },
+    { note: "G", hasAccidental: true,  octave: 6, selected: false, highlighted: false },
+    { note: "A", hasAccidental: false, octave: 6, selected: false, highlighted: false },
+    { note: "A", hasAccidental: true,  octave: 6, selected: false, highlighted: false },
+    { note: "B", hasAccidental: false, octave: 6, selected: false, highlighted: false },
+    { note: "C", hasAccidental: false, octave: 7, selected: false, highlighted: false },
+    { note: "C", hasAccidental: true,  octave: 7, selected: false, highlighted: false },
+    { note: "D", hasAccidental: false, octave: 7, selected: false, highlighted: false },
+    { note: "D", hasAccidental: true,  octave: 7, selected: false, highlighted: false },
+    { note: "E", hasAccidental: false, octave: 7, selected: false, highlighted: false },
+    { note: "F", hasAccidental: false, octave: 7, selected: false, highlighted: false },
+    { note: "F", hasAccidental: true,  octave: 7, selected: false, highlighted: false },
+    { note: "G", hasAccidental: false, octave: 7, selected: false, highlighted: false },
+    { note: "G", hasAccidental: true,  octave: 7, selected: false, highlighted: false },
+    { note: "A", hasAccidental: false, octave: 7, selected: false, highlighted: false },
+    { note: "A", hasAccidental: true,  octave: 7, selected: false, highlighted: false },
+    { note: "B", hasAccidental: false, octave: 7, selected: false, highlighted: false },
+    { note: "C", hasAccidental: false, octave: 8, selected: false, highlighted: false },
+    { note: "C", hasAccidental: true,  octave: 8, selected: false, highlighted: false },
+    { note: "D", hasAccidental: false, octave: 8, selected: false, highlighted: false },
+    { note: "D", hasAccidental: true,  octave: 8, selected: false, highlighted: false },
+    { note: "E", hasAccidental: false, octave: 8, selected: false, highlighted: false },
+    { note: "F", hasAccidental: false, octave: 8, selected: false, highlighted: false },
+    { note: "F", hasAccidental: true,  octave: 8, selected: false, highlighted: false },
+    { note: "G", hasAccidental: false, octave: 8, selected: false, highlighted: false },
+    { note: "G", hasAccidental: true,  octave: 8, selected: false, highlighted: false },
+    { note: "A", hasAccidental: false, octave: 8, selected: false, highlighted: false },
+    { note: "A", hasAccidental: true,  octave: 8, selected: false, highlighted: false },
+    { note: "B", hasAccidental: false, octave: 8, selected: false, highlighted: false },
+  ],
+};
+
+const musicTheorySlice = createSlice({
+  name: "musicTheory",
+  initialState,
+  reducers: {
+    placeholderaddString(state, action) {
+      state.balance += action.payload;
+    },
+    getSomeNotes: {
+      prepare(note, octave, amount) {
+        return {
+          payload: { note, octave, amount },
+        };
+      },
+
+      reducer(state, action) {
+        state.loan = action.payload.amount;
+        state.loanPurpose = action.payload.purpose;
+        state.balance = state.balance + action.payload.amount;
+      },
+    },
+  },
+});
+
+export const selectAllNotes = (state) => state.musicTheory.allNotes;
+
+export const { placeholderaddString, placeholdertuneString } =
+  musicTheorySlice.actions;
+
+export default musicTheorySlice.reducer;

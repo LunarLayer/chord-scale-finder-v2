@@ -1,18 +1,16 @@
+// console.log("uiSlice");
+
 import { createSlice } from "@reduxjs/toolkit";
 
-import { getWindowWidth } from "../../helpers/windowHelper";
-
-console.log("uiSlice");
-
-const initialState = {
-  windowWidth: getWindowWidth(),
-  currentViewDisplay1: "fretboard", // - fretboardSettings - keyChange
-  currentViewDisplay2: "chordAndScaleIdentifier", // - chordProgressionBuilder
-};
+import { getWindowWidth } from "../../Helpers/WindowHelper";
 
 const uiSlice = createSlice({
   name: "ui",
-  initialState,
+  initialState: {
+    windowWidth: getWindowWidth(),
+    currentViewDisplay1: "fretboard", // - fretboardSettings - keyChange
+    currentViewDisplay2: "chordAndScaleIdentifier", // - chordProgressionBuilder
+  },
   reducers: {
     setCurrentViewDisplay1(state, action) {
       state.currentViewDisplay1 = action.payload;
@@ -25,6 +23,8 @@ const uiSlice = createSlice({
     },
   },
 });
+
+export const selectWindowWidth = (state) => state.ui.windowWidth;
 
 export const {
   setCurrentViewDisplay1,

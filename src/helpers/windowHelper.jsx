@@ -1,5 +1,3 @@
-console.log("windowHelper");
-
 export function getWindowWidth() {
   let windowWidth =
     window.innerWidth && document.documentElement.clientWidth

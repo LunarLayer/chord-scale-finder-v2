@@ -1,6 +1,56 @@
-import { setFretboardIsScrolling } from "../features/fretboard/fretboardSlice";
+import { setFretboardIsScrolling } from "../Features/Instruments/InstrumentsSlice";
 
-export function initFretboardScroll(dispatch, notesWidth, notesGap) {
+export function getFretsWithNotes(tuning, notes) {
+  let fretsWithNotes = [];
+
+  for (let fret = 0; fret < 25; fret++) {
+    for (let note of tuning) {
+    }
+  }
+  // let startNoteIndex = allNotes.findIndex(
+  //   (note) =>
+  //     note.note === string.root &&
+  //     note.octave === string.octave &&
+  //     note.hasAccidental === string.hasAccidental
+  // );
+  // return allNotes.slice(startNoteIndex, startNoteIndex + 25);
+}
+
+export function fillFretArraysWithNoteArrays(allNotes, strings) {
+  let res = [];
+  let stringsWithNotes = [];
+  let fretNotes = [];
+
+  for (let string of strings) {
+    stringsWithNotes.push(getNotesForString(allNotes, string));
+  }
+
+  for (let i = 0; i < 25; i++) {
+    for (let stringWithNotes of stringsWithNotes) {
+      fretNotes.push(stringWithNotes[i]);
+    }
+    res.push(fretNotes);
+    fretNotes = [];
+  }
+
+  return res;
+}
+
+export function getNotesForFret(fretNumber, allNotes, strings) {
+  let notesForFret = [];
+  for (let string of strings) {
+    let rootNoteIndex = allNotes.findIndex(
+      (note) =>
+        note.note === string.root &&
+        note.octave === string.octave &&
+        note.hasAccidental === string.hasAccidental
+    );
+    notesForFret.push(allNotes[rootNoteIndex + fretNumber]);
+  }
+  return notesForFret;
+}
+
+export function initFretboardScroll(dispatch, notesWidth, fretsGap) {
   // const pointerScroll = (elem) => {
   //   let isDrag = false;
 
@@ -18,7 +68,7 @@ export function initFretboardScroll(dispatch, notesWidth, notesGap) {
   let fretboard = document.getElementById("fretboard");
   console.log(fretboard);
   let scrollPositions = { current: 0, cursor: 0 };
-  const snapPointsWidth = notesWidth + notesGap;
+  const snapPointsWidth = notesWidth + fretsGap;
   // strings.scrollLeft = 0; // reset scroll position to 0
 
   const mouseDownHandler = function (e) {

@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import "./Toolbar.scss";
 
 import Button from "../Button/Button";
-import FretCountSlider from "../FretCountSlider/FretCountSlider";
+import FretCountSlider from "../fretCountSlider/fretCountSlider";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentViewDisplay1 } from "../../features/ui/uiSlice";
+import { setCurrentViewDisplay1 } from "../../Features/ui/uiSlice";
 
 function Toolbar() {
   const dispatch = useDispatch();

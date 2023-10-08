@@ -1,23 +1,26 @@
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setWindowWidth } from "../features/ui/uiSlice";
+import { setWindowWidth } from "../Features/ui/uiSlice";
 
 import debounce from "lodash/debounce";
 import { getWindowWidth } from "../helpers/windowHelper";
 
 import "./AppLayout.scss";
 
-import Fretboard from "../components/Fretboard/Fretboard";
-import FretboardSettings from "../components/FretboardSettings/FretboardSettings";
-import KeyChange from "../components/KeyChange/KeyChange";
+import Loader from "../components/Loader/Loader";
 import Navbar from "../components/Navbar/Navbar";
 import ProjectSettings from "../components/ProjectSettings/ProjectSettings";
 import Toolbar from "../components/Toolbar/Toolbar";
+import InstrumentSettings from "../components/InstrumentSettings/InstrumentSettings";
+import KeyChange from "../components/KeyChange/KeyChange";
+import Fretboard from "../components/Fretboard/Fretboard";
+import Piano from "../components/Piano/Piano";
 import ChordAndScaleIdentifier from "../components/ChordAndScaleIdentifier/ChordAndScaleIdentifier";
 import ChordProgressionBuilder from "../components/ChordProgressionBuilder/ChordProgressionBuilder";
-import Loader from "../components/Loader/Loader";
+import { userLoggedIn } from "../Features/User/UserSlice";
+import { initializeFretboard } from "../Features/Fretboard/FretboardSlice";
 
 function AppLayout() {
   console.log("appLayout");
@@ -31,9 +34,19 @@ function AppLayout() {
   const fretboardIsLoading = useSelector(
     (store) => store.fretboard.fretboardIsLoading
   );
+  const loginSuccess = useSelector((store) => store.user.loginSuccess);
+  // const theme = useSelector((store) => store.instrument.theme);
 
   useEffect(() => {
-    console.log("AppLayout - UseEffect");
+    if (loginSuccess) {
+      let user = {};
+      dispatch(userLoggedIn(user));
+    } else {
+      dispatch(initializeFretboard());
+    }
+  }, [dispatch, loginSuccess]);
+
+  useEffect(() => {
     function handleResize() {
       dispatch(setWindowWidth(getWindowWidth()));
     }
@@ -44,9 +57,9 @@ function AppLayout() {
   }, [dispatch]);
 
   function Display1({ view }) {
-    if (fretboardIsLoading) return <Loader />;
     if (view === "fretboard") return <Fretboard />;
-    if (view === "fretboardSettings") return <FretboardSettings />;
+    if (view === "piano") return <Piano />;
+    if (view === "instrumentSettings") return <InstrumentSettings />;
     if (view === "keyChange") return <KeyChange />;
   }
   function Display2({ view }) {
@@ -54,8 +67,7 @@ function AppLayout() {
     if (view === "ChordProgressionBuilder") return <ChordProgressionBuilder />;
   }
 
-  // FretboardSection
-  // ChordSection
+  if (fretboardIsLoading) return <Loader />;
 
   return (
     <div className="appLayout">
@@ -65,6 +77,9 @@ function AppLayout() {
       <Toolbar />
       <Display1 view={currentViewDisplay1} />
       <Display2 view={currentViewDisplay2} />
+      {/* <StandardFretboard /> */}
+      {/* <Fretboard /> */}
+      {/* <Fretboard2 /> */}
     </div>
   );
 }

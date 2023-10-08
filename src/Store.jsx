@@ -1,14 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import musicTheoryReducer from "./features/musicTheory/musicTheorySlice";
-import fretboardReducer from "./features/fretboard/fretboardSlice";
-import uiReducer from "./features/ui/uiSlice";
+import MusicTheoryReducer from "./Features/MusicTheory/MusicTheorySlice";
+import FretboardReducer from "./Features/Fretboard/FretboardSlice";
+import PianoReducer from "./Features/Piano/PianoSlice";
+import UIReducer from "./Features/UI/UISlice";
+import UserReducer from "./Features/User/UserSlice";
 
 const store = configureStore({
   reducer: {
-    musicTheory: musicTheoryReducer,
-    fretboard: fretboardReducer,
-    ui: uiReducer,
+    musicTheory: MusicTheoryReducer,
+    fretboard: FretboardReducer,
+    piano: PianoReducer,
+    ui: UIReducer,
+    user: UserReducer,
   },
 });
 export default store;

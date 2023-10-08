@@ -1,30 +1,21 @@
 import { useSelector } from "react-redux";
-
-import "./Fretboard.scss";
-
-import String from "../String/String";
+import Fret from "./Fret";
 
 function Fretboard() {
-  console.log("fretboard");
-  const { strings, notesGap, fretboardWidth, fretCount } = useSelector(
-    (store) => store.fretboard
-  );
+  // const theme = useSelector((store) => store.instrument.theme);
 
-  if (fretCount === 0) return null;
+  const allNotes = useSelector((store) => store.musicTheory.allNotes);
+  const fretboardWidth = useSelector((store) => store.fretboard.fretboardWidth);
 
   return (
-    <div id="fretboard" style={{ gap: notesGap, width: fretboardWidth }}>
-      {strings.map((string) => {
-        return (
-          <String
-            key={`string-${string.stringNumber}`}
-            stringNumber={string.stringNumber}
-            notes={string.notes}
-          />
-        );
-      })}
+    <div id="fretboard" style={{ width: fretboardWidth }}>
+      fretboard
     </div>
   );
 }
 
 export default Fretboard;
+
+// a fret needs:
+// tuning, fretNumber, notes
+// to derive its notes
