@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-
 import MusicTheoryReducer from "./Features/MusicTheory/MusicTheorySlice";
 import FretboardReducer from "./Features/Fretboard/FretboardSlice";
 import PianoReducer from "./Features/Piano/PianoSlice";

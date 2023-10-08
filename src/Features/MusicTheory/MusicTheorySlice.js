@@ -117,7 +117,7 @@ const initialState = {
   ],
 };
 
-const musicTheorySlice = createSlice({
+const MusicTheorySlice = createSlice({
   name: "musicTheory",
   initialState,
   reducers: {
@@ -125,12 +125,6 @@ const musicTheorySlice = createSlice({
       state.balance += action.payload;
     },
     getSomeNotes: {
-      prepare(note, octave, amount) {
-        return {
-          payload: { note, octave, amount },
-        };
-      },
-
       reducer(state, action) {
         state.loan = action.payload.amount;
         state.loanPurpose = action.payload.purpose;
@@ -141,8 +135,6 @@ const musicTheorySlice = createSlice({
 });
 
 export const selectAllNotes = (state) => state.musicTheory.allNotes;
+export const { placeholderaddString, getSomeNotes } = MusicTheorySlice.actions;
 
-export const { placeholderaddString, placeholdertuneString } =
-  musicTheorySlice.actions;
-
-export default musicTheorySlice.reducer;
+export default MusicTheorySlice.reducer;

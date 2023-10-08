@@ -5,7 +5,7 @@ import "./Toolbar.scss";
 import Button from "../Button/Button";
 import FretCountSlider from "../fretCountSlider/fretCountSlider";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentViewDisplay1 } from "../../Features/ui/uiSlice";
+import { setCurrentViewDisplay1 } from "../../Features/UI/UISlice";
 
 function Toolbar() {
   const dispatch = useDispatch();

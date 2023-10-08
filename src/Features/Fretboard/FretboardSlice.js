@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getWindowWidth } from "../../Helpers/WindowHelper";
-import store from "../../Store";
+// import { getWindowWidth } from "../../Helpers/WindowHelper";
+import { selectAllNotes } from "../MusicTheory/MusicTheorySlice";
 
 // If no user is logged in: AppLayout: updateFretboard("onlyNotes");
 
@@ -25,50 +25,62 @@ const FretboardSlice = createSlice({
   name: "fretboard",
   initialState,
   reducers: {
+    logNotes(state, action) {
+      console.log("logging Notes");
+      let notes = getAllNotes();
+      console.log(notes);
+    },
     initializeFretboard(state, action) {
-      let theme = "onlyNotes";
-      const allNotes = selectAllNotes(store.getState());
-      console.log(allNotes);
-      let windowWidth = getWindowWidth();
-      let notesGap = getNotesGap(windowWidth);
-      let notesMinWidth = getNotesMinWidth(windowWidth);
-      let notesMaxWidth = getNotesMaxWidth(windowWidth);
-      let fretboardPadding = getFretboardPadding(windowWidth);
-      let fretCap = getFretCap(
-        windowWidth,
-        fretboardPadding,
-        notesGap,
-        notesMinWidth,
-        theme
-      );
-      let fretCount = getFretCount(
-        windowWidth,
-        fretboardPadding,
-        notesGap,
-        notesMaxWidth,
-        fretCap
-      );
-      let notesWidth = getNotesWidth(
-        windowWidth,
-        theme,
-        fretboardPadding,
-        notesGap,
-        fretCount,
-        notesMaxWidth
-      );
-      let fretboardWidth = getFretboardWidth(fretCount, notesWidth, notesGap);
-      // prettier-ignore
-      let tuning = [
-        { note: "G", octave: 2, hasAccidental: false },
-        { note: "D", octave: 2, hasAccidental: false },
-        { note: "A", octave: 1, hasAccidental: false },
-        { note: "E", octave: 1, hasAccidental: false },
-      ];
-      let fretsWithNotes = getFretsWithNotes(tuning);
+      // let theme = "onlyNotes";
+      // const allNotes = selectAllNotes(store.getState());
+      // console.log(allNotes);
+      // let windowWidth = getWindowWidth();
+      // let notesGap = getNotesGap(windowWidth);
+      // let notesMinWidth = getNotesMinWidth(windowWidth);
+      // let notesMaxWidth = getNotesMaxWidth(windowWidth);
+      // let fretboardPadding = getFretboardPadding(windowWidth);
+      // let fretCap = getFretCap(
+      //   windowWidth,
+      //   fretboardPadding,
+      //   notesGap,
+      //   notesMinWidth,
+      //   theme
+      // );
+      // let fretCount = getFretCount(
+      //   windowWidth,
+      //   fretboardPadding,
+      //   notesGap,
+      //   notesMaxWidth,
+      //   fretCap
+      // );
+      // let notesWidth = getNotesWidth(
+      //   windowWidth,
+      //   theme,
+      //   fretboardPadding,
+      //   notesGap,
+      //   fretCount,
+      //   notesMaxWidth
+      // );
+      // let fretboardWidth = getFretboardWidth(fretCount, notesWidth, notesGap);
+      // // prettier-ignore
+      // let tuning = [
+      //   { note: "G", octave: 2, hasAccidental: false },
+      //   { note: "D", octave: 2, hasAccidental: false },
+      //   { note: "A", octave: 1, hasAccidental: false },
+      //   { note: "E", octave: 1, hasAccidental: false },
+      // ];
+      // let fretsWithNotes = getFretsWithNotes(tuning);
     },
     initializeFretboardTheme_OnlyNotes(state, action) {},
   },
 });
+
+const getAllNotes = (state) => {
+  console.log("case");
+  const allNotesValue = selectAllNotes(state);
+  console.log(allNotesValue);
+  return allNotesValue;
+};
 
 function initializeStateFor_OnlyNotesTheme(state) {
   console.log("running");
@@ -216,7 +228,7 @@ function getFretWidths(windowWidth) {
   }
 }
 
-export const { initializeFretboard } = FretboardSlice.actions;
+export const { logNotes } = FretboardSlice.actions;
 
 export default FretboardSlice.reducer;
 

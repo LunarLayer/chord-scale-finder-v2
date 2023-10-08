@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentViewDisplay1 } from "../../Features/ui/uiSlice";
+import { setCurrentViewDisplay1 } from "../../Features/UI/UISlice";
 
 function FretCountSlider() {
   const slider = React.createRef();

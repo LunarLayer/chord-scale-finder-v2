@@ -2,10 +2,10 @@ import PropTypes from "prop-types";
 import { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setWindowWidth } from "../Features/ui/uiSlice";
+import { setWindowWidth } from "../Features/UI/UISlice";
 
 import debounce from "lodash/debounce";
-import { getWindowWidth } from "../helpers/windowHelper";
+import { getWindowWidth } from "../Helpers/WindowHelper";
 
 import "./AppLayout.scss";
 
@@ -20,7 +20,7 @@ import Piano from "../components/Piano/Piano";
 import ChordAndScaleIdentifier from "../components/ChordAndScaleIdentifier/ChordAndScaleIdentifier";
 import ChordProgressionBuilder from "../components/ChordProgressionBuilder/ChordProgressionBuilder";
 import { userLoggedIn } from "../Features/User/UserSlice";
-import { initializeFretboard } from "../Features/Fretboard/FretboardSlice";
+import { logNotes } from "../Features/Fretboard/FretboardSlice";
 
 function AppLayout() {
   console.log("appLayout");
@@ -42,7 +42,7 @@ function AppLayout() {
       let user = {};
       dispatch(userLoggedIn(user));
     } else {
-      dispatch(initializeFretboard());
+      dispatch(logNotes());
     }
   }, [dispatch, loginSuccess]);
 
