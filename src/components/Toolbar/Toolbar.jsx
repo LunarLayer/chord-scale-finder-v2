@@ -35,7 +35,7 @@ function Toolbar() {
       </div>
 
       <div>
-        <h4>Fretboard</h4>
+        <h4>Instrument</h4>
         <Button
           className={`${
             currentViewDisplay1 === "fretboardSettings" ? "active" : ""

@@ -1,5 +1,5 @@
 function InstrumentSettings() {
-  return <div>InstrumentSettings</div>;
+  return <div>Instrument Settings</div>;
 }
 
 export default InstrumentSettings;

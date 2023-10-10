@@ -1,19 +1,59 @@
-import { setFretboardIsScrolling } from "../Features/Instruments/InstrumentsSlice";
+// import { setFretboardIsScrolling } from "../Features/Instruments/InstrumentsSlice";
 
-export function getFretsWithNotes(tuning, notes) {
-  let fretsWithNotes = [];
-
-  for (let fret = 0; fret < 25; fret++) {
-    for (let note of tuning) {
-    }
+export function RenderFretMarker(fretNumber, notesWidth) {
+  switch (fretNumber) {
+    case 3:
+    case 5:
+    case 7:
+    case 9:
+    case 15:
+    case 17:
+    case 19:
+    case 21:
+      return (
+        <div className="fretMarkings">
+          <div className="fretLine" />
+          <div
+            className="fretDot"
+            style={{
+              width: notesWidth - 10,
+              height: notesWidth - 10,
+            }}
+          />
+        </div>
+      );
+    case 12:
+    case 24:
+      return (
+        <div className="fretMarkings">
+          <div className="fretLine" />
+          <div
+            className="fretDot"
+            style={{
+              width: notesWidth - 10,
+              height: notesWidth - 10,
+              top: 25 + "%",
+              transform: `translateY(${-50}%)`,
+            }}
+          />
+          <div
+            className="fretDot"
+            style={{
+              width: notesWidth - 10,
+              height: notesWidth - 10,
+              bottom: 25 + "%",
+              transform: `translateY(${+50}%)`,
+            }}
+          />
+        </div>
+      );
+    default:
+      return (
+        <div className="fretMarkings">
+          <div className="fretLine" />
+        </div>
+      );
   }
-  // let startNoteIndex = allNotes.findIndex(
-  //   (note) =>
-  //     note.note === string.root &&
-  //     note.octave === string.octave &&
-  //     note.hasAccidental === string.hasAccidental
-  // );
-  // return allNotes.slice(startNoteIndex, startNoteIndex + 25);
 }
 
 export function fillFretArraysWithNoteArrays(allNotes, strings) {
