@@ -1,0 +1,36 @@
+#SharpsAndFlatsDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  button {
+    cursor: pointer;
+    font-size: 12px;
+    background-color: white;
+    padding: 0 5px;
+    border: none;
+
+    &.flats {
+      &:hover,
+      &.selected {
+        color: white;
+        background-color: red;
+      }
+    }
+    &.naturals {
+      min-width: 20px;
+      &:hover,
+      &.selected {
+        color: white;
+        background-color: green;
+      }
+    }
+    &.sharps {
+      &:hover,
+      &.selected {
+        color: white;
+        background-color: blue;
+      }
+    }
+  }
+}
