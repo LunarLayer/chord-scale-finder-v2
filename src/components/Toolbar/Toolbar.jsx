@@ -5,18 +5,21 @@ import "./Toolbar.scss";
 import Button from "../Button/Button";
 import FretCountSlider from "../fretCountSlider/fretCountSlider";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentViewDisplay1 } from "../../Features/UI/UISlice";
+import { setCurrentViewSection1 } from "../../Features/UI/UISlice";
 
 function Toolbar() {
   const dispatch = useDispatch();
-  const currentViewDisplay1 = useSelector(
-    (store) => store.ui.currentViewDisplay1
+  const currentViewSection1 = useSelector(
+    (store) => store.ui.currentViewSection1
   );
+  const key = useSelector((store) => store.musicTheory.key);
+  const tonalityType = useSelector((store) => store.musicTheory.tonalityType);
+
   function handleChangeView(view) {
-    if (currentViewDisplay1 === view) {
-      dispatch(setCurrentViewDisplay1("fretboard"));
+    if (currentViewSection1 === view) {
+      dispatch(setCurrentViewSection1("fretboard"));
     } else {
-      dispatch(setCurrentViewDisplay1(view));
+      dispatch(setCurrentViewSection1(view));
     }
   }
 
@@ -27,10 +30,10 @@ function Toolbar() {
       <div>
         <h4>Key</h4>
         <Button
-          className={`${currentViewDisplay1 === "keyChange" ? "active" : ""}`}
+          className={`${currentViewSection1 === "keyChange" ? "active" : ""}`}
           onClick={() => handleChangeView("keyChange")}
         >
-          C Major
+          {key.note + key.accidental} {tonalityType}
         </Button>
       </div>
 
@@ -38,9 +41,9 @@ function Toolbar() {
         <h4>Instrument</h4>
         <Button
           className={`${
-            currentViewDisplay1 === "fretboardSettings" ? "active" : ""
+            currentViewSection1 === "fretboardSettings" ? "active" : ""
           }`}
-          onClick={() => handleChangeView("fretboardSettings")}
+          onClick={() => handleChangeView("instrumentSettings")}
         >
           Settings
         </Button>

@@ -11,19 +11,12 @@ const MinimalNote = memo(function Note({
   octave,
   isSelected,
   isHighlighted,
+  handleClick,
 }) {
   const notesWidth = useSelector((store) => store.fretboard.notesWidth);
-  const [selected, setSelected] = useState(isSelected);
-  const dispatch = useDispatch();
   const accidentalType = useSelector(
     (store) => store.musicTheory.accidentalType
   );
-
-  function handleClick() {
-    console.log("click!");
-    setSelected(!selected);
-    dispatch(toggleNoteSelected(note, hasAccidental, octave, !selected));
-  }
 
   return (
     <button
@@ -33,7 +26,7 @@ const MinimalNote = memo(function Note({
         minHeight: notesWidth,
         maxHeight: notesWidth,
       }}
-      className={`note ${selected ? "selected" : ""} ${
+      className={`note ${isSelected ? "selected" : ""} ${
         isHighlighted ? "highlighted" : ""
       }`}
       data-note={`${note}${hasAccidental ? accidentalType : ""}`}

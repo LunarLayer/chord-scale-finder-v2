@@ -24,13 +24,13 @@ import { userLoggedIn } from "../Features/User/UserSlice";
 import { initializeFretboard } from "../Features/Fretboard/FretboardSlice";
 
 function AppLayout() {
-  console.log("appLayout");
+  // console.log("appLayout");
   const dispatch = useDispatch();
-  const currentViewDisplay1 = useSelector(
-    (store) => store.ui.currentViewDisplay1
+  const currentViewSection1 = useSelector(
+    (store) => store.ui.currentViewSection1
   );
-  const currentViewDisplay2 = useSelector(
-    (store) => store.ui.currentViewDisplay2
+  const currentViewSection2 = useSelector(
+    (store) => store.ui.currentViewSection2
   );
   const fretboardIsReady = useSelector(
     (store) => store.fretboard.fretboardIsReady
@@ -60,7 +60,7 @@ function AppLayout() {
     };
   }, [dispatch]);
 
-  function Display1({ view }) {
+  function Section1({ view }) {
     if (view === "fretboard" && fretboardVariant === "default")
       return <DefaultFretboard />;
     if (view === "fretboard" && fretboardVariant === "minimal")
@@ -69,7 +69,7 @@ function AppLayout() {
     if (view === "instrumentSettings") return <InstrumentSettings />;
     if (view === "keyChange") return <KeyChange />;
   }
-  function Display2({ view }) {
+  function Section2({ view }) {
     if (view === "ChordAndScaleIdentifier") return <ChordAndScaleIdentifier />;
     if (view === "ChordProgressionBuilder") return <ChordProgressionBuilder />;
   }
@@ -81,8 +81,8 @@ function AppLayout() {
           <ProjectSettings />
         </Navbar>
         <Toolbar />
-        <Display1 view={currentViewDisplay1} />
-        <Display2 view={currentViewDisplay2} />
+        <Section1 view={currentViewSection1} />
+        <Section2 view={currentViewSection2} />
         {/* <StandardFretboard /> */}
         {/* <Fretboard /> */}
         {/* <Fretboard2 /> */}

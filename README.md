@@ -1,5 +1,6 @@
 ### Todo:
 > Fretboard scroll on desktop and mobile with atomatic snap to edge of note/fret
+> Make instruments resizable (how cool would that be!)
 
 > User login
 > <Bonus> Save user data in DB: PreferredInstrument, Projects, b/w or colored notes, etc.

@@ -8,15 +8,15 @@ const uiSlice = createSlice({
   name: "ui",
   initialState: {
     windowWidth: getWindowWidth(),
-    currentViewDisplay1: "fretboard", // - fretboardSettings - keyChange
-    currentViewDisplay2: "chordAndScaleIdentifier", // - chordProgressionBuilder
+    currentViewSection1: "fretboard", // - instrumentSettings - keyChange
+    currentViewSection2: "chordAndScaleIdentifier", // - chordProgressionBuilder
   },
   reducers: {
-    setCurrentViewDisplay1(state, action) {
-      state.currentViewDisplay1 = action.payload;
+    setCurrentViewSection1(state, action) {
+      state.currentViewSection1 = action.payload;
     },
-    setCurrentViewDisplay2(state, action) {
-      state.currentViewDisplay2 = action.payload;
+    setCurrentViewSection2(state, action) {
+      state.currentViewSection2 = action.payload;
     },
     setWindowWidth(state, action) {
       state.windowWidth = action.payload;
@@ -27,8 +27,8 @@ const uiSlice = createSlice({
 export const selectWindowWidth = (state) => state.ui.windowWidth;
 
 export const {
-  setCurrentViewDisplay1,
-  setCurrentViewDisplay2,
+  setCurrentViewSection1,
+  setCurrentViewSection2,
   setWindowWidth,
 } = uiSlice.actions;
 
