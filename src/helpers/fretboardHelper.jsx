@@ -1,6 +1,6 @@
 // import { setFretboardIsScrolling } from "../Features/Instruments/InstrumentsSlice";
 
-export function RenderFretMarker(fretNumber, notesWidth) {
+export function RenderFretVisuals(fretNumber, notesWidth) {
   switch (fretNumber) {
     case 3:
     case 5:
@@ -11,22 +11,19 @@ export function RenderFretMarker(fretNumber, notesWidth) {
     case 19:
     case 21:
       return (
-        <div className="fretMarkings">
-          <div className="fretLine" />
-          <div
-            className="fretDot"
-            style={{
-              width: notesWidth - 10,
-              height: notesWidth - 10,
-            }}
-          />
-        </div>
+        <div
+          className="fretDot"
+          style={{
+            width: notesWidth - 10,
+            height: notesWidth - 10,
+            top: 45 + "%",
+          }}
+        />
       );
     case 12:
     case 24:
       return (
-        <div className="fretMarkings">
-          <div className="fretLine" />
+        <>
           <div
             className="fretDot"
             style={{
@@ -45,14 +42,10 @@ export function RenderFretMarker(fretNumber, notesWidth) {
               transform: `translateY(${+50}%)`,
             }}
           />
-        </div>
+        </>
       );
     default:
-      return (
-        <div className="fretMarkings">
-          <div className="fretLine" />
-        </div>
-      );
+      return null;
   }
 }
 

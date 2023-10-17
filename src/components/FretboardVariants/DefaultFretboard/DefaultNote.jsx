@@ -12,13 +12,13 @@ const DefaultNote = memo(function Note({
   isSelected,
   isHighlighted,
   notesWidth,
+  handleClick,
 }) {
   const [selected, setSelected] = useState(isSelected);
   const dispatch = useDispatch();
   const accidentalType = useSelector(
     (store) => store.musicTheory.accidentalType
   );
-
   function handleClick() {
     console.log("click!");
     setSelected(!selected);

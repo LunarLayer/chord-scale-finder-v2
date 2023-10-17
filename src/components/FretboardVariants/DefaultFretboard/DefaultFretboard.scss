@@ -1,51 +1,122 @@
 #DefaultFretboard {
+  position: relative;
+  overflow: auto;
   display: flex;
-  overflow: hidden;
+  align-items: space-between;
   margin: 0 auto;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
 
-  .fret {
+  .frets {
     position: relative;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    // gap = inline css
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 
-    .fretMarkings {
+    .stringVisuals {
       position: absolute;
       top: 0;
       right: 0;
       bottom: 0;
       left: 0;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
+      // gap set in inlineStyle
+      .stringVisual {
+        position: relative;
+        width: 100%;
 
-      .fretLine {
-        position: absolute;
-        right: 0;
-        border-right: 1px solid blue;
-        height: 100%;
+        &::after {
+          content: "";
+          position: absolute;
+          right: 0;
+          left: 0;
+          top: 50%;
+          transform: translateY(calc(-50% + 5px));
+          background-color: black;
+          width: 100%;
+        }
+
+        // prettier-ignore
+        &:nth-child(1)::after { height: 1px; }
+        &:nth-child(2)::after {
+          height: 2px;
+        }
+        &:nth-child(3)::after {
+          height: 3px;
+        }
+        &:nth-child(4)::after {
+          height: 4px;
+        }
+        &:nth-child(5)::after {
+          height: 2.5px;
+        }
+        &:nth-child(6)::after {
+          height: 3px;
+        }
+        &:nth-child(7)::after {
+          height: 2px;
+        }
+        &:nth-child(8)::after {
+          height: 2px;
+        }
       }
+    }
+
+    .fret {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      // gap = inline css
+      padding: 5px 0;
+
+      &::after {
+        content: "";
+        position: absolute;
+        width: 1px;
+        transform: translateX(50%);
+        background-color: black;
+        right: 0;
+        top: 0;
+        bottom: 0;
+      }
+
       .fretDot {
         position: absolute;
         background-color: black;
         border-radius: 50%;
       }
+
+      .note {
+        z-index: 1;
+        cursor: pointer;
+        border-radius: 50%;
+        font-size: 11px;
+        padding: 0;
+        &.selected {
+          color: white;
+          background-color: blue;
+        }
+        &:hover {
+          color: white;
+          background-color: blue;
+        }
+      }
     }
 
-    .note {
-      z-index: 1;
-      cursor: pointer;
-      border-radius: 50%;
-      font-size: 11px;
-      padding: 0;
-      &.selected {
-        background-color: blue;
+    .fret0 {
+      background-color: rgb(68, 68, 68);
+      &::before {
+        content: "";
+        position: absolute;
+        width: 1px;
+        background-color: black;
+        left: 0;
+        top: 0;
+        bottom: 0;
       }
-      &:hover {
-        background-color: blue;
+
+      .note {
+        // border-radius: 30%;
       }
     }
   }

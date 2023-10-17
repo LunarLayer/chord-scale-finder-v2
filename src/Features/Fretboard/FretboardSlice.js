@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getWindowWidth } from "../../Helpers/WindowHelper";
 import { getFretsWithNotes } from "../../Helpers/InstrumentHelper";
-import { setWindowWidth } from "../UI/UISlice";
+import { setCurrentViewSection1, setWindowWidth } from "../UI/UISlice";
 
 const initialState = {
   fretboardIsReady: undefined,
@@ -18,6 +18,7 @@ const initialState = {
   fretboardWidth: undefined,
   fretsWithNotes: undefined,
   fretWidths: undefined,
+  fretWidthsGrowthFactor: undefined,
   preferredFretCount: undefined,
   tuning: [
     { note: "G", octave: 2, hasAccidental: false },
@@ -34,6 +35,7 @@ const FretboardSlice = createSlice({
     initializeFretboard(state) {
       let windowWidth = getWindowWidth();
       state.fretsWithNotes = getFretsWithNotes(state.tuning);
+      // updateDefaultFretboard(state, windowWidth);
       updateDefaultFretboard(state, windowWidth);
     },
     setPreferredFretCount(state, action) {
@@ -42,11 +44,17 @@ const FretboardSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(setWindowWidth, (state, action) => {
-      console.log("resize");
-      let newWindowWidth = action.payload;
-      updateFretboard(state, newWindowWidth);
-    });
+    builder
+      .addCase(setWindowWidth, (state, action) => {
+        let newWindowWidth = action.payload;
+        updateFretboard(state, newWindowWidth);
+      })
+      .addCase(setCurrentViewSection1, (state, action) => {
+        // console.log(".addCase(setCurrentViewSection1");
+        // console.log(action.payload);
+        // let newWindowWidth = action.payload;
+        // updateFretboard(state, newWindowWidth);
+      });
   },
 });
 
@@ -65,40 +73,39 @@ function updateFretboard(state, newWindowWidth) {
 function updateDefaultFretboard(state, newWindowWidth) {
   let windowWidth = newWindowWidth || getWindowWidth();
   if (newWindowWidth) {
-    state.notesGap = 25;
-    state.notesMinWidth = getNotesMinWidth(newWindowWidth);
-    state.notesMaxWidth = getNotesMaxWidth(newWindowWidth);
+    state.notesGap = getNotesGap(state.fretboardVariant, windowWidth);
+    state.notesMinWidth = getNotesMinWidth(
+      state.fretboardVariant,
+      newWindowWidth
+    );
+    state.notesMaxWidth = getNotesMaxWidth(
+      state.fretboardVariant,
+      newWindowWidth
+    );
     state.fretboardPadding = getFretboardPadding(newWindowWidth);
-    state.fretWidths = getFretWidths(windowWidth, state.fretboardPadding);
+    state.fretWidthsGrowthFactor = getFretsWidthGrowthFactor(windowWidth);
+    state.fretWidths = getFretWidths(
+      windowWidth,
+      state.fretboardPadding,
+      state.notesMinWidth,
+      state.notesMaxWidth,
+      state.fretWidthsGrowthFactor
+    );
+    state.notesWidth = getDefaultNotesWidth(state.fretWidths);
+    // state.notesWidth = state.fretWidths[state.fretWidths.length - 1];
   }
-  state.fretCap = getFretCap(
-    windowWidth,
-    state.fretboardVariant,
-    state.fretboardPadding,
-    state.notesGap,
-    state.notesMinWidth
-  );
-  state.fretCount = getFretCount(
+  state.fretCap = getDefaultFretCap(
     windowWidth,
     state.fretboardPadding,
-    state.notesGap,
-    state.notesMaxWidth,
-    state.fretCap,
-    state.preferredFretCount
+    state.fretWidths
   );
-  state.notesWidth = getNotesWidth(
-    windowWidth,
-    state.fretboardVariant,
-    state.fretboardPadding,
-    state.notesGap,
-    state.fretCount,
-    state.notesMaxWidth
+  state.fretCount = getDefaultFretCount(
+    state.preferredFretCount,
+    state.fretCap
   );
-  state.fretboardWidth = getFretboardWidth(
-    state.fretboardVariant,
-    state.fretCount,
-    state.notesWidth,
-    state.notesGap
+  state.fretboardWidth = getDefaultFretboardWidth(
+    state.fretWidths,
+    state.fretCount
   );
   state.fretsWithNotes = getFretsWithNotes(state.tuning);
   state.fretboardIsReady = true;
@@ -107,19 +114,24 @@ function updateDefaultFretboard(state, newWindowWidth) {
 function updateMinimalFretboard(state, newWindowWidth) {
   let windowWidth = newWindowWidth || getWindowWidth();
   if (newWindowWidth) {
-    state.notesGap = getNotesGap(newWindowWidth);
-    state.notesMinWidth = getNotesMinWidth(newWindowWidth);
-    state.notesMaxWidth = getNotesMaxWidth(newWindowWidth);
+    state.notesGap = getNotesGap(state.fretboardVariant, newWindowWidth);
+    state.notesMinWidth = getNotesMinWidth(
+      state.fretboardVariant,
+      newWindowWidth
+    );
+    state.notesMaxWidth = getNotesMaxWidth(
+      state.fretboardVariant,
+      newWindowWidth
+    );
     state.fretboardPadding = getFretboardPadding(newWindowWidth);
   }
-  state.fretCap = getFretCap(
+  state.fretCap = getMinimalFretCap(
     windowWidth,
-    state.fretboardVariant,
     state.fretboardPadding,
     state.notesGap,
     state.notesMinWidth
   );
-  state.fretCount = getFretCount(
+  state.fretCount = getMinimalFretCount(
     windowWidth,
     state.fretboardPadding,
     state.notesGap,
@@ -127,16 +139,14 @@ function updateMinimalFretboard(state, newWindowWidth) {
     state.fretCap,
     state.preferredFretCount
   );
-  state.notesWidth = getNotesWidth(
+  state.notesWidth = getMinimalNotesWidth(
     windowWidth,
-    state.fretboardVariant,
     state.fretboardPadding,
     state.notesGap,
     state.fretCount,
     state.notesMaxWidth
   );
-  state.fretboardWidth = getFretboardWidth(
-    state.fretboardVariant,
+  state.fretboardWidth = getMinimalFretboardWidth(
     state.fretCount,
     state.notesWidth,
     state.notesGap
@@ -144,32 +154,75 @@ function updateMinimalFretboard(state, newWindowWidth) {
   state.fretboardIsReady = true;
 }
 
-function getNotesGap(windowWidth) {
+function getFretsWidthGrowthFactor(windowWidth) {
   if (windowWidth <= 600) {
-    return 4;
+    return 0.3;
   } else if (windowWidth > 600 && windowWidth <= 900) {
-    return 5;
+    return 0.33;
   } else if (windowWidth > 900) {
-    return 6;
+    return 0.35;
   }
 }
 
-function getNotesMinWidth(windowWidth) {
-  if (windowWidth <= 600) {
-    return 20;
-  } else if (windowWidth > 600 && windowWidth <= 900) {
-    return 25;
-  } else if (windowWidth > 900) {
-    return 30;
+function getNotesGap(fretboardVariant, windowWidth) {
+  if (fretboardVariant === "default") {
+    if (windowWidth <= 600) {
+      return 10;
+    } else if (windowWidth > 600 && windowWidth <= 900) {
+      return 15;
+    } else if (windowWidth > 900) {
+      return 20;
+    }
+  }
+  if (fretboardVariant === "minimal") {
+    if (windowWidth <= 600) {
+      return 4;
+    } else if (windowWidth > 600 && windowWidth <= 900) {
+      return 5;
+    } else if (windowWidth > 900) {
+      return 6;
+    }
   }
 }
-function getNotesMaxWidth(windowWidth) {
-  if (windowWidth <= 600) {
-    return 35;
-  } else if (windowWidth > 600 && windowWidth <= 900) {
-    return 40;
-  } else if (windowWidth > 900) {
-    return 45;
+
+function getNotesMinWidth(fretboardVariant, windowWidth) {
+  if (fretboardVariant === "default") {
+    if (windowWidth <= 600) {
+      return 20;
+    } else if (windowWidth > 600 && windowWidth <= 900) {
+      return 22;
+    } else if (windowWidth > 900) {
+      return 24;
+    }
+  }
+  if (fretboardVariant === "minimal") {
+    if (windowWidth <= 600) {
+      return 20;
+    } else if (windowWidth > 600 && windowWidth <= 900) {
+      return 25;
+    } else if (windowWidth > 900) {
+      return 30;
+    }
+  }
+}
+function getNotesMaxWidth(fretboardVariant, windowWidth) {
+  if (fretboardVariant === "default") {
+    if (windowWidth <= 600) {
+      return 20;
+    } else if (windowWidth > 600 && windowWidth <= 900) {
+      return 25;
+    } else if (windowWidth > 900) {
+      return 28;
+    }
+  }
+  if (fretboardVariant === "minimal") {
+    if (windowWidth <= 600) {
+      return 35;
+    } else if (windowWidth > 600 && windowWidth <= 900) {
+      return 40;
+    } else if (windowWidth > 900) {
+      return 45;
+    }
   }
 }
 
@@ -183,28 +236,44 @@ function getFretboardPadding(windowWidth) {
   }
 }
 
-function getFretCap(
+function getDefaultFretCap(windowWidth, fretboardPadding, fretWidths) {
+  let fretboardWidth = windowWidth - fretboardPadding * 2;
+  let fretCap = 0;
+  let fretWidthsSum = 0;
+  for (let fretWidth of fretWidths) {
+    fretWidthsSum += fretWidth;
+    if (fretWidthsSum < fretboardWidth + 0.001) {
+      fretCap++;
+    } else {
+      break;
+    }
+  }
+  if (fretCap > 25) fretCap = 25;
+  return fretCap;
+}
+
+function getMinimalFretCap(
   windowWidth,
-  fretboardVariant,
   fretboardPadding,
   notesGap,
   notesMinWidth
 ) {
-  let fretCap;
   let fretboardWidth = windowWidth - fretboardPadding * 2;
-  if (fretboardVariant === "minimal") {
-    fretCap =
-      Math.floor((fretboardWidth + notesGap) / (notesMinWidth + notesGap)) - 1; // why -1
-    if (fretCap > 25) fretCap = 25;
-  }
-  if (fretboardVariant === "default") {
-    fretCap = Math.floor(fretboardWidth / (notesMinWidth + notesGap)) - 1; // why -1
-    if (fretCap > 25) fretCap = 25;
-  }
+  let fretCap =
+    Math.floor((fretboardWidth + notesGap) / (notesMinWidth + notesGap)) - 1; // why -1
+  if (fretCap > 25) fretCap = 25;
   return fretCap;
 }
 
-function getFretCount(
+function getDefaultFretCount(preferredFretCount, fretCap) {
+  if (preferredFretCount === 0 || preferredFretCount > 0) {
+    return Math.min(preferredFretCount, fretCap);
+  } else {
+    return fretCap;
+  }
+}
+
+function getMinimalFretCount(
   windowWidth,
   fretboardPadding,
   notesGap,
@@ -223,106 +292,104 @@ function getFretCount(
   }
 }
 
-function getNotesWidth(
+function getDefaultNotesWidth(fretWidths) {
+  return fretWidths[0] - 4;
+}
+
+function getMinimalNotesWidth(
   windowWidth,
-  fretboardVariant,
   fretboardPadding,
   notesGap,
   fretCount,
   notesMaxWidth
 ) {
-  let newNotesWidth = 0;
   let fretboardWidth = windowWidth - fretboardPadding * 2;
-  if (fretboardVariant === "default") {
-    newNotesWidth = 25;
-  }
-  if (fretboardVariant === "minimal") {
-    let widthOfAllGaps = notesGap * (fretCount - 1);
-    let availableSpaceForNotes = fretboardWidth - widthOfAllGaps; // -1 because almost always 1 less gap than notes
-    newNotesWidth = Math.floor(availableSpaceForNotes / fretCount);
-    if (newNotesWidth > notesMaxWidth) newNotesWidth = notesMaxWidth;
-  }
+  let widthOfAllGaps = notesGap * (fretCount - 1);
+  let availableSpaceForNotes = fretboardWidth - widthOfAllGaps; // -1 because almost always 1 less gap than notes
+  let newNotesWidth = Math.floor(availableSpaceForNotes / fretCount);
+  if (newNotesWidth > notesMaxWidth) newNotesWidth = notesMaxWidth;
   return newNotesWidth;
 }
 
-function getFretboardWidth(fretboardVariant, fretCount, notesWidth, notesGap) {
-  let fretboardWidth;
-  if (fretboardVariant === "minimal")
-    fretboardWidth = fretCount * notesWidth + (fretCount - 1) * notesGap + 2; // Account for subpixel rendering
-  if (fretboardVariant === "default") fretboardWidth = "implement this"; // Account for subpixel rendering
-  return fretboardWidth;
+function getDefaultFretboardWidth(fretWidths, fretCount) {
+  let newFretboardWidth = 0;
+  for (let i = 0; i < fretCount; i++) {
+    newFretboardWidth += fretWidths[i];
+  }
+  return newFretboardWidth;
 }
-// prettier-ignore
-function getFretWidths(windowWidth, fretboardPadding) {
-  const equalTemperamentConstant = 17.817;
-  let fretboardWidth = windowWidth - fretboardPadding * 2;
-  let nutMinSize = 25; // 30 // 35
 
-  let spaceForFrets = fretboardWidth - nutMinSize;
-  let fret24ToBridge = spaceForFrets / 4;
-  let scaleLength = spaceForFrets + fret24ToBridge;
-  
-  let fretWidths = [];
-  
-  for (let i = 0; i < 24; i++) {
-    // console.log("scaleLength: " + scaleLength)
-    let fretWidth = scaleLength / equalTemperamentConstant;
-    scaleLength = scaleLength - fretWidth;
-    fretWidths.push(fretWidth)
+function getMinimalFretboardWidth(fretCount, notesWidth, notesGap) {
+  let minimalFretboardWidth =
+    fretCount * notesWidth + (fretCount - 1) * notesGap + 2; // Account for subpixel rendering
+  return minimalFretboardWidth;
+}
+
+function getFretWidths(
+  windowWidth,
+  fretboardPadding,
+  notesMinWidth,
+  notesMaxWidth,
+  fretWidthsGrowthFactor
+) {
+  let fretboardWidth = windowWidth - fretboardPadding * 2;
+  let spaceForIncrements = fretboardWidth * fretWidthsGrowthFactor;
+  let spaceForFrets = fretboardWidth - spaceForIncrements;
+  let notesWidth = (spaceForFrets - 100) / 25;
+
+  if (notesWidth < notesMinWidth || notesWidth > notesMaxWidth) {
+    notesWidth = notesWidth < notesMinWidth ? notesMinWidth : notesMaxWidth;
+    spaceForFrets = (notesWidth + 4) * 25;
+    let newFretboardWidth = spaceForFrets / (1 - fretWidthsGrowthFactor);
+    spaceForIncrements = newFretboardWidth * fretWidthsGrowthFactor;
   }
 
-  console.log("fretWidths.count: " + fretWidths.length)
-  
-  console.log("fretWidths: " + fretWidths)
-  // spaceForFrets - (12th Root of 2) + remove size from fretboard to bridge = fretWidths[]
-  
-  const twelfthRootOf2 = Math.pow(2, 1/12);
-  console.log(twelfthRootOf2);
-  
-  
+  // return values;
+  let fretWidths = [];
+  let incPart = spaceForIncrements / 276;
+  notesWidth += 4;
+
+  fretWidths.push(notesWidth);
+
+  for (let i = 23; i > 0; i--) {
+    fretWidths.push(notesWidth + i * incPart);
+  }
+  fretWidths.push(notesWidth);
 
   return fretWidths;
 
+  // Old code using an exponential growth matching that of an actual fretboard
+  // let equalTemperamentConstant = 17.817;
+  // equalTemperamentConstant = 80;
+  // let nutWidth = notesMinWidth;
 
+  // let fretWidths = [nutWidth];
+  // // Calculate stringLength based on window size
+  // let fretboardWidth = windowWidth - fretboardPadding * 2;
+  // let spaceForFrets = fretboardWidth - nutWidth; // notesMinWidth is the very first fret, it will be placed in fretWidths by default
+  // let fret24ToBridge = spaceForFrets / 4;
+  // let stringLength = spaceForFrets + fret24ToBridge;
 
+  // // Calculate stringLength based on notesMinWidth
+  // let minFret23ToBridge = notesMinWidth * equalTemperamentConstant;
+  // let minStringLength = (minFret23ToBridge - notesMinWidth) * 4;
 
+  // // Calculate stringLength based on notesMaxWidth
+  // let maxFret23ToBridge = notesMaxWidth * equalTemperamentConstant;
+  // let maxStringLength = (maxFret23ToBridge - notesMaxWidth) * 4;
 
+  // // let newValue = 1.2 * notesMinWidth;
 
+  // if (stringLength < minStringLength) stringLength = minStringLength;
+  // if (stringLength > maxStringLength) stringLength = maxStringLength;
 
-
-
-
-  // NoteMaxWidths: 35 - 40 - 45
-  // NoteMinWidths: 20 - 25 - 30
-  // return [
-  //   25, 55.556, 108.025, 157.579, 204.38, 248.581, 290.327, 329.753, 366.989,
-  //   402.156, 435.37, 466.738, 496.364, 524.344, 550.769, 575.726, 599.297,
-  //   621.558, 642.583, 662.439, 681.193, 698.904, 715.632, 731.43, 746.351,
-  // ];
-  // return [
-  //   25, 55.556, 52.469, 49.554, 46.801, 44.201, 41.746, 39.426, 37.236, 33.167,
-  //   33.214, 31.368, 29.626, 28.375, 25.425, 24.957, 23.571, 22.261, 19.025,
-  //   19.856, 18.754, 17.711, 16.728, 15.798,
-  // ];
-  // if (windowWidth <= 600) {
-  //   return [
-  //     25, 48.597, 47.272, 46.022, 44.843, 43.729, 42.678, 41.685, 40.749,
-  //     39.865, 39.031, 38.243, 37.5, 36.798, 36.136, 35.511, 34.921, 34.364,
-  //     33.839, 33.343, 32.875, 32.433, 32.015, 31.622, 31.25,
-  //   ];
-  // } else if (windowWidth > 600 && windowWidth <= 900) {
-  //   return [
-  //     25, 48.597, 47.272, 46.022, 44.843, 43.729, 42.678, 41.685, 40.749,
-  //     39.865, 39.031, 38.243, 37.5, 36.798, 36.136, 35.511, 34.921, 34.364,
-  //     33.839, 33.343, 32.875, 32.433, 32.015, 31.622, 31.25,
-  //   ];
-  // } else if (windowWidth > 900) {
-  //   return [
-  //     25, 48.597, 47.272, 46.022, 44.843, 43.729, 42.678, 41.685, 40.749,
-  //     39.865, 39.031, 38.243, 37.5, 36.798, 36.136, 35.511, 34.921, 34.364,
-  //     33.839, 33.343, 32.875, 32.433, 32.015, 31.622, 31.25,
-  //   ];
+  // for (let i = 1; i <= 24; i++) {
+  //   let fretWidth = stringLength / equalTemperamentConstant; // Maybe rounding is needed
+  //   stringLength -= fretWidth;
+  //   fretWidths.push(fretWidth);
   // }
+
+  // return fretWidths;
 }
 
 export const { initializeFretboard, setPreferredFretCount } =

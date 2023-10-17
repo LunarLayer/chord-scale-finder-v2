@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import DefaultNote from "./DefaultNote";
 import { memo } from "react";
 
-import { RenderFretMarker } from "../../../Helpers/FretboardHelper";
+import { RenderFretVisuals } from "../../../Helpers/FretboardHelper";
 
 const DefaultFret = memo(function Fret({
   notes,
@@ -17,7 +17,7 @@ const DefaultFret = memo(function Fret({
       className={`fret fret${fretNumber}`}
       style={{ minWidth: fretWidth, gap: notesGap }}
     >
-      {RenderFretMarker(fretNumber, notesWidth)}
+      {RenderFretVisuals(fretNumber, notesWidth)}
       {notes.map((note, index) => {
         return (
           <DefaultNote
