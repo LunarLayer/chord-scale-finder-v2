@@ -1,0 +1,30 @@
+#MinimalFretboard {
+  margin: 0 auto;
+  overflow: hidden;
+
+  .frets {
+    display: flex;
+
+    .fret {
+      display: flex;
+      flex-direction: column;
+      // gap = inline css
+
+      .note {
+        cursor: pointer;
+
+        &.selected {
+          background-color: blue;
+        }
+      }
+    }
+  }
+
+  #FretNumbers {
+    display: flex;
+
+    > p {
+      text-align: center;
+    }
+  }
+}

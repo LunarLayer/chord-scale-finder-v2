@@ -5,7 +5,7 @@ import { toggleNoteSelected } from "../../../Features/MusicTheory/MusicTheorySli
 import { memo } from "react";
 import { useState } from "react";
 
-const DefaultNote = memo(function Note({
+const MinimalNote = memo(function Note({
   note,
   hasAccidental,
   octave,
@@ -14,16 +14,9 @@ const DefaultNote = memo(function Note({
   notesWidth,
   handleClick,
 }) {
-  const [selected, setSelected] = useState(isSelected);
-  const dispatch = useDispatch();
   const accidentalType = useSelector(
     (store) => store.musicTheory.accidentalType
   );
-  function handleClick() {
-    console.log("click!");
-    setSelected(!selected);
-    dispatch(toggleNoteSelected(note, hasAccidental, octave, !selected));
-  }
 
   return (
     <button
@@ -33,7 +26,7 @@ const DefaultNote = memo(function Note({
         minHeight: notesWidth,
         maxHeight: notesWidth,
       }}
-      className={`note ${selected ? "selected" : ""} ${
+      className={`note ${isSelected ? "selected" : ""} ${
         isHighlighted ? "highlighted" : ""
       }`}
       data-note={`${note}${hasAccidental ? accidentalType : ""}`}
@@ -45,9 +38,9 @@ const DefaultNote = memo(function Note({
   );
 });
 
-export default DefaultNote;
+export default MinimalNote;
 
-DefaultNote.propTypes = {
+MinimalNote.propTypes = {
   note: PropTypes.string,
   hasAccidental: PropTypes.bool,
   octave: PropTypes.number,

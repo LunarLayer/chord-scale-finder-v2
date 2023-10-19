@@ -5,8 +5,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 
 const Loader = lazy(() => import("./components/Loader/Loader"));
-const AppLayout = lazy(() => import("./pages/AppLayout"));
+const AppLayout = lazy(() => import("./Pages/AppLayout"));
 const Login = lazy(() => import("./pages/Login"));
+import "./animations/keyframes";
 
 function App() {
   return (

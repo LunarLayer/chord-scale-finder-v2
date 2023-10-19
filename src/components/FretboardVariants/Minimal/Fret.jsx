@@ -1,9 +1,14 @@
 import PropTypes from "prop-types";
 
 import { memo } from "react";
-import MinimalNote from "./MinimalNote";
+import MinimalNote from "./Note";
 
-const MinimalFret = memo(function Fret({ notes, fretNumber, notesGap }) {
+const MinimalFret = memo(function Fret({
+  notes,
+  fretNumber,
+  notesGap,
+  notesWidth,
+}) {
   return (
     <div className={`fret fret${fretNumber}`} style={{ gap: notesGap }}>
       {notes.map((note, index) => {
@@ -15,6 +20,7 @@ const MinimalFret = memo(function Fret({ notes, fretNumber, notesGap }) {
             octave={note.octave}
             isSelected={note.selected}
             isHighlighted={note.highlighted}
+            notesWidth={notesWidth}
           />
         );
       })}

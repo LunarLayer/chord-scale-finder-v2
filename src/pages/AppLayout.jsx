@@ -15,13 +15,12 @@ import ProjectSettings from "../components/ProjectSettings/ProjectSettings";
 import Toolbar from "../components/Toolbar/Toolbar";
 import InstrumentSettings from "../components/InstrumentSettings/InstrumentSettings";
 import KeyChange from "../components/KeyChange/KeyChange";
-import DefaultFretboard from "../components/FretboardVariants/DefaultFretboard/DefaultFretboard";
-import MinimalFretboard from "../components/FretboardVariants/MinimalFretboard/MinimalFretboard";
+import DefaultFretboard from "../components/FretboardVariants/Default/Fretboard";
+import MinimalFretboard from "../components/FretboardVariants/Minimal/Fretboard";
 import Piano from "../components/Piano/Piano";
 import ChordAndScaleIdentifier from "../components/ChordAndScaleIdentifier/ChordAndScaleIdentifier";
 import ChordProgressionBuilder from "../components/ChordProgressionBuilder/ChordProgressionBuilder";
-import { userLoggedIn } from "../Features/User/UserSlice";
-import { initializeFretboard } from "../Features/Fretboard/FretboardSlice";
+import { loginUser } from "../Features/User/UserSlice";
 
 function AppLayout() {
   // console.log("appLayout");
@@ -44,9 +43,24 @@ function AppLayout() {
   useEffect(() => {
     if (loginSuccess) {
       let user = {};
-      dispatch(userLoggedIn(user));
+      dispatch(loginUser(user));
     } else {
-      dispatch(initializeFretboard());
+      dispatch(
+        loginUser({
+          userName: "guest",
+          instrument: "fretboard",
+          instrumentVariant: "default",
+          theme: "black",
+          key: "C",
+          tuning: [
+            { note: "G", octave: 2, hasAccidental: false },
+            { note: "D", octave: 2, hasAccidental: false },
+            { note: "A", octave: 1, hasAccidental: false },
+            { note: "E", octave: 1, hasAccidental: false },
+          ],
+          projects: [],
+        })
+      );
     }
   }, [dispatch, loginSuccess]);
 
@@ -83,6 +97,7 @@ function AppLayout() {
         <Toolbar />
         <Section1 view={currentViewSection1} />
         <Section2 view={currentViewSection2} />
+
         {/* <StandardFretboard /> */}
         {/* <Fretboard /> */}
         {/* <Fretboard2 /> */}

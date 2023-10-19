@@ -1,0 +1,123 @@
+#DefaultFretboard {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  margin: 0 auto;
+
+  .frets {
+    position: relative;
+    display: flex;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+  }
+  .stringVisuals {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    // gap set in inlineStyle
+    .stringVisual {
+      position: relative;
+      width: 100%;
+
+      .staticPart {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: 2px;
+        transform: translateY(calc(-50% + 5px)); // 5px = padding on fret
+        background: repeating-linear-gradient(45deg, black, grey 2px);
+      }
+
+      .vibratingPart {
+        position: absolute;
+        right: 0;
+        width: 0;
+        top: 50%;
+        height: 2px;
+        transform: translateY(calc(-50% + 5px)); // 5px = padding on fret
+        background: repeating-linear-gradient(45deg, black, grey 2px);
+        transform-origin: left center;
+
+        &.animate {
+          animation: stringVibration 2s;
+        }
+      }
+    }
+    .stringVisualVibrating {
+    }
+  }
+
+  .fret {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // gap = inline css
+    padding: 5px 0;
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 1px;
+      transform: translateX(50%);
+      background-color: black;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    .fretDot {
+      position: absolute;
+      background-color: black;
+      border-radius: 50%;
+    }
+
+    .note {
+      z-index: 1;
+      cursor: pointer;
+      border-radius: 50%;
+      font-size: 11px;
+      padding: 0;
+      &.selected {
+        color: white;
+        background-color: blue;
+      }
+      &:hover {
+        color: white;
+        background-color: blue;
+      }
+    }
+
+    &[data-fret="0"] {
+      background-color: rgb(68, 68, 68);
+      &::before {
+        content: "";
+        position: absolute;
+        width: 1px;
+        background-color: black;
+        left: 0;
+        top: 0;
+        bottom: 0;
+      }
+
+      .note {
+        // border-radius: 30%;
+      }
+    }
+  }
+
+  #FretNumbers {
+    display: flex;
+
+    > p {
+      text-align: center;
+    }
+  }
+}

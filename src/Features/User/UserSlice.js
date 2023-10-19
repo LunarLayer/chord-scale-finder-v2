@@ -3,17 +3,45 @@ import { createSlice } from "@reduxjs/toolkit";
 const UserSlice = createSlice({
   name: "user",
   initialState: {
-    user: {},
-    loginSuccess: false,
+    userName: undefined,
+    instrument: undefined,
+    instrumentVariant: undefined,
+    theme: undefined,
+    coloredNotes: undefined,
+    tuning: undefined,
+    key: undefined,
+    // projects: [],
   },
   reducers: {
-    userLoggedIn(state, action) {
-      return { ...state, user: action.payload };
+    loginUser(state, action) {
+      const user = action.payload;
+      state.userName = user.userName;
+      state.instrument = user.instrument;
+      state.instrumentVariant = user.instrumentVariant;
+      state.theme = user.theme;
+      state.key = user.key;
+      state.tuning = user.tuning;
+      state.projects = user.projects;
+    },
+    setInstrumentDetails: {
+      prepare(instrument, instrumentVariant, theme, tuning) {
+        return {
+          payload: { instrument, instrumentVariant, theme, tuning },
+        };
+      },
+
+      reducer(state, action) {
+        const { instrument, instrumentVariant, theme, tuning } = action.payload;
+        state.instrument = instrument;
+        state.instrumentVariant = instrumentVariant;
+        state.theme = theme;
+        state.tuning = tuning;
+      },
     },
   },
 });
 
-export const { userLoggedIn } = UserSlice.actions;
+export const { loginUser, setInstrumentDetails } = UserSlice.actions;
 
 export default UserSlice.reducer;
 

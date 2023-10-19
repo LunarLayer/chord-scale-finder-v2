@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-import DefaultNote from "./DefaultNote";
+import DefaultNote from "./Note";
 import { memo } from "react";
 
 import { RenderFretVisuals } from "../../../Helpers/FretboardHelper";
@@ -14,7 +14,8 @@ const DefaultFret = memo(function Fret({
 }) {
   return (
     <div
-      className={`fret fret${fretNumber}`}
+      className={`fret`}
+      data-fret={fretNumber}
       style={{ minWidth: fretWidth, gap: notesGap }}
     >
       {RenderFretVisuals(fretNumber, notesWidth)}
