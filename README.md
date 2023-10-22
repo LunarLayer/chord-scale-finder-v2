@@ -1,6 +1,13 @@
 ### Todo:
-> Fretboard scroll on desktop and mobile with atomatic snap to edge of note/fret
-> Make instruments resizable (how cool would that be!)
+<Fretboard> 
+> scroll on desktop and mobile with atomatic snap to edge of note/fret
+Make instruments resizable (how cool would that be!)
+
+<Tonal.js>
+> Only import what's needed
+
+<Howler.js>
+
 
 > User login
 > <Bonus> Save user data in DB: PreferredInstrument, Projects, b/w or colored notes, etc.
@@ -75,3 +82,5 @@ when the notes are as big as they can be.
 // When you face the problem of subpixel rendering and the right wall of the last notes/fret disappear, 
 remember you compensated for this on the block-fretboard. 
 remove the compensation once a solution has been found.
+
+

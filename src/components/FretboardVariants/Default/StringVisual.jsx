@@ -1,11 +1,8 @@
-const StringVisual = ({ stringNumber, stringHeight }) => {
+import "./stringVisual.scss";
+
+const StringVisual = ({ stringNumber }) => {
   return (
-    <div
-      className={`stringVisual stringVisual${stringNumber}`}
-      style={{
-        height: stringHeight,
-      }}
-    >
+    <div className={`stringVisual stringVisual${stringNumber}`}>
       <span className="staticPart" />
       <span className="vibratingPart" />
     </div>

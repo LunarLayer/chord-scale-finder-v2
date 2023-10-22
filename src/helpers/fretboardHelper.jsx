@@ -2,52 +2,61 @@ import { addKeyframesForStringVibration } from "../animations/keyframes";
 
 export function animateStringPlayed(
   note,
-  noteIndex,
   fretboardWidth,
   fretWidths,
   fretCount,
-  stringCount,
-  fretNumber
+  allStringsAnimationState,
+  setAllStringsAnimationState
 ) {
-  console.log("stringCount: " + stringCount);
+  if (note.classList.contains("note")) {
+    let fret = note.parentNode;
+    let fretNumber = fret.getAttribute("data-fret");
+    let fretNotes = Array.from(fret.children).filter((note) =>
+      note.classList.contains("note")
+    );
+    let noteIndex = fretNotes.indexOf(note);
+    let vibrateStringFromPos = 0;
+    for (let i = 0; i < fretCount; i++) {
+      if (i <= fretNumber) vibrateStringFromPos += fretWidths[i];
+    }
 
-  // This const is re-made on every call to this function. It should consist.
-  // Perhaps add strings to the array dynimcally
-  const allStringsAnimationState = new Array(stringCount)
-    .fill(null)
-    .map(() => ({
-      animationTimeout: null,
-      animating: false,
-    }));
-  let vibrationLength = getVibrationLength(
-    fretCount,
-    fretNumber,
-    fretWidths,
-    fretboardWidth
-  );
+    let vibrationLength = fretboardWidth - vibrateStringFromPos;
 
-  addKeyframesForStringVibration(vibrationLength, fretboardWidth);
+    addKeyframesForStringVibration(vibrationLength, fretboardWidth);
 
-  let stringVisual = document.getElementsByClassName("stringVisual")[noteIndex];
-  let staticPart = stringVisual.querySelector(".staticPart");
-  let vibratingPart = stringVisual.querySelector(".vibratingPart");
+    let stringVisual =
+      document.getElementsByClassName("stringVisual")[noteIndex];
+    let staticPart = stringVisual.querySelector(".staticPart");
+    let vibratingPart = stringVisual.querySelector(".vibratingPart");
 
-  if (allStringsAnimationState[noteIndex].animationTimeout) {
-    clearTimeout(allStringsAnimationState[noteIndex].animationTimeout);
+    if (allStringsAnimationState[noteIndex].animationResetTimeout) {
+      clearTimeout(allStringsAnimationState[noteIndex].animationResetTimeout);
+    }
+    vibratingPart.classList.remove("animate");
+    void vibratingPart.offsetWidth; // Trigger reflow
+
+    staticPart.style.width = `calc(100% - ${vibrationLength}px)`;
+    vibratingPart.style.width = `${vibrationLength}px`;
+    vibratingPart.classList.add("animate");
+
+    const updatedAnimationState = [...allStringsAnimationState];
+    updatedAnimationState[noteIndex].animating = true;
+    setAllStringsAnimationState(updatedAnimationState);
+
+    allStringsAnimationState[noteIndex].animationResetTimeout = setTimeout(
+      () => {
+        staticPart.style.width = `100%`;
+        vibratingPart.style.width = 0;
+
+        // Update the animation state for this string
+        const resetAnimationState = [...allStringsAnimationState];
+        resetAnimationState[noteIndex].animating = false;
+
+        setAllStringsAnimationState(resetAnimationState);
+      },
+      2000
+    );
   }
-  vibratingPart.classList.remove("animate");
-  void vibratingPart.offsetWidth; // Trigger reflow
-
-  staticPart.style.width = `calc(100% - ${vibrationLength}px)`;
-  vibratingPart.style.width = `${vibrationLength}px`;
-  vibratingPart.classList.add("animate");
-  allStringsAnimationState[noteIndex].animating = true;
-
-  allStringsAnimationState[noteIndex].animationTimeout = setTimeout(() => {
-    staticPart.style.width = `100%`;
-    vibratingPart.style.width = 0;
-    allStringsAnimationState[noteIndex].animating = false;
-  }, 2000);
 
   function getVibrationLength(
     fretCount,

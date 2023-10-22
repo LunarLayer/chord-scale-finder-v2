@@ -40,7 +40,7 @@ export function addKeyframesForStringVibration(
 
   function addKeyFrameSkewY(percent, skewY) {
     keyframes += `${percent}% {
-      transform: skewY(${skewY}deg) translateY(calc(-50% + 5px));
+      transform: skewY(${skewY}deg);
     }`;
   }
 }

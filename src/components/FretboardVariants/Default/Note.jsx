@@ -1,39 +1,50 @@
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { memo } from "react";
+import { useState } from "react";
+import { toggleNoteSelected } from "../../../Features/MusicTheory/MusicTheorySlice";
 
 const DefaultNote = memo(function Note({
   note,
   hasAccidental,
   octave,
-  isSelected,
-  isHighlighted,
+  highlighted,
   notesWidth,
 }) {
+  const dispatch = useDispatch();
+  const [selected, setSelected] = useState(false);
   const accidentalType = useSelector(
     (store) => store.musicTheory.accidentalType
   );
 
   function handleNoteClicked() {
-    toggleNoteSelected;
+    let clickedNote = { note, hasAccidental, octave, selected, highlighted };
+    dispatch(toggleNoteSelected(clickedNote));
+    setSelected(!selected);
   }
 
   return (
     <button
-      style={{
-        minWidth: notesWidth,
-        minHeight: notesWidth,
-      }}
-      className={`note ${isSelected ? "selected" : ""} ${
-        isHighlighted ? "highlighted" : ""
+      style={{ height: notesWidth * 1.5 }}
+      className={`note ${selected ? "selected" : ""} ${
+        highlighted ? "highlighted" : ""
       }`}
       data-note={`${note}${hasAccidental ? accidentalType : ""}`}
       data-octave={octave}
-      onClick={() => handleNoteClicked}
+      onClick={() => handleNoteClicked()}
     >
-      {note}
-      {hasAccidental ? accidentalType : null}
+      <span
+        style={{
+          minWidth: notesWidth,
+          maxWidth: notesWidth,
+          minHeight: notesWidth,
+          maxHeight: notesWidth,
+        }}
+      >
+        {note}
+        {hasAccidental ? accidentalType : null}
+      </span>
     </button>
   );
 });

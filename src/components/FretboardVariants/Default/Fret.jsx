@@ -9,14 +9,13 @@ const DefaultFret = memo(function Fret({
   notes,
   fretNumber,
   notesWidth,
-  notesGap,
   fretWidth,
 }) {
   return (
     <div
       className={`fret`}
       data-fret={fretNumber}
-      style={{ minWidth: fretWidth, gap: notesGap }}
+      style={{ minWidth: fretWidth }}
     >
       {RenderFretVisuals(fretNumber, notesWidth)}
       {notes.map((note, index) => {

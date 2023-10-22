@@ -6,50 +6,59 @@ import { useEffect } from "react";
 import { animateStringPlayed } from "../../../Helpers/FretboardHelper";
 import StringVisual from "./StringVisual";
 import { toggleNoteSelected } from "../../../Features/MusicTheory/MusicTheorySlice";
-
+import { useState } from "react";
+import { getFretsWithNotes } from "../../../Helpers/InstrumentHelper";
+import { Instrument } from "../../../Helpers/AudioPlayer";
+import { Chord, interval, note, transpose } from "tonal";
+import { SoundEngine } from "../../../Helpers/AudioPlayer";
 function Fretboard() {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const fretboardTheme = useSelector((store) => store.fretboard.fretboardTheme);
   const fretboardWidth = useSelector((store) => store.fretboard.fretboardWidth);
-  const fretsWithNotes = useSelector((store) => store.fretboard.fretsWithNotes);
   const coloredNotes = useSelector((store) => store.fretboard.coloredNotes);
   const fretWidths = useSelector((store) => store.fretboard.fretWidths);
   const notesWidth = useSelector((store) => store.fretboard.notesWidth);
-  const notesGap = useSelector((store) => store.fretboard.notesGap);
+  const allNotes = useSelector((store) => store.musicTheory.allNotes);
   const tuning = useSelector((store) => store.fretboard.tuning);
   const fretCount = useSelector((store) => store.fretboard.fretCount);
-  // const selectedNotes = useSelector((store) => store.musicTheory.selectedNotes);
+  let fretsWithNotes = getFretsWithNotes(tuning, allNotes);
 
+  const [allStringsAnimationState, setAllStringsAnimationState] = useState(
+    new Array(tuning.length).fill(null).map(() => ({
+      animationResetTimeout: null,
+      animating: false,
+    }))
+  );
   useEffect(() => {
     let fretboard = document.getElementById("DefaultFretboard");
     function handleNoteClicked(e) {
-      if (e.target.classList.contains("note")) {
-        let note = e.target;
-        let fret = note.parentNode;
-        let fretNumber = fret.getAttribute("data-fret");
-        let fretNotes = Array.from(fret.children).filter((note) =>
-          note.classList.contains("note")
-        );
-        let noteIndex = fretNotes.indexOf(note);
-        let stringCount = fretNotes.length;
-        // let octave = note.getAttribute("data-octave");
-        // dispatchEvent(toggleNoteSelected(note))
-        animateStringPlayed(
-          note,
-          noteIndex,
-          fretboardWidth,
-          fretWidths,
-          fretCount,
-          stringCount,
-          fretNumber
-        );
-      }
+      let note = e.target;
+      if (note.parentNode.classList.contains("note")) note = note.parentNode;
+      let noteOctave = note.getAttribute("data-octave");
+      let noteName = note.innerText;
+      SoundEngine.playNote(noteName + noteOctave);
+      animateStringPlayed(
+        note,
+        fretboardWidth,
+        fretWidths,
+        fretCount,
+        allStringsAnimationState,
+        setAllStringsAnimationState
+      );
     }
-    fretboard.addEventListener("click", handleNoteClicked);
+    fretboard.addEventListener("mousedown", handleNoteClicked);
     return () => {
-      fretboard.removeEventListener("click", handleNoteClicked);
+      fretboard.removeEventListener("mousedown", handleNoteClicked);
     };
-  }, [fretboardWidth, fretWidths, fretCount]);
+  }, [
+    fretboardWidth,
+    fretWidths,
+    fretCount,
+    allStringsAnimationState,
+    setAllStringsAnimationState,
+    dispatch,
+    allNotes,
+  ]);
 
   return (
     <div
@@ -59,19 +68,18 @@ function Fretboard() {
         width: fretboardWidth,
       }}
     >
-      <div className="stringVisuals" style={{ gap: notesGap }}>
-        {/* These stringVisuals' thickness should be calculated based on octave of the rootNote */}
-        {tuning.map((tuning, index) => {
-          return (
-            <StringVisual
-              key={`stringVisual${index}`}
-              stringNumber={index + 1}
-              stringHeight={notesWidth}
-            />
-          );
-        })}
-      </div>
       <div className="frets">
+        <div className="stringVisuals">
+          {/* These stringVisuals' thickness should be calculated based on octave of the rootNote */}
+          {tuning.map((tuning, index) => {
+            return (
+              <StringVisual
+                key={`stringVisual${index}`}
+                stringNumber={index + 1}
+              />
+            );
+          })}
+        </div>
         {fretsWithNotes.map((notesArr, index) => {
           return (
             <Fret
@@ -79,7 +87,6 @@ function Fretboard() {
               notes={notesArr}
               fretNumber={index}
               notesWidth={notesWidth}
-              notesGap={notesGap}
               fretWidth={fretWidths?.[index]}
             />
           );

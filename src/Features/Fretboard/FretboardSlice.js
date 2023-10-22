@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getWindowWidth } from "../../Helpers/WindowHelper";
-import { getFretsWithNotes } from "../../Helpers/InstrumentHelper";
+// import { getFretsWithNotes } from "../../Helpers/InstrumentHelper";
 import { setWindowWidth } from "../UI/UISlice";
 import { loginUser, setInstrumentDetails } from "../User/UserSlice";
 
@@ -17,7 +17,6 @@ const initialState = {
   fretCount: undefined,
   notesWidth: undefined,
   fretboardWidth: undefined,
-  fretsWithNotes: undefined,
   fretWidths: undefined,
   fretWidthsGrowthFactor: undefined,
   preferredFretCount: undefined,
@@ -28,11 +27,6 @@ const FretboardSlice = createSlice({
   name: "fretboard",
   initialState,
   reducers: {
-    // initializeFretboard(state) {
-    //   let windowWidth = getWindowWidth();
-    //   state.fretsWithNotes = getFretsWithNotes(state.tuning);
-    //   updateFretboard(state, windowWidth);
-    // },
     setPreferredFretCount(state, action) {
       state.preferredFretCount = action.payload;
       updateFretboard(state);
@@ -51,7 +45,7 @@ const FretboardSlice = createSlice({
           state.fretboardVariant = user.instrumentVariant;
           state.theme = user.theme;
           state.tuning = user.tuning;
-          state.fretsWithNotes = getFretsWithNotes(user.tuning);
+          // state.fretsWithNotes = getFretsWithNotes(user.tuning);
           updateFretboard(state, windowWidth);
         }
       })
@@ -62,7 +56,7 @@ const FretboardSlice = createSlice({
           state.fretboardVariant = instrumentVariant;
           state.fretboardTheme = theme;
           state.tuning = tuning;
-          state.fretsWithNotes = getFretsWithNotes(tuning);
+          // state.fretsWithNotes = getFretsWithNotes(tuning);
           updateFretboard(state, windowWidth);
         }
       });
