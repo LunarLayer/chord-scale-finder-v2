@@ -8,9 +8,9 @@ import StringVisual from "./StringVisual";
 import { toggleNoteSelected } from "../../../Features/MusicTheory/MusicTheorySlice";
 import { useState } from "react";
 import { getFretsWithNotes } from "../../../Helpers/InstrumentHelper";
-import { Instrument } from "../../../Helpers/AudioPlayer";
 import { Chord, interval, note, transpose } from "tonal";
-import { SoundEngine } from "../../../Helpers/AudioPlayer";
+import { soundEngine } from "../../../Helpers/SoundEngine";
+
 function Fretboard() {
   const dispatch = useDispatch();
   const fretboardTheme = useSelector((store) => store.fretboard.fretboardTheme);
@@ -29,14 +29,31 @@ function Fretboard() {
       animating: false,
     }))
   );
+
+  // useEffect(() => {
+  //   initSoundEngineFor("defaultFretboard", tuning);
+  // }, [tuning]);
+
   useEffect(() => {
     let fretboard = document.getElementById("DefaultFretboard");
     function handleNoteClicked(e) {
       let note = e.target;
       if (note.parentNode.classList.contains("note")) note = note.parentNode;
+      console.log(note);
       let noteOctave = note.getAttribute("data-octave");
       let noteName = note.innerText;
-      SoundEngine.playNote(noteName + noteOctave);
+      // SoundEngine.playNote(noteName + noteOctave);
+      let fret = note.parentNode;
+      let fretNumber = fret.getAttribute("data-fret");
+      let fretNotes = Array.from(fret.children).filter((note) =>
+        note.classList.contains("note")
+      );
+      let strings = fretNotes.length;
+      let noteToPlay = noteName + noteOctave;
+      let stringNumber = fretNotes.indexOf(note);
+      // soundEngine.play(noteToPlay, stringNumber);
+      soundEngine.playNote(noteToPlay, strings - stringNumber);
+
       animateStringPlayed(
         note,
         fretboardWidth,

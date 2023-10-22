@@ -19,6 +19,7 @@ const DefaultNote = memo(function Note({
   );
 
   function handleNoteClicked() {
+    console.log("click");
     let clickedNote = { note, hasAccidental, octave, selected, highlighted };
     dispatch(toggleNoteSelected(clickedNote));
     setSelected(!selected);
@@ -32,7 +33,7 @@ const DefaultNote = memo(function Note({
       }`}
       data-note={`${note}${hasAccidental ? accidentalType : ""}`}
       data-octave={octave}
-      onClick={() => handleNoteClicked()}
+      onMouseDown={() => handleNoteClicked()}
     >
       <span
         style={{
