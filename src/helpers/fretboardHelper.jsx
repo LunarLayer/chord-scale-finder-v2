@@ -1,149 +1,56 @@
-import { addKeyframesForStringVibration } from "../animations/keyframes";
+import { addKeyframeStringVibration } from "../animations/keyframes";
 
 export function animateStringPlayed(
-  note,
+  noteIndex,
   fretboardWidth,
+  fretNumber,
   fretWidths,
   fretCount,
-  allStringsAnimationState,
-  setAllStringsAnimationState
+  stringAnimations,
+  setStringAnimations
 ) {
-  if (note.classList.contains("note")) {
-    let fret = note.parentNode;
-    let fretNumber = fret.getAttribute("data-fret");
-    let fretNotes = Array.from(fret.children).filter((note) =>
-      note.classList.contains("note")
-    );
-    let noteIndex = fretNotes.indexOf(note);
-    let vibrateStringFromPos = 0;
-    for (let i = 0; i < fretCount; i++) {
-      if (i <= fretNumber) vibrateStringFromPos += fretWidths[i];
-    }
-
-    let vibrationLength = fretboardWidth - vibrateStringFromPos;
-
-    addKeyframesForStringVibration(vibrationLength, fretboardWidth);
-
-    let stringVisual =
-      document.getElementsByClassName("stringVisual")[noteIndex];
-    let staticPart = stringVisual.querySelector(".staticPart");
-    let vibratingPart = stringVisual.querySelector(".vibratingPart");
-
-    if (allStringsAnimationState[noteIndex].animationResetTimeout) {
-      clearTimeout(allStringsAnimationState[noteIndex].animationResetTimeout);
-    }
-    vibratingPart.classList.remove("animate");
-    void vibratingPart.offsetWidth; // Trigger reflow
-
-    staticPart.style.width = `calc(100% - ${vibrationLength}px)`;
-    vibratingPart.style.width = `${vibrationLength}px`;
-    vibratingPart.classList.add("animate");
-
-    const updatedAnimationState = [...allStringsAnimationState];
-    updatedAnimationState[noteIndex].animating = true;
-    setAllStringsAnimationState(updatedAnimationState);
-
-    allStringsAnimationState[noteIndex].animationResetTimeout = setTimeout(
-      () => {
-        staticPart.style.width = `100%`;
-        vibratingPart.style.width = 0;
-
-        // Update the animation state for this string
-        const resetAnimationState = [...allStringsAnimationState];
-        resetAnimationState[noteIndex].animating = false;
-
-        setAllStringsAnimationState(resetAnimationState);
-      },
-      2000
-    );
-  }
-
-  function getVibrationLength(
+  let vibrationLength = getVibrationLength(
     fretCount,
     fretNumber,
     fretWidths,
     fretboardWidth
-  ) {
-    let vibrateStringFromPos = 0;
-    for (let i = 0; i < fretCount; i++) {
-      if (i <= fretNumber) vibrateStringFromPos += fretWidths[i];
-    }
-    return fretboardWidth - vibrateStringFromPos;
-  }
+  );
+  addKeyframeStringVibration(vibrationLength, fretboardWidth);
+
+  let stringVisual = document.getElementsByClassName("stringVisual")[noteIndex];
+  let staticPart = stringVisual.querySelector(".staticPart");
+  let vibratingPart = stringVisual.querySelector(".vibratingPart");
+
+  if (stringAnimations[noteIndex].timeout)
+    clearTimeout(stringAnimations[noteIndex].timeout);
+
+  vibratingPart.classList.remove("animate");
+  void vibratingPart.offsetWidth; // Trigger reflow (stop animation)
+
+  staticPart.style.width = `calc(100% - ${vibrationLength}px)`;
+  vibratingPart.style.width = `${vibrationLength}px`;
+  vibratingPart.classList.add("animate");
+
+  const updatedStringAnimations = [...stringAnimations];
+  updatedStringAnimations[noteIndex].animating = true;
+  setStringAnimations(updatedStringAnimations);
+
+  stringAnimations[noteIndex].timeout = setTimeout(() => {
+    staticPart.style.width = `100%`;
+    vibratingPart.style.width = 0;
+    const resetAnimationState = [...stringAnimations];
+    resetAnimationState[noteIndex].animating = false;
+    setStringAnimations(resetAnimationState);
+  }, 3000);
 }
 
-// export function animateStringsAndPlayAllNotes(selectedNotes) {
-//   console.log("animateStringsAndPlayAllNotes");
-// }
-
-export function RenderFretVisuals(fretNumber, notesWidth) {
-  switch (fretNumber) {
-    case 3:
-    case 5:
-    case 7:
-    case 9:
-    case 15:
-    case 17:
-    case 19:
-    case 21:
-      return (
-        <div
-          className="fretDot"
-          style={{
-            width: notesWidth - 10,
-            height: notesWidth - 10,
-            top: 45 + "%",
-          }}
-        />
-      );
-    case 12:
-    case 24:
-      return (
-        <>
-          <div
-            className="fretDot"
-            style={{
-              width: notesWidth - 10,
-              height: notesWidth - 10,
-              top: 25 + "%",
-              transform: `translateY(${-50}%)`,
-            }}
-          />
-          <div
-            className="fretDot"
-            style={{
-              width: notesWidth - 10,
-              height: notesWidth - 10,
-              bottom: 25 + "%",
-              transform: `translateY(${+50}%)`,
-            }}
-          />
-        </>
-      );
-    default:
-      return null;
+function getVibrationLength(fretCount, fretNumber, fretWidths, fretboardWidth) {
+  let vibrationStartPos = 0;
+  for (let i = 0; i < fretCount; i++) {
+    if (i <= fretNumber) vibrationStartPos += fretWidths[i];
   }
+  return fretboardWidth - vibrationStartPos;
 }
-
-// export function fillFretArraysWithNoteArrays(allNotes, strings) {
-//   let res = [];
-//   let stringsWithNotes = [];
-//   let fretNotes = [];
-
-//   for (let string of strings) {
-//     stringsWithNotes.push(getNotesForString(allNotes, string));
-//   }
-
-//   for (let i = 0; i < 25; i++) {
-//     for (let stringWithNotes of stringsWithNotes) {
-//       fretNotes.push(stringWithNotes[i]);
-//     }
-//     res.push(fretNotes);
-//     fretNotes = [];
-//   }
-
-//   return res;
-// }
 
 export function getNotesForFret(fretNumber, allNotes, strings) {
   let notesForFret = [];

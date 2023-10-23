@@ -4,8 +4,9 @@ const initialState = {
   key: { note: "c", accidental: "" },
   tonalityType: "major", // Minor
   accidentalType: "#", // "b"
-
-  selectedNotes: [],
+  selectedNotes: [], // {note, hasAccidental, octave, stringNumber, highlighted}
+  // markNotesSetting: "single", // similar / all
+  markNotesSetting: "single", // single / similar / all
   allNotes: [
     {
       note: "C",
@@ -784,7 +785,6 @@ const MusicTheorySlice = createSlice({
       },
     },
     toggleAccidentalType(state) {
-      console.log("toggleAccidentalType: " + state.accidentalType);
       if (state.accidentalType === "#") {
         state.accidentalType = "b";
       } else if (state.accidentalType === "b") {
@@ -802,39 +802,55 @@ const MusicTheorySlice = createSlice({
       }
     },
     toggleNoteSelected(state, action) {
-      let note = { ...action.payload };
-
-      if (note.selected === false) {
-        note.selected = true;
-        state.selectedNotes = [...state.selectedNotes, note];
-      } else {
-        let noteIndex = state.selectedNotes.findIndex(
-          (noteItem) =>
-            noteItem.note === note.note &&
-            noteItem.hasAccidental === note.hasAccidental &&
-            noteItem.octave === note.octave
+      const clickedNote = action.payload;
+      if (state.markNotesSetting === "single") {
+        const selectedIndex = state.selectedNotes.findIndex(
+          (note) =>
+            note.note === clickedNote.note &&
+            note.octave === clickedNote.octave &&
+            note.hasAccidental === clickedNote.hasAccidental &&
+            note.stringNumber === clickedNote.stringNumber
         );
-        note.selected = false;
-        let updatedSelectedNotes = [...state.selectedNotes];
-        updatedSelectedNotes[noteIndex] = note;
-        state.selectedNotes = [...updatedSelectedNotes];
+        if (selectedIndex !== -1) {
+          state.selectedNotes.splice(selectedIndex, 1);
+        } else {
+          state.selectedNotes.push(clickedNote);
+        }
       }
-      // update allNotes
-      let noteIndex = state.allNotes.findIndex(
-        (noteItem) =>
-          noteItem.note === note.note &&
-          noteItem.hasAccidental === note.hasAccidental &&
-          noteItem.octave === note.octave
-      );
-      let updatedAllNotes = [...state.allNotes];
-      updatedAllNotes[noteIndex] = note;
-      state.allNotes = [...updatedAllNotes];
+
+      if (state.markNotesSetting === "similar") {
+        const clickedIndex = state.allNotes.findIndex(
+          (note) =>
+            note.note === clickedNote.note &&
+            note.octave === clickedNote.octave &&
+            note.hasAccidental === clickedNote.hasAccidental
+        );
+        state.allNotes[clickedIndex].selected =
+          !state.allNotes[clickedIndex].selected;
+      }
+
+      if (state.markNotesSetting === "all") {
+        state.allNotes = state.allNotes.map((note) => {
+          if (
+            note.note === clickedNote.note &&
+            note.hasAccidental === clickedNote.hasAccidental
+          ) {
+            return {
+              ...note,
+              selected: !note.selected,
+            };
+          } else {
+            return note;
+          }
+        });
+      }
     },
   },
 });
 
 export const {
   toggleNoteSelected,
+  toggleNoteSelectedOnString,
   toggleAccidentalType,
   toggleTonalityType,
   setKey,

@@ -21,6 +21,7 @@ import Piano from "../components/Piano/Piano";
 import ChordAndScaleIdentifier from "../components/ChordAndScaleIdentifier/ChordAndScaleIdentifier";
 import ChordProgressionBuilder from "../components/ChordProgressionBuilder/ChordProgressionBuilder";
 import { loginUser } from "../Features/User/UserSlice";
+import { sound } from "../Helpers/SoundEngine";
 
 function AppLayout() {
   // console.log("appLayout");
@@ -87,7 +88,8 @@ function AppLayout() {
     if (view === "ChordAndScaleIdentifier") return <ChordAndScaleIdentifier />;
     if (view === "ChordProgressionBuilder") return <ChordProgressionBuilder />;
   }
-
+  // console.log(sound.state());
+  // if (fretboardIsReady) {
   if (fretboardIsReady) {
     return (
       <div className="appLayout">

@@ -9,31 +9,39 @@ const DefaultNote = memo(function Note({
   note,
   hasAccidental,
   octave,
+  stringNumber,
+  isSelected,
   highlighted,
   notesWidth,
 }) {
   const dispatch = useDispatch();
-  const [selected, setSelected] = useState(false);
+  // const [selected, setSelected] = useState(false);
   const accidentalType = useSelector(
     (store) => store.musicTheory.accidentalType
   );
 
   function handleNoteClicked() {
-    console.log("click");
-    let clickedNote = { note, hasAccidental, octave, selected, highlighted };
+    let clickedNote = {
+      note,
+      octave,
+      hasAccidental,
+      selected: !isSelected,
+      highlighted,
+      stringNumber,
+    };
     dispatch(toggleNoteSelected(clickedNote));
-    setSelected(!selected);
+    // setSelected(!selected);
   }
 
   return (
     <button
       style={{ height: notesWidth * 1.5 }}
-      className={`note ${selected ? "selected" : ""} ${
+      className={`note ${isSelected ? "selected" : ""} ${
         highlighted ? "highlighted" : ""
       }`}
       data-note={`${note}${hasAccidental ? accidentalType : ""}`}
       data-octave={octave}
-      onMouseDown={() => handleNoteClicked()}
+      onClick={() => handleNoteClicked()}
     >
       <span
         style={{

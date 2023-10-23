@@ -1,93 +1,94 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Fret from "./Fret";
 import "./Fretboard.scss";
 import FretNumbers from "./FretNumbers";
 import { useEffect } from "react";
 import { animateStringPlayed } from "../../../Helpers/FretboardHelper";
 import StringVisual from "./StringVisual";
-import { toggleNoteSelected } from "../../../Features/MusicTheory/MusicTheorySlice";
 import { useState } from "react";
 import { getFretsWithNotes } from "../../../Helpers/InstrumentHelper";
-import { Chord, interval, note, transpose } from "tonal";
 import { soundEngine } from "../../../Helpers/SoundEngine";
 
 function Fretboard() {
-  const dispatch = useDispatch();
   const fretboardTheme = useSelector((store) => store.fretboard.fretboardTheme);
   const fretboardWidth = useSelector((store) => store.fretboard.fretboardWidth);
   const coloredNotes = useSelector((store) => store.fretboard.coloredNotes);
   const fretWidths = useSelector((store) => store.fretboard.fretWidths);
   const notesWidth = useSelector((store) => store.fretboard.notesWidth);
-  const allNotes = useSelector((store) => store.musicTheory.allNotes);
-  const tuning = useSelector((store) => store.fretboard.tuning);
+  const stringCount = useSelector((store) => store.fretboard.stringCount);
   const fretCount = useSelector((store) => store.fretboard.fretCount);
-  let fretsWithNotes = getFretsWithNotes(tuning, allNotes);
-
-  const [allStringsAnimationState, setAllStringsAnimationState] = useState(
-    new Array(tuning.length).fill(null).map(() => ({
-      animationResetTimeout: null,
+  const selectedNotes = useSelector((store) => store.musicTheory.selectedNotes);
+  const allNotes = useSelector((store) => store.musicTheory.allNotes);
+  const markNotesSetting = useSelector(
+    (store) => store.musicTheory.markNotesSetting
+  );
+  const tuning = useSelector((store) => store.fretboard.tuning);
+  const [fretsWithNotes, setFretsWithNotes] = useState([]);
+  const [stringAnimations, setStringAnimations] = useState(
+    new Array(stringCount).fill(null).map(() => ({
       animating: false,
+      timeout: null,
     }))
   );
 
-  // useEffect(() => {
-  //   initSoundEngineFor("defaultFretboard", tuning);
-  // }, [tuning]);
+  useEffect(() => {
+    setFretsWithNotes(
+      getFretsWithNotes(tuning, selectedNotes, allNotes, markNotesSetting)
+    );
+  }, [tuning, selectedNotes, allNotes, markNotesSetting]);
 
   useEffect(() => {
     let fretboard = document.getElementById("DefaultFretboard");
     function handleNoteClicked(e) {
       let note = e.target;
       if (note.parentNode.classList.contains("note")) note = note.parentNode;
-      console.log(note);
-      let noteOctave = note.getAttribute("data-octave");
-      let noteName = note.innerText;
-      // SoundEngine.playNote(noteName + noteOctave);
-      let fret = note.parentNode;
-      let fretNumber = fret.getAttribute("data-fret");
-      let fretNotes = Array.from(fret.children).filter((note) =>
-        note.classList.contains("note")
-      );
-      let strings = fretNotes.length;
-      let noteToPlay = noteName + noteOctave;
-      let stringNumber = fretNotes.indexOf(note);
-      // soundEngine.play(noteToPlay, stringNumber);
-      soundEngine.playNote(noteToPlay, strings - stringNumber);
+      if (note.classList.contains("note")) {
+        let octave = note.getAttribute("data-octave");
+        let noteName = note.innerText;
+        let fret = note.parentNode;
+        let fretNumber = fret.getAttribute("data-fret");
+        let fretNotes = Array.from(fret.children).filter((note) =>
+          note.classList.contains("note")
+        );
+        let noteIndex = fretNotes.indexOf(note);
+        let noteToPlay = noteName + octave;
+        let stringNumber = stringCount - fretNotes.indexOf(note);
 
-      animateStringPlayed(
-        note,
-        fretboardWidth,
-        fretWidths,
-        fretCount,
-        allStringsAnimationState,
-        setAllStringsAnimationState
-      );
+        soundEngine.playNote(noteToPlay, stringNumber);
+
+        animateStringPlayed(
+          noteIndex,
+          fretboardWidth,
+          fretNumber,
+          fretWidths,
+          fretCount,
+          stringAnimations,
+          setStringAnimations
+        );
+      }
     }
-    fretboard.addEventListener("mousedown", handleNoteClicked);
+    fretboard.addEventListener("click", handleNoteClicked);
     return () => {
-      fretboard.removeEventListener("mousedown", handleNoteClicked);
+      fretboard.removeEventListener("click", handleNoteClicked);
     };
   }, [
     fretboardWidth,
     fretWidths,
     fretCount,
-    allStringsAnimationState,
-    setAllStringsAnimationState,
-    dispatch,
+    stringAnimations,
+    setStringAnimations,
     allNotes,
+    stringCount,
   ]);
 
   return (
     <div
       id="DefaultFretboard"
       className={`${fretboardTheme} ${coloredNotes ? "coloredNotes" : ""}`}
-      style={{
-        width: fretboardWidth,
-      }}
+      style={{ width: fretboardWidth }}
     >
       <div className="frets">
         <div className="stringVisuals">
-          {/* These stringVisuals' thickness should be calculated based on octave of the rootNote */}
           {tuning.map((tuning, index) => {
             return (
               <StringVisual

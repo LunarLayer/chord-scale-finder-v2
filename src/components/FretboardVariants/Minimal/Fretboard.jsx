@@ -2,15 +2,56 @@ import { useSelector } from "react-redux";
 import Fret from "./Fret";
 import "./Fretboard.scss";
 import FretNumbers from "./FretNumbers";
+import { getFretsWithNotes } from "../../../Helpers/InstrumentHelper";
+import { soundEngine } from "../../../Helpers/SoundEngine";
+import { useEffect } from "react";
+import { useState } from "react";
 
 function Fretboard() {
   const fretboardTheme = useSelector((store) => store.fretboard.fretboardTheme);
   const coloredNotes = useSelector((store) => store.fretboard.coloredNotes);
   const fretboardWidth = useSelector((store) => store.fretboard.fretboardWidth);
-  const fretsWithNotes = useSelector((store) => store.fretboard.fretsWithNotes);
   const notesGap = useSelector((store) => store.fretboard.notesGap);
   const notesWidth = useSelector((store) => store.fretboard.notesWidth);
-  console.log(fretboardWidth);
+  const stringCount = useSelector((store) => store.fretboard.stringCount);
+  const selectedNotes = useSelector((store) => store.musicTheory.selectedNotes);
+  const allNotes = useSelector((store) => store.musicTheory.allNotes);
+  const markNotesSetting = useSelector(
+    (store) => store.musicTheory.markNotesSetting
+  );
+  const tuning = useSelector((store) => store.fretboard.tuning);
+  const [fretsWithNotes, setFretsWithNotes] = useState([]);
+
+  useEffect(() => {
+    setFretsWithNotes(
+      getFretsWithNotes(tuning, selectedNotes, allNotes, markNotesSetting)
+    );
+  }, [tuning, selectedNotes, allNotes, markNotesSetting]);
+
+  useEffect(() => {
+    let fretboard = document.getElementById("MinimalFretboard");
+    function handleNoteClicked(e) {
+      let note = e.target;
+      if (note.parentNode.classList.contains("note")) note = note.parentNode;
+      if (note.classList.contains("note")) {
+        let octave = note.getAttribute("data-octave");
+        let noteName = note.innerText;
+        let fret = note.parentNode;
+        let fretNotes = Array.from(fret.children).filter((note) =>
+          note.classList.contains("note")
+        );
+        let noteToPlay = noteName + octave;
+        let stringNumber = stringCount - fretNotes.indexOf(note);
+
+        soundEngine.playNote(noteToPlay, stringNumber);
+      }
+    }
+    fretboard.addEventListener("click", handleNoteClicked);
+    return () => {
+      fretboard.removeEventListener("click", handleNoteClicked);
+    };
+  }, [allNotes, stringCount]);
+
   return (
     <div
       id="MinimalFretboard"

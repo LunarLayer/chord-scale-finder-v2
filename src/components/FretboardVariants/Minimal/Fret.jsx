@@ -10,7 +10,7 @@ const MinimalFret = memo(function Fret({
   notesWidth,
 }) {
   return (
-    <div className={`fret fret${fretNumber}`} style={{ gap: notesGap }}>
+    <div className={`fret`} style={{ gap: notesGap }}>
       {notes.map((note, index) => {
         return (
           <MinimalNote
@@ -18,8 +18,9 @@ const MinimalFret = memo(function Fret({
             note={note.note}
             hasAccidental={note.hasAccidental}
             octave={note.octave}
+            stringNumber={notes.length - index}
             isSelected={note.selected}
-            isHighlighted={note.highlighted}
+            highlighted={note.highlighted}
             notesWidth={notesWidth}
           />
         );
