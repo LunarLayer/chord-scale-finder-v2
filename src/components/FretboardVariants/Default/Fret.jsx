@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import DefaultNote from "./Note";
 import { memo } from "react";
 
-import { RenderFretVisuals } from "../../../Helpers/FretboardHelper";
+import FretDotsVisual from "./FretDotsVisual";
 
 const DefaultFret = memo(function Fret({
   notes,
@@ -17,7 +17,7 @@ const DefaultFret = memo(function Fret({
       data-fret={fretNumber}
       style={{ minWidth: fretWidth }}
     >
-      {RenderFretVisuals(fretNumber, notesWidth)}
+      <FretDotsVisual fretNumber={fretNumber} notesWidth={notesWidth} />
       {notes.map((note, index) => {
         return (
           <DefaultNote
@@ -25,8 +25,9 @@ const DefaultFret = memo(function Fret({
             note={note.note}
             hasAccidental={note.hasAccidental}
             octave={note.octave}
+            stringNumber={notes.length - index}
             isSelected={note.selected}
-            isHighlighted={note.highlighted}
+            highlighted={note.highlighted}
             notesWidth={notesWidth}
           />
         );
