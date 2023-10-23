@@ -1,9 +1,6 @@
-export function addKeyframesForStringVibration(
-  vibrationLength,
-  fretboardWidth
-) {
+export function addKeyframeStringVibration(vibrationLength, fretboardWidth) {
   const percentage = (vibrationLength / fretboardWidth) * 100;
-  let skewY = 0.5 + 1 * (1 - percentage / 100);
+  let skewY = 0.2 + 0.5 * (1 - percentage / 100);
   var keyframes = "";
   let percent = 100;
   let skewYPart = skewY / percent;
