@@ -21,6 +21,7 @@ const initialState = {
   fretWidthsGrowthFactor: undefined,
   preferredFretCount: undefined,
   tuning: undefined,
+  stringCount: undefined,
 };
 
 const FretboardSlice = createSlice({
@@ -45,7 +46,6 @@ const FretboardSlice = createSlice({
           state.fretboardVariant = user.instrumentVariant;
           state.theme = user.theme;
           state.tuning = user.tuning;
-          // state.fretsWithNotes = getFretsWithNotes(user.tuning);
           updateFretboard(state, windowWidth);
         }
       })
@@ -93,6 +93,7 @@ function updateDefaultFretboard(state, newWindowWidth) {
       state.fretWidthsGrowthFactor
     );
   }
+  state.stringCount = state.tuning.length;
   state.notesWidth = getNotesWidth_DefaultFretboard(state.fretWidths);
   state.fretCap = getFretCap_DefaultFretboard(
     windowWidth,
