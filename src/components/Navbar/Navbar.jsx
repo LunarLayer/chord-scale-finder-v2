@@ -2,19 +2,16 @@
 
 import "./Navbar.scss";
 
-function Navbar({ children }) {
+function Navbar() {
   return (
     <nav id="navbar">
-      <div id="domain-links">
-        <a href="https://lunarlayer.com/" target="_blank" rel="noreferrer">
-          lunarlayer.com
-        </a>
-        /
-        <a href="https://chord-scale-finder.lunarlayer.com/">
-          Chord-scale-finder
-        </a>
+      <button>Projects</button>
+      <div className="quickSettings">
+        <button>🎹</button>
+        <button>🎵</button>
+        <button>🔊</button>
       </div>
-      {children}
+      <button>Login</button>
     </nav>
   );
 }
