@@ -3,7 +3,6 @@ import Fret from "./Fret";
 import "./Fretboard.scss";
 import FretNumbers from "./FretNumbers";
 import { getFretsWithNotes } from "../../../Helpers/InstrumentHelper";
-import { soundEngine } from "../../../Helpers/SoundEngine";
 import { useEffect } from "react";
 import { useState } from "react";
 
@@ -43,7 +42,7 @@ function Fretboard() {
         let noteToPlay = noteName + octave;
         let stringNumber = stringCount - fretNotes.indexOf(note);
 
-        soundEngine.playNote(noteToPlay, stringNumber);
+        // soundEngine.playNote(noteToPlay, stringNumber);
       }
     }
     fretboard.addEventListener("click", handleNoteClicked);

@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { soundEngine } from "../../Helpers/SoundEngine";
 
 const UserSlice = createSlice({
   name: "user",
   initialState: {
     userName: undefined,
     instrument: undefined,
+    instrumentSound: undefined,
     instrumentVariant: undefined,
     theme: undefined,
     coloredNotes: undefined,
@@ -17,22 +19,39 @@ const UserSlice = createSlice({
       const user = action.payload;
       state.userName = user.userName;
       state.instrument = user.instrument;
+      state.instrumentSound = user.instrumentSound;
       state.instrumentVariant = user.instrumentVariant;
       state.theme = user.theme;
       state.key = user.key;
       state.tuning = user.tuning;
       state.projects = user.projects;
     },
+    setInstrumentSound(state, action) {
+      state.instrumentSound = action.payload;
+      soundEngine.setInstrumentSound(action.payload);
+    },
     setInstrumentDetails: {
-      prepare(instrument, instrumentVariant, theme, tuning) {
+      prepare(instrument, instrumentSound, instrumentVariant, theme, tuning) {
         return {
-          payload: { instrument, instrumentVariant, theme, tuning },
+          payload: {
+            instrument,
+            instrumentSound,
+            instrumentVariant,
+            theme,
+            tuning,
+          },
         };
       },
-
       reducer(state, action) {
-        const { instrument, instrumentVariant, theme, tuning } = action.payload;
+        const {
+          instrument,
+          instrumentSound,
+          instrumentVariant,
+          theme,
+          tuning,
+        } = action.payload;
         state.instrument = instrument;
+        state.instrumentSound = instrumentSound;
         state.instrumentVariant = instrumentVariant;
         state.theme = theme;
         state.tuning = tuning;

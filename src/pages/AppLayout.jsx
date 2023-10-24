@@ -11,7 +11,6 @@ import "./AppLayout.scss";
 
 import Loader from "../components/Loader/Loader";
 import Navbar from "../components/Navbar/Navbar";
-import ProjectSettings from "../components/ProjectSettings/ProjectSettings";
 import Toolbar from "../components/Toolbar/Toolbar";
 import InstrumentSettings from "../components/InstrumentSettings/InstrumentSettings";
 import KeyChange from "../components/KeyChange/KeyChange";
@@ -21,11 +20,12 @@ import Piano from "../components/Piano/Piano";
 import ChordAndScaleIdentifier from "../components/ChordAndScaleIdentifier/ChordAndScaleIdentifier";
 import ChordProgressionBuilder from "../components/ChordProgressionBuilder/ChordProgressionBuilder";
 import { loginUser } from "../Features/User/UserSlice";
-import { sound } from "../Helpers/SoundEngine";
+import { soundEngine } from "../Helpers/SoundEngine";
+import { useState } from "react";
 
 function AppLayout() {
-  // console.log("appLayout");
   const dispatch = useDispatch();
+  const [soundIsReady, setSoundIsReady] = useState(false);
   const currentViewSection1 = useSelector(
     (store) => store.ui.currentViewSection1
   );
@@ -38,8 +38,20 @@ function AppLayout() {
   const fretboardVariant = useSelector(
     (store) => store.fretboard.fretboardVariant
   );
-
   const loginSuccess = useSelector((store) => store.user.loginSuccess);
+
+  useEffect(() => {
+    const checkSoundIsReady = setInterval(() => {
+      console.log("checking");
+      if (soundEngine.state() === "loaded") {
+        setSoundIsReady(true);
+        clearInterval(checkSoundIsReady);
+      }
+    }, 10);
+    return () => {
+      clearInterval(checkSoundIsReady);
+    };
+  }, []);
 
   useEffect(() => {
     if (loginSuccess) {
@@ -50,6 +62,7 @@ function AppLayout() {
         loginUser({
           userName: "guest",
           instrument: "fretboard",
+          instrumentSound: "jazzbass",
           instrumentVariant: "default",
           theme: "black",
           key: "C",
@@ -88,21 +101,14 @@ function AppLayout() {
     if (view === "ChordAndScaleIdentifier") return <ChordAndScaleIdentifier />;
     if (view === "ChordProgressionBuilder") return <ChordProgressionBuilder />;
   }
-  // console.log(sound.state());
-  // if (fretboardIsReady) {
-  if (fretboardIsReady) {
+
+  if (fretboardIsReady && soundIsReady) {
     return (
       <div className="appLayout">
-        <Navbar>
-          <ProjectSettings />
-        </Navbar>
+        <Navbar />
         <Toolbar />
         <Section1 view={currentViewSection1} />
         <Section2 view={currentViewSection2} />
-
-        {/* <StandardFretboard /> */}
-        {/* <Fretboard /> */}
-        {/* <Fretboard2 /> */}
       </div>
     );
   } else {

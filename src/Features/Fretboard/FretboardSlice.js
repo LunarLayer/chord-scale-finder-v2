@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getWindowWidth } from "../../Helpers/WindowHelper";
-// import { getFretsWithNotes } from "../../Helpers/InstrumentHelper";
 import { setWindowWidth } from "../UI/UISlice";
 import { loginUser, setInstrumentDetails } from "../User/UserSlice";
 
 const initialState = {
   fretboardIsReady: false,
+  fretboardSoundIsReady: false,
   fretboardVariant: undefined, // minimal / default
   fretboardTheme: undefined, // black / blue / red etc.
   coloredNotes: false,
@@ -28,6 +28,9 @@ const FretboardSlice = createSlice({
   name: "fretboard",
   initialState,
   reducers: {
+    setFretboardSoundIsReady(state, action) {
+      state.fretboardSoundIsReady = action.payload;
+    },
     setPreferredFretCount(state, action) {
       state.preferredFretCount = action.payload;
       updateFretboard(state);
@@ -406,7 +409,10 @@ function getFretWidths(
   // return fretWidths;
 }
 
-export const { initializeFretboard, setPreferredFretCount } =
-  FretboardSlice.actions;
+export const {
+  initializeFretboard,
+  setFretboardSoundIsReady,
+  setPreferredFretCount,
+} = FretboardSlice.actions;
 
 export default FretboardSlice.reducer;
