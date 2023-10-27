@@ -19,9 +19,7 @@ function Fretboard() {
   const fretCount = useSelector((store) => store.fretboard.fretCount);
   const selectedNotes = useSelector((store) => store.musicTheory.selectedNotes);
   const allNotes = useSelector((store) => store.musicTheory.allNotes);
-  const markNotesSetting = useSelector(
-    (store) => store.musicTheory.markNotesSetting
-  );
+  const markNotes = useSelector((store) => store.musicTheory.markNotes);
   const tuning = useSelector((store) => store.fretboard.tuning);
   const [fretsWithNotes, setFretsWithNotes] = useState([]);
   const [stringAnimations, setStringAnimations] = useState(
@@ -33,9 +31,9 @@ function Fretboard() {
 
   useEffect(() => {
     setFretsWithNotes(
-      getFretsWithNotes(tuning, selectedNotes, allNotes, markNotesSetting)
+      getFretsWithNotes(tuning, selectedNotes, allNotes, markNotes)
     );
-  }, [tuning, selectedNotes, allNotes, markNotesSetting]);
+  }, [tuning, selectedNotes, allNotes, markNotes]);
 
   useEffect(() => {
     let fretboard = document.getElementById("DefaultFretboard");

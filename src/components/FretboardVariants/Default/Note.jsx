@@ -16,9 +16,7 @@ const DefaultNote = memo(function Note({
 }) {
   const dispatch = useDispatch();
   // const [selected, setSelected] = useState(false);
-  const accidentalType = useSelector(
-    (store) => store.musicTheory.accidentalType
-  );
+  const accidental = useSelector((store) => store.musicTheory.accidental);
 
   function handleNoteClicked() {
     let clickedNote = {
@@ -39,7 +37,7 @@ const DefaultNote = memo(function Note({
       className={`note ${isSelected ? "selected" : ""} ${
         highlighted ? "highlighted" : ""
       }`}
-      data-note={`${note}${hasAccidental ? accidentalType : ""}`}
+      data-note={`${note}${hasAccidental ? accidental : ""}`}
       data-octave={octave}
       onClick={() => handleNoteClicked()}
     >
@@ -52,7 +50,7 @@ const DefaultNote = memo(function Note({
         }}
       >
         {note}
-        {hasAccidental ? accidentalType : null}
+        {hasAccidental ? accidental : null}
       </span>
     </button>
   );

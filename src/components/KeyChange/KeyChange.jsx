@@ -4,8 +4,8 @@ import "./KeyChange.scss";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 import {
   setKey,
-  toggleAccidentalType,
-  toggleTonalityType,
+  toggleAccidental,
+  toggleTonality,
 } from "../../Features/MusicTheory/MusicTheorySlice";
 import getNoteSizeForKeyChange from "../../Helpers/ToolbarHelper";
 import Keys from "./Keys";
@@ -14,47 +14,45 @@ import SharpsFlatsDisplay from "./SharpsFlatsDisplay";
 function KeyChange() {
   const dispatch = useDispatch();
   const key = useSelector((store) => store.musicTheory.key);
-  const tonalityType = useSelector((store) => store.musicTheory.tonalityType);
-  const accidentalType = useSelector(
-    (store) => store.musicTheory.accidentalType
-  );
-  const windowWidth = useSelector((store) => store.ui.windowWidth);
-  let selected = key.note + key.accidental + tonalityType;
+  const tonality = useSelector((store) => store.musicTheory.tonality);
+  const accidental = useSelector((store) => store.musicTheory.accidental);
+  let selected = key.note + key.accidental + tonality;
+  console.log(selected);
 
-  function handleToggleAccidentalType() {
-    dispatch(toggleAccidentalType());
+  function handleToggleAccidental() {
+    dispatch(toggleAccidental());
   }
 
-  function handleToggleTonalityType() {
-    dispatch(toggleTonalityType());
+  function handleToggleTonality() {
+    dispatch(toggleTonality());
   }
 
   function handleNoteClicked(note, accidental) {
-    console.log("handleNoteClicked: " + note + " " + accidental);
-    dispatch(setKey(note, accidental));
+    dispatch(setKey({ note, accidental }));
   }
 
   let noteSize = getNoteSizeForKeyChange();
 
-  console.log("key: ");
-  console.log(key);
-
   return (
     <div id="KeyChange">
       <div className="flex-wrapper">
-        <Keys noteSize={noteSize} handleNoteClicked={handleNoteClicked} />
+        <Keys
+          noteSize={noteSize}
+          handleNoteClicked={handleNoteClicked}
+          selected={key}
+        />
         <div className="settings">
           <ToggleSwitch
             option1="major"
             option2="minor"
-            currentlySelected={tonalityType}
-            onToggle={() => handleToggleTonalityType()}
+            currentlySelected={tonality}
+            onToggle={() => handleToggleTonality()}
           />
           <ToggleSwitch
             option1="b"
             option2="#"
-            currentlySelected={accidentalType}
-            onToggle={() => handleToggleAccidentalType()}
+            currentlySelected={accidental}
+            onToggle={() => handleToggleAccidental()}
           />
         </div>
       </div>

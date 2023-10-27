@@ -14,7 +14,7 @@ function InstrumentTabContent({
             handleInstrumentSelected({
               instrument: "fretboard",
               instrumentVariant: "default",
-              theme: "black",
+              instrumentTheme: "black",
               tuning: [
                 { note: "G", octave: 2, hasAccidental: false },
                 { note: "D", octave: 2, hasAccidental: false },
@@ -34,7 +34,7 @@ function InstrumentTabContent({
             handleInstrumentSelected({
               instrument: "fretboard",
               instrumentVariant: "default",
-              theme: "black",
+              instrumentTheme: "black",
               tuning: [
                 { note: "C", octave: 3, hasAccidental: false },
                 { note: "G", octave: 2, hasAccidental: false },
@@ -56,7 +56,7 @@ function InstrumentTabContent({
             handleInstrumentSelected({
               instrument: "fretboard",
               instrumentVariant: "minimal",
-              theme: "black",
+              instrumentTheme: "black",
               tuning: [
                 { note: "G", octave: 2, hasAccidental: false },
                 { note: "D", octave: 2, hasAccidental: false },
@@ -76,7 +76,7 @@ function InstrumentTabContent({
             handleInstrumentSelected({
               instrument: "fretboard",
               instrumentVariant: "minimal",
-              theme: "black",
+              instrumentTheme: "black",
               tuning: [
                 { note: "C", octave: 3, hasAccidental: false },
                 { note: "G", octave: 2, hasAccidental: false },

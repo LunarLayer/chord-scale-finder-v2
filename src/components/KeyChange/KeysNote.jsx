@@ -7,11 +7,10 @@ const KeysNote = memo(function KeysNote({
   note,
   hasAccidental,
   size,
+  isSelected,
   handleClick,
 }) {
-  const accidentalType = useSelector(
-    (store) => store.musicTheory.accidentalType
-  );
+  const accidental = useSelector((store) => store.musicTheory.accidental);
 
   return (
     <button
@@ -21,12 +20,12 @@ const KeysNote = memo(function KeysNote({
         minHeight: size,
         maxHeight: size,
       }}
-      className="keysNote"
-      data-note={`${note}${hasAccidental ? accidentalType : ""}`}
+      className={`keysNote ${isSelected ? "active" : ""}`}
+      data-note={`${note}${hasAccidental ? accidental : ""}`}
       onClick={handleClick}
     >
       {note}
-      {hasAccidental ? accidentalType : null}
+      {hasAccidental ? accidental : null}
     </button>
   );
 });

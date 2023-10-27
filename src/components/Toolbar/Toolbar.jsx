@@ -5,7 +5,10 @@ import "./Toolbar.scss";
 import Button from "../Button/Button";
 import FretCountSlider from "../fretCountSlider/fretCountSlider";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentViewSection1 } from "../../Features/UI/UISlice";
+import {
+  setCurrentViewSection1,
+  toggleQuickMenu,
+} from "../../Features/UI/UISlice";
 
 function Toolbar() {
   const dispatch = useDispatch();
@@ -13,8 +16,10 @@ function Toolbar() {
     (store) => store.ui.currentViewSection1
   );
   const key = useSelector((store) => store.musicTheory.key);
-  const tonalityType = useSelector((store) => store.musicTheory.tonalityType);
-
+  const tonality = useSelector((store) => store.musicTheory.tonality);
+  const instrumentQuickMenu = useSelector(
+    (store) => store.ui.quickMenus.instrumentQuickMenu
+  );
   function handleChangeView(view) {
     if (currentViewSection1 === view) {
       dispatch(setCurrentViewSection1("fretboard"));
@@ -23,37 +28,64 @@ function Toolbar() {
     }
   }
 
+  function handleToggleQuickMenu(name) {
+    dispatch(toggleQuickMenu(name));
+  }
+
   function handleClearNotes() {}
 
   return (
     <div id="toolbar">
-      <div>
-        <h4>Key</h4>
-        <Button
-          className={`${currentViewSection1 === "keyChange" ? "active" : ""}`}
-          onClick={() => handleChangeView("keyChange")}
-        >
-          {key.note + key.accidental} {tonalityType}
-        </Button>
+      <div className="Tonality wrapper">
+        <h4>Tonality</h4>
+        <div className="content">
+          <Button
+            className={`${currentViewSection1 === "keyChange" ? "active" : ""}`}
+            onClick={() => handleChangeView("keyChange")}
+          >
+            {key.note + key.accidental} {tonality}
+          </Button>
+        </div>
       </div>
 
-      <div>
+      <div className="instrument wrapper">
         <h4>Instrument</h4>
-        <Button
-          className={`${
-            currentViewSection1 === "fretboardSettings" ? "active" : ""
-          }`}
-          onClick={() => handleChangeView("instrumentSettings")}
-        >
-          Settings
-        </Button>
+        <div className="content">
+          <Button
+            className={`${
+              currentViewSection1 === "instrumentSettings" ? "active" : ""
+            }`}
+            onClick={() => handleChangeView("instrumentSettings")}
+          >
+            🛠️
+          </Button>
+        </div>
       </div>
 
-      <div>
-        <h4>Notes</h4>
-        <Button className="notes-clear" onClick={handleClearNotes}>
-          Clear
-        </Button>
+      <div className="menus wrapper">
+        <h4>Quick menus</h4>
+        <div className="content">
+          <Button
+            className={`${
+              instrumentQuickMenu.showing === true ? "active" : ""
+            }`}
+            onClick={() => handleToggleQuickMenu("instrumentQuickMenu")}
+          >
+            🎹
+          </Button>
+          {/* <Button
+            className={`${soundPlayerQuickSettings.showing ? "active" : ""}`}
+            onClick={() => handleToggleQuickSetting("soundPlayerQuickSettings")}
+          >
+            🎵
+          </Button>
+          <Button
+            className={`${theoryQuickSettings.showing ? "active" : ""}`}
+            onClick={() => handleToggleQuickSetting("theoryQuickSettings")}
+          >
+            🔊
+          </Button> */}
+        </div>
       </div>
 
       <FretCountSlider />

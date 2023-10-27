@@ -5,13 +5,16 @@ import "./Navbar.scss";
 function Navbar() {
   return (
     <nav id="navbar">
-      <button>Projects</button>
-      <div className="quickSettings">
-        <button>🎹</button>
-        <button>🎵</button>
-        <button>🔊</button>
+      <div className="flex-wrapper">
+        <button>Projects</button>
+        {/* <div className="quickSettings">
+           <button>🛠️</button>
+          <button>🎹</button>
+          <button>🎵</button>
+          <button>🔊</button> 
+        </div>*/}
+        <button>Login</button>
       </div>
-      <button>Login</button>
     </nav>
   );
 }

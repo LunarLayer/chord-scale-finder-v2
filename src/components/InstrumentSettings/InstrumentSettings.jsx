@@ -19,12 +19,10 @@ function InstrumentSettings() {
   }
 
   function handleInstrumentSelected(instrumentDetails) {
-    const { instrument, instrumentVariant, theme, tuning } = instrumentDetails;
+    // const { instrument, instrumentVariant, theme, tuning } = instrumentDetails;
     // setSelectedInstrument(selectedInstrument);
 
-    dispatch(
-      setInstrumentDetails(instrument, instrumentVariant, theme, tuning)
-    );
+    dispatch(setInstrumentDetails(instrumentDetails));
     dispatch(setCurrentViewSection1("fretboard"));
     // setCurrentViewSection1("fretboard");
   }

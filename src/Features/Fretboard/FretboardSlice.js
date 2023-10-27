@@ -45,10 +45,10 @@ const FretboardSlice = createSlice({
       .addCase(loginUser, (state, action) => {
         let windowWidth = getWindowWidth();
         const user = action.payload;
-        if (user.instrument === "fretboard") {
-          state.fretboardVariant = user.instrumentVariant;
-          state.theme = user.theme;
-          state.tuning = user.tuning;
+        if (user.settings.instrument === "fretboard") {
+          state.fretboardVariant = user.settings.instrumentVariant;
+          state.fretboardTheme = user.settings.instrumentTheme;
+          state.tuning = user.settings.tuning;
           updateFretboard(state, windowWidth);
         }
       })

@@ -4,37 +4,36 @@ import "./Keys.scss";
 
 import { memo } from "react";
 import KeysNote from "./KeysNote";
+import { useState } from "react";
 
-const Keys = memo(function Keys({ noteSize, handleNoteClicked }) {
-  const accidentalType = useSelector(
-    (store) => store.musicTheory.accidentalType
-  );
-  const tonalityType = useSelector((store) => store.musicTheory.tonalityType);
+const Keys = memo(function Keys({
+  noteSize,
+  handleNoteClicked,
+  currentSelected,
+}) {
+  const accidental = useSelector((store) => store.musicTheory.accidental);
+  const [selected, setSelected] = useState(currentSelected);
 
   return (
     <div id="Keys">
       <div className="notesWrapper">
         <div className="sharpsOrFlats">
           <KeysNote
-            note={accidentalType === "#" ? "C" : "D"}
+            note={accidental === "#" ? "C" : "D"}
             hasAccidental={true}
             size={noteSize}
+            isSelected={selected}
             handleClick={() =>
-              handleNoteClicked(
-                accidentalType === "#" ? "c" : "d",
-                accidentalType
-              )
+              handleNoteClicked(accidental === "#" ? "c" : "d", accidental)
             }
           />
           <KeysNote
-            note={accidentalType === "#" ? "D" : "E"}
+            note={accidental === "#" ? "D" : "E"}
             hasAccidental={true}
             size={noteSize}
+            isSelected={selected}
             handleClick={() =>
-              handleNoteClicked(
-                accidentalType === "#" ? "d" : "e",
-                accidentalType
-              )
+              handleNoteClicked(accidental === "#" ? "d" : "e", accidental)
             }
           />
         </div>
@@ -43,6 +42,7 @@ const Keys = memo(function Keys({ noteSize, handleNoteClicked }) {
             note="C"
             hasAccidental={false}
             size={noteSize}
+            isSelected={selected}
             handleClick={() => handleNoteClicked("c", "")}
           />
           <KeysNote
@@ -62,36 +62,27 @@ const Keys = memo(function Keys({ noteSize, handleNoteClicked }) {
       <div className="notesWrapper">
         <div className="sharpsOrFlats">
           <KeysNote
-            note={accidentalType === "#" ? "F" : "G"}
+            note={accidental === "#" ? "F" : "G"}
             hasAccidental={true}
             size={noteSize}
             handleClick={() =>
-              handleNoteClicked(
-                accidentalType === "#" ? "f" : "g",
-                accidentalType
-              )
+              handleNoteClicked(accidental === "#" ? "f" : "g", accidental)
             }
           />
           <KeysNote
-            note={accidentalType === "#" ? "G" : "A"}
+            note={accidental === "#" ? "G" : "A"}
             hasAccidental={true}
             size={noteSize}
             handleClick={() =>
-              handleNoteClicked(
-                accidentalType === "#" ? "g" : "a",
-                accidentalType
-              )
+              handleNoteClicked(accidental === "#" ? "g" : "a", accidental)
             }
           />
           <KeysNote
-            note={accidentalType === "#" ? "A" : "B"}
+            note={accidental === "#" ? "A" : "B"}
             hasAccidental={true}
             size={noteSize}
             handleClick={() =>
-              handleNoteClicked(
-                accidentalType === "#" ? "a" : "b",
-                accidentalType
-              )
+              handleNoteClicked(accidental === "#" ? "a" : "b", accidental)
             }
           />
         </div>

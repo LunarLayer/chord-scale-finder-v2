@@ -22,6 +22,8 @@ import ChordProgressionBuilder from "../components/ChordProgressionBuilder/Chord
 import { loginUser } from "../Features/User/UserSlice";
 import { soundEngine } from "../Helpers/SoundEngine";
 import { useState } from "react";
+import FretboardQuickSettings from "../components/QuickSettings/Instrument/FretboardQuickMenu";
+import PianoQuickSettings from "../components/QuickSettings/Instrument/PianoQuickMenu";
 
 function AppLayout() {
   const dispatch = useDispatch();
@@ -42,7 +44,6 @@ function AppLayout() {
 
   useEffect(() => {
     const checkSoundIsReady = setInterval(() => {
-      console.log("checking");
       if (soundEngine.state() === "loaded") {
         setSoundIsReady(true);
         clearInterval(checkSoundIsReady);
@@ -60,19 +61,31 @@ function AppLayout() {
     } else {
       dispatch(
         loginUser({
-          userName: "guest",
-          instrument: "fretboard",
-          instrumentSound: "jazzbass",
-          instrumentVariant: "default",
-          theme: "black",
-          key: "C",
-          tuning: [
-            { note: "G", octave: 2, hasAccidental: false },
-            { note: "D", octave: 2, hasAccidental: false },
-            { note: "A", octave: 1, hasAccidental: false },
-            { note: "E", octave: 1, hasAccidental: false },
-          ],
-          projects: [],
+          username: "Guest",
+          settings: {
+            key: { note: "C", accidental: "" },
+            tonality: "major",
+            accidental: "#",
+            instrument: "fretboard",
+            instrumentSound: "jazzbass",
+            instrumentVariant: "default",
+            instrumentTheme: "black",
+            coloredNotes: false,
+            tuning: [
+              { note: "G", octave: 2, hasAccidental: false },
+              { note: "D", octave: 2, hasAccidental: false },
+              { note: "A", octave: 1, hasAccidental: false },
+              { note: "E", octave: 1, hasAccidental: false },
+            ],
+            markNotes: "Single",
+            labelNotes: "Note",
+            fretPosition: "All",
+            highlightedNotes: "None",
+            quickMenus: {
+              instrument: { showing: true, activeTab: "markNotes" },
+              soundPlayer: { showing: true, activeTab: "markNotes" },
+            },
+          },
         })
       );
     }
@@ -107,7 +120,14 @@ function AppLayout() {
       <div className="appLayout">
         <Navbar />
         <Toolbar />
+        {currentViewSection1 === "fretboard" ? (
+          <FretboardQuickSettings />
+        ) : currentViewSection1 === "piano" ? (
+          <PianoQuickSettings />
+        ) : null}
         <Section1 view={currentViewSection1} />
+        {/* <AudioQuickSettings />
+        <TheoryQuickSettings /> */}
         <Section2 view={currentViewSection2} />
       </div>
     );

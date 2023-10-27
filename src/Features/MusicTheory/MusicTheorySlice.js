@@ -1,12 +1,17 @@
 import { createSlice, current } from "@reduxjs/toolkit";
+import { loginUser } from "../User/UserSlice";
 
 const initialState = {
-  key: { note: "c", accidental: "" },
-  tonalityType: "major", // Minor
-  accidentalType: "#", // "b"
-  selectedNotes: [], // {note, hasAccidental, octave, stringNumber, highlighted}
-  // markNotesSetting: "single", // similar / all
-  markNotesSetting: "single", // single / similar / all
+  key: { note: "C", accidental: "" },
+  tonality: "major", // Minor
+  accidental: "#", // "b"
+  tuning: undefined,
+  selectedNotes: [], // {note, hasAccidental, octave, selected, highlighted}
+  // instrument quick settings:
+  markNotes: "single", // identical / all
+  labelNotes: "note", // Degrees / Intervals / Octaves / DoReMi
+  fretPosition: "all", // 1 / 2 / 3 / 4 / 5
+  highlightedNotes: "chord", // root / all / triads / Arpeggio / scale degree (1 3 5 7)
   allNotes: [
     {
       note: "C",
@@ -771,39 +776,44 @@ const MusicTheorySlice = createSlice({
   name: "musicTheory",
   initialState,
   reducers: {
-    setKey: {
-      prepare(note, accidental) {
-        return {
-          payload: { note, accidental },
-        };
-      },
-
-      reducer(state, action) {
-        const { note, accidental } = action.payload;
-        state.key.note = note;
-        state.key.accidental = accidental;
-      },
+    setKey(state, action) {
+      const { note, accidental } = action.payload;
+      state.key.note = note;
+      state.key.accidental = accidental;
     },
-    toggleAccidentalType(state) {
-      if (state.accidentalType === "#") {
-        state.accidentalType = "b";
-      } else if (state.accidentalType === "b") {
-        state.accidentalType = "#";
+    setMarkNotes(state, action) {
+      state.markNotes = action.payload;
+      console.log(action.payload);
+    },
+    setLabelNotes(state, action) {
+      state.labelNotes = action.payload;
+    },
+    setFretPosition(state, action) {
+      state.fretPosition = action.payload;
+    },
+    setHighlightedNotes(state, action) {
+      state.highlightedNotes = action.payload;
+    },
+    toggleAccidental(state) {
+      if (state.accidental === "#") {
+        state.accidental = "b";
+      } else if (state.accidental === "b") {
+        state.accidental = "#";
       }
       if (state.key.accidental) {
-        state.key.accidental = state.accidentalType;
+        state.key.accidental = state.accidental;
       }
     },
-    toggleTonalityType(state) {
-      if (state.tonalityType === "major") {
-        state.tonalityType = "minor";
-      } else if (state.tonalityType === "minor") {
-        state.tonalityType = "major";
+    toggleTonality(state) {
+      if (state.tonality === "major") {
+        state.tonality = "minor";
+      } else if (state.tonality === "minor") {
+        state.tonality = "major";
       }
     },
     toggleNoteSelected(state, action) {
       const clickedNote = action.payload;
-      if (state.markNotesSetting === "single") {
+      if (state.markNotes === "single") {
         const selectedIndex = state.selectedNotes.findIndex(
           (note) =>
             note.note === clickedNote.note &&
@@ -818,7 +828,7 @@ const MusicTheorySlice = createSlice({
         }
       }
 
-      if (state.markNotesSetting === "similar") {
+      if (state.markNotes === "identical") {
         const clickedIndex = state.allNotes.findIndex(
           (note) =>
             note.note === clickedNote.note &&
@@ -829,7 +839,7 @@ const MusicTheorySlice = createSlice({
           !state.allNotes[clickedIndex].selected;
       }
 
-      if (state.markNotesSetting === "all") {
+      if (state.markNotes === "all") {
         state.allNotes = state.allNotes.map((note) => {
           if (
             note.note === clickedNote.note &&
@@ -846,13 +856,28 @@ const MusicTheorySlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(loginUser, (state, action) => {
+      const user = action.payload;
+      state.key = user.settings.key;
+      state.tuning = user.settings.tuning;
+      state.markNotes = user.settings.markNotes;
+      state.labelNotes = user.settings.labelNotes;
+      state.fretPosition = user.settings.fretPosition;
+      state.highlightedNotes = user.settings.highlightedNotes;
+    });
+  },
 });
 
 export const {
+  setMarkNotes,
+  setLabelNotes,
+  setFretPosition,
+  setHighlightedNotes,
   toggleNoteSelected,
   toggleNoteSelectedOnString,
-  toggleAccidentalType,
-  toggleTonalityType,
+  toggleAccidental,
+  toggleTonality,
   setKey,
 } = MusicTheorySlice.actions;
 
