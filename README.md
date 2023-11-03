@@ -1,4 +1,26 @@
+> Actions involving selectedNotes
+<SoundEngine>
+> PlayNote (note)
+> PlayScale (fretboard.strings -> grab notes sequentially starting from string 1 -> 2 -> 3 -> etc.)
+> PlayChord (musicTheory.selectedNotes -> Play selectedNotes with a slight delay)
+
+> MarkNotes: 
+> <Single>: 
+Add: dispatch(selectNoteOnString({ note, stringIndex }));
+Render: fretboard.strings
+> <Identical>: 
+Add: dispatch(selectNotes(note));
+Render: if selectedNotes.includes(note (already has oct)) -> note.selected = true;
+> <All>: 
+Add: SelectedNotes.push(C# + i (i = 0 - 8))
+Render: if selectedNotes.includes(note (already has oct)) -> note.selected = true;
+
+
+
+
 ### Todo:
+<soundEngine>
+> Load a sound on/off symbol instead of delaying everything until the instrument audio has loaded.
 <Fretboard> 
 > scroll on desktop and mobile with atomatic snap to edge of note/fret
 Make instruments resizable (how cool would that be!)

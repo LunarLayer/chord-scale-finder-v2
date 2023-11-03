@@ -1,109 +1,111 @@
 import "./SharpsFlatsDisplay.scss";
 
 function SharpsFlatsDisplay({ selected }) {
+  console.log("SharpsFlatsDisplay");
+  console.log(selected);
   return (
     <div id="SharpsAndFlatsDisplay">
       <button
         className={`flats ${
-          selected === "cbmajor" || selected === "abminor" ? "selected" : ""
+          selected === "Cbmajor" || selected === "Abminor" ? "selected" : ""
         }`}
       >
         Bb, Eb, Ab, Db, Gb, Cb, Fb
       </button>
       <button
         className={`flats ${
-          selected === "gbmajor" || selected === "ebminor" ? "selected" : ""
+          selected === "Gbmajor" || selected === "Ebminor" ? "selected" : ""
         }`}
       >
         Bb, Eb, Ab, Db, Gb, Cb
       </button>
       <button
         className={`flats ${
-          selected === "dbmajor" || selected === "bbminor" ? "selected" : ""
+          selected === "Dbmajor" || selected === "Bbminor" ? "selected" : ""
         }`}
       >
         Bb, Eb, Ab, Db, Gb
       </button>
       <button
         className={`flats ${
-          selected === "abmajor" || selected === "fminor" ? "selected" : ""
+          selected === "Abmajor" || selected === "Fminor" ? "selected" : ""
         }`}
       >
         Bb, Eb, Ab, Db
       </button>
       <button
         className={`flats ${
-          selected === "ebmajor" || selected === "cminor" ? "selected" : ""
+          selected === "Ebmajor" || selected === "Cminor" ? "selected" : ""
         }`}
       >
         Bb, Eb, Ab
       </button>
       <button
         className={`flats ${
-          selected === "bbmajor" || selected === "gminor" ? "selected" : ""
+          selected === "Bbmajor" || selected === "Gminor" ? "selected" : ""
         }`}
       >
         Bb, Eb
       </button>
       <button
         className={`flats ${
-          selected === "fmajor" || selected === "dminor" ? "selected" : ""
+          selected === "Fmajor" || selected === "Dminor" ? "selected" : ""
         }`}
       >
         Bb
       </button>
       <button
         className={`naturals ${
-          selected === "cmajor" || selected === "aminor" ? "selected" : ""
+          selected === "Cmajor" || selected === "Aminor" ? "selected" : ""
         }`}
       >
         -
       </button>
       <button
         className={`sharps ${
-          selected === "gmajor" || selected === "eminor" ? "selected" : ""
+          selected === "Gmajor" || selected === "Eminor" ? "selected" : ""
         }`}
       >
         F#
       </button>
       <button
         className={`sharps ${
-          selected === "dmajor" || selected === "bminor" ? "selected" : ""
+          selected === "Dmajor" || selected === "Bminor" ? "selected" : ""
         }`}
       >
         F#, C#
       </button>
       <button
         className={`sharps ${
-          selected === "amajor" || selected === "f#minor" ? "selected" : ""
+          selected === "Amajor" || selected === "F#minor" ? "selected" : ""
         }`}
       >
         F#, C#, G#
       </button>
       <button
         className={`sharps ${
-          selected === "emajor" || selected === "c#minor" ? "selected" : ""
+          selected === "Emajor" || selected === "C#minor" ? "selected" : ""
         }`}
       >
         F#, C#, G#, D#
       </button>
       <button
         className={`sharps ${
-          selected === "bmajor" || selected === "g#minor" ? "selected" : ""
+          selected === "Bmajor" || selected === "G#minor" ? "selected" : ""
         }`}
       >
         F#, C#, G#, D#, A#
       </button>
       <button
         className={`sharps ${
-          selected === "f#major" || selected === "d#minor" ? "selected" : ""
+          selected === "F#major" || selected === "D#minor" ? "selected" : ""
         }`}
       >
         F#, C#, G#, D#, A#, E#
       </button>
       <button
         className={`sharps ${
-          selected === "c#major" || selected === "a#minor" ? "selected" : ""
+          selected === "C#major" || selected === "A#minor" ? "selected" : ""
         }`}
       >
         F#, C#, G#, D#, A#, E#, B#

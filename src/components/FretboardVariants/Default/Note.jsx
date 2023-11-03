@@ -2,44 +2,23 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 
 import { memo } from "react";
-import { useState } from "react";
-import { toggleNoteSelected } from "../../../Features/MusicTheory/MusicTheorySlice";
 
 const DefaultNote = memo(function Note({
   note,
-  hasAccidental,
+  accidental,
   octave,
-  stringNumber,
   isSelected,
-  highlighted,
+  isHighlighted,
   notesWidth,
 }) {
-  const dispatch = useDispatch();
-  // const [selected, setSelected] = useState(false);
-  const accidental = useSelector((store) => store.musicTheory.accidental);
-
-  function handleNoteClicked() {
-    let clickedNote = {
-      note,
-      octave,
-      hasAccidental,
-      selected: !isSelected,
-      highlighted,
-      stringNumber,
-    };
-    dispatch(toggleNoteSelected(clickedNote));
-    // setSelected(!selected);
-  }
-
   return (
     <button
       style={{ height: notesWidth * 1.5 }}
       className={`note ${isSelected ? "selected" : ""} ${
-        highlighted ? "highlighted" : ""
+        isHighlighted ? "selected" : ""
       }`}
-      data-note={`${note}${hasAccidental ? accidental : ""}`}
+      data-note={note + accidental}
       data-octave={octave}
-      onClick={() => handleNoteClicked()}
     >
       <span
         style={{
@@ -49,8 +28,7 @@ const DefaultNote = memo(function Note({
           maxHeight: notesWidth,
         }}
       >
-        {note}
-        {hasAccidental ? accidental : null}
+        {note + accidental}
       </span>
     </button>
   );
@@ -60,7 +38,7 @@ export default DefaultNote;
 
 DefaultNote.propTypes = {
   note: PropTypes.string,
-  hasAccidental: PropTypes.bool,
+  accidental: PropTypes.string,
   octave: PropTypes.number,
   isSelected: PropTypes.bool,
   isHighlighted: PropTypes.bool,

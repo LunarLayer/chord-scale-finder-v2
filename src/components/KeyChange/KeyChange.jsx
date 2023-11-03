@@ -1,62 +1,62 @@
 import { useDispatch, useSelector } from "react-redux";
-
 import "./KeyChange.scss";
-import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
-import {
-  setKey,
-  toggleAccidental,
-  toggleTonality,
-} from "../../Features/MusicTheory/MusicTheorySlice";
-import getNoteSizeForKeyChange from "../../Helpers/ToolbarHelper";
-import Keys from "./Keys";
-import SharpsFlatsDisplay from "./SharpsFlatsDisplay";
+import { Key, Note } from "tonal";
+import KeyChangeNote from "../NoteVariants/KeyChangeNote";
+import { useState } from "react";
+import { setKey } from "../../Features/MusicTheory/MusicTheorySlice";
 
 function KeyChange() {
   const dispatch = useDispatch();
   const key = useSelector((store) => store.musicTheory.key);
-  const tonality = useSelector((store) => store.musicTheory.tonality);
-  const accidental = useSelector((store) => store.musicTheory.accidental);
-  let selected = key.note + key.accidental + tonality;
-  console.log(selected);
+  let keyNote = Note.get(key.tonic).letter;
 
-  function handleToggleAccidental() {
-    dispatch(toggleAccidental());
+  function handleSelectNote(note) {
+    if (key.type === "major") {
+      dispatch(setKey(Key.majorKey(note)));
+    } else {
+      dispatch(setKey(Key.minorKey(note)));
+    }
   }
 
-  function handleToggleTonality() {
-    dispatch(toggleTonality());
+  function handleSelectScale(scale) {
+    if (scale === "major") {
+      dispatch(setKey(Key.majorKey(key.tonic)));
+    } else {
+      dispatch(setKey(Key.minorKey(key.tonic)));
+    }
   }
-
-  function handleNoteClicked(note, accidental) {
-    dispatch(setKey({ note, accidental }));
-  }
-
-  let noteSize = getNoteSizeForKeyChange();
 
   return (
     <div id="KeyChange">
-      <div className="flex-wrapper">
-        <Keys
-          noteSize={noteSize}
-          handleNoteClicked={handleNoteClicked}
-          selected={key}
-        />
-        <div className="settings">
-          <ToggleSwitch
-            option1="major"
-            option2="minor"
-            currentlySelected={tonality}
-            onToggle={() => handleToggleTonality()}
+      <div className="note-selection">
+        <div className="notes">
+          <KeyChangeNote label="C" onClick={() => handleSelectNote("C")} />
+          <KeyChangeNote label="D" onClick={() => handleSelectNote("D")} />
+          <KeyChangeNote label="E" onClick={() => handleSelectNote("E")} />
+          <KeyChangeNote label="F" onClick={() => handleSelectNote("F")} />
+          <KeyChangeNote label="G" onClick={() => handleSelectNote("G")} />
+          <KeyChangeNote label="A" onClick={() => handleSelectNote("A")} />
+          <KeyChangeNote label="B" onClick={() => handleSelectNote("B")} />
+        </div>
+        <div className="accidentals">
+          <KeyChangeNote
+            label={keyNote + "b"}
+            onClick={() => handleSelectNote(keyNote + "b")}
           />
-          <ToggleSwitch
-            option1="b"
-            option2="#"
-            currentlySelected={accidental}
-            onToggle={() => handleToggleAccidental()}
+          <KeyChangeNote
+            label={keyNote}
+            onClick={() => handleSelectNote(keyNote)}
+          />
+          <KeyChangeNote
+            label={keyNote + "#"}
+            onClick={() => handleSelectNote(keyNote + "#")}
           />
         </div>
       </div>
-      <SharpsFlatsDisplay selected={selected} />
+      <div className="scaleSelection">
+        <button onClick={() => handleSelectScale("major")}>Major</button>
+        <button onClick={() => handleSelectScale("minor")}>Minor</button>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import "./ToggleSwitch.scss";
 
-function ToggleSwitch({ option1, option2, onToggle, currentlySelected }) {
+function ToggleSwitch({ option1, option2, onToggle, selected }) {
   return (
     <>
       <div className="toggleSwitch">
@@ -13,7 +13,7 @@ function ToggleSwitch({ option1, option2, onToggle, currentlySelected }) {
           id={option1}
           className="checkbox"
           onChange={onToggle}
-          checked={currentlySelected === option1 ? false : true}
+          checked={selected === option1 ? false : true}
         />
         <label htmlFor={option1} className="label">
           <div className="ball"></div>

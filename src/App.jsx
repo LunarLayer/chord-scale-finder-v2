@@ -1,7 +1,6 @@
 // Navigate element might be needed later
 import { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import "./App.css";
 
 const Loader = lazy(() => import("./components/Loader/Loader"));

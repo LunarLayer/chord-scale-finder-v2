@@ -6,10 +6,11 @@ import { memo } from "react";
 import FretDotsVisual from "./FretDotsVisual";
 
 const DefaultFret = memo(function Fret({
-  notes,
+  fretNotes,
   fretNumber,
   notesWidth,
   fretWidth,
+  markNotes,
 }) {
   return (
     <div
@@ -18,16 +19,25 @@ const DefaultFret = memo(function Fret({
       style={{ minWidth: fretWidth }}
     >
       <FretDotsVisual fretNumber={fretNumber} notesWidth={notesWidth} />
-      {notes.map((note, index) => {
+      {fretNotes.map((note, index) => {
+        let stringNumber = fretNotes.length - index;
+        let selected = note.selected;
+        if (
+          markNotes === "Single" &&
+          !note.selectedOnStrings?.includes(stringNumber)
+        ) {
+          selected = false;
+        }
+
         return (
           <DefaultNote
             key={`note-${index}-fret-${fretNumber}`}
-            note={note.note}
-            hasAccidental={note.hasAccidental}
-            octave={note.octave}
-            stringNumber={notes.length - index}
-            isSelected={note.selected}
-            highlighted={note.highlighted}
+            note={note.letter}
+            accidental={note.acc}
+            octave={note.oct}
+            stringNumber={stringNumber}
+            isSelected={selected}
+            isHighlighted={false}
             notesWidth={notesWidth}
           />
         );
@@ -39,11 +49,8 @@ const DefaultFret = memo(function Fret({
 export default DefaultFret;
 
 DefaultFret.propTypes = {
-  fretboardVariant: PropTypes.string,
+  fretNotes: PropTypes.array,
   fretNumber: PropTypes.number,
-  fretWidths: PropTypes.array,
-  notes: PropTypes.array,
-  notesGap: PropTypes.number,
   notesWidth: PropTypes.number,
   fretWidth: PropTypes.number,
 };

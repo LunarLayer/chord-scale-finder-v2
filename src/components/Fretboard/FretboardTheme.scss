@@ -1,0 +1,180 @@
+#FretboardTheme {
+  z-index: 1;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  // background-image: url("/intrumentGraphics/QuiltedMaple2.jpg");
+  // background-size: auto;
+  // background-repeat: no-repeat;
+  // background-position: center;
+  // object-fit: ;
+
+  .stringVisuals {
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    .stringVisual {
+      display: flex;
+      // overflow: hidden; // account for subpixel rendering
+
+      .staticPart {
+        display: block;
+        width: 100%;
+        background-color: #e4e4e4;
+        // box-shadow: 0 0.15em 0 0 rgba(0, 0, 0, 0.2);
+        background-image: repeating-linear-gradient(
+            55deg,
+            rgba(0, 0, 0, 0.6),
+            transparent 0.15em,
+            transparent 0.2em
+          ),
+          linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.5) 10%,
+            hsla(0, 0%, 100%, 0.2) 20%,
+            hsla(0, 0%, 100%, 0.5) 30%,
+            hsla(0, 0%, 100%, 0.2) 40%,
+            rgba(0, 0, 0, 0.6) 80%
+          );
+      }
+
+      .vibratingPart {
+        display: block;
+        width: 0;
+        background-color: #e4e4e4;
+        // box-shadow: 0 0.15em 0 0 rgba(0, 0, 0, 0.2);
+        background-image: repeating-linear-gradient(
+            55deg,
+            rgba(0, 0, 0, 0.6),
+            transparent 0.15em,
+            transparent 0.2em
+          ),
+          linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.5) 10%,
+            hsla(0, 0%, 100%, 0.2) 20%,
+            hsla(0, 0%, 100%, 0.5) 30%,
+            hsla(0, 0%, 100%, 0.2) 40%,
+            rgba(0, 0, 0, 0.6) 80%
+          );
+        transform-origin: left center;
+
+        &.animate {
+          animation: stringVibration 3s;
+          // animation-timing-function: ease-in-out;
+        }
+      }
+
+      &:nth-child(1) {
+        .staticPart {
+          height: 4px;
+        }
+        .vibratingPart {
+          height: 4px;
+        }
+      }
+      &:nth-child(2) {
+        .staticPart {
+          height: 5px;
+        }
+        .vibratingPart {
+          height: 5px;
+        }
+      }
+      &:nth-child(3) {
+        .staticPart {
+          height: 6px;
+        }
+        .vibratingPart {
+          height: 6px;
+        }
+      }
+      &:nth-child(4) {
+        .staticPart {
+          height: 7px;
+        }
+        .vibratingPart {
+          height: 7px;
+        }
+      }
+      &:nth-child(5) {
+        .staticPart,
+        .vibratingPart {
+          height: 5px;
+        }
+      }
+      &:nth-child(6) {
+        .staticPart,
+        .vibratingPart {
+          height: 6px;
+        }
+      }
+      &:nth-child(7) {
+        .staticPart,
+        .vibratingPart {
+          height: 7px;
+        }
+      }
+      &:nth-child(8) {
+        .staticPart,
+        .vibratingPart {
+          height: 8px;
+        }
+      }
+      &:nth-child(9) {
+        .staticPart,
+        .vibratingPart {
+          height: 9px;
+        }
+      }
+    }
+  }
+
+  .fretVisuals {
+    z-index: 1;
+    position: absolute;
+    display: flex;
+    height: 100%;
+
+    .fretVisual {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+
+      &:nth-child(1) {
+        background-color: #e3dac9;
+      }
+
+      .fretBand {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        border-left: 2px solid silver;
+        transform: translateX(-50%);
+      }
+
+      .fretMarker {
+        height: 15px;
+        width: 15px;
+        background-image: url("/intrumentGraphics/fretMarker.png");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        border-radius: 50%;
+      }
+    }
+  }
+}

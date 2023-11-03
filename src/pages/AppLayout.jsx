@@ -13,17 +13,16 @@ import Loader from "../components/Loader/Loader";
 import Navbar from "../components/Navbar/Navbar";
 import Toolbar from "../components/Toolbar/Toolbar";
 import InstrumentSettings from "../components/InstrumentSettings/InstrumentSettings";
-import KeyChange from "../components/KeyChange/KeyChange";
-import DefaultFretboard from "../components/FretboardVariants/Default/Fretboard";
-import MinimalFretboard from "../components/FretboardVariants/Minimal/Fretboard";
+import Fretboard from "../components/Fretboard/Fretboard";
 import Piano from "../components/Piano/Piano";
 import ChordAndScaleIdentifier from "../components/ChordAndScaleIdentifier/ChordAndScaleIdentifier";
 import ChordProgressionBuilder from "../components/ChordProgressionBuilder/ChordProgressionBuilder";
 import { loginUser } from "../Features/User/UserSlice";
-import { soundEngine } from "../Helpers/SoundEngine";
 import { useState } from "react";
 import FretboardQuickSettings from "../components/QuickSettings/Instrument/FretboardQuickMenu";
 import PianoQuickSettings from "../components/QuickSettings/Instrument/PianoQuickMenu";
+import { Key, Note } from "tonal";
+import NewKeyChange from "../components/KeyChange/KeyChange";
 
 function AppLayout() {
   const dispatch = useDispatch();
@@ -42,17 +41,8 @@ function AppLayout() {
   );
   const loginSuccess = useSelector((store) => store.user.loginSuccess);
 
-  useEffect(() => {
-    const checkSoundIsReady = setInterval(() => {
-      if (soundEngine.state() === "loaded") {
-        setSoundIsReady(true);
-        clearInterval(checkSoundIsReady);
-      }
-    }, 10);
-    return () => {
-      clearInterval(checkSoundIsReady);
-    };
-  }, []);
+  let note = Note.get("Cb2");
+  console.log(note);
 
   useEffect(() => {
     if (loginSuccess) {
@@ -63,20 +53,21 @@ function AppLayout() {
         loginUser({
           username: "Guest",
           settings: {
-            key: { note: "C", accidental: "" },
-            tonality: "major",
-            accidental: "#",
-            instrument: "fretboard",
-            instrumentSound: "jazzbass",
-            instrumentVariant: "default",
-            instrumentTheme: "black",
-            coloredNotes: false,
-            tuning: [
-              { note: "G", octave: 2, hasAccidental: false },
-              { note: "D", octave: 2, hasAccidental: false },
-              { note: "A", octave: 1, hasAccidental: false },
-              { note: "E", octave: 1, hasAccidental: false },
-            ],
+            uiTheme: "default",
+            key: Key.majorKey("C"),
+            instrument: {
+              type: "guitar",
+              soundFile: "jazzBass.mp3",
+              style: "default",
+              theme: "default",
+              coloredNotes: false,
+              tuning: [
+                Note.get("G2"),
+                Note.get("D2"),
+                Note.get("A1"),
+                Note.get("E1"),
+              ],
+            },
             markNotes: "Single",
             labelNotes: "Note",
             fretPosition: "All",
@@ -102,20 +93,17 @@ function AppLayout() {
   }, [dispatch]);
 
   function Section1({ view }) {
-    if (view === "fretboard" && fretboardVariant === "default")
-      return <DefaultFretboard />;
-    if (view === "fretboard" && fretboardVariant === "minimal")
-      return <MinimalFretboard />;
+    if (view === "fretboard") return <Fretboard />;
     if (view === "piano") return <Piano />;
     if (view === "instrumentSettings") return <InstrumentSettings />;
-    if (view === "keyChange") return <KeyChange />;
+    if (view === "keyChange") return <NewKeyChange />;
   }
   function Section2({ view }) {
     if (view === "ChordAndScaleIdentifier") return <ChordAndScaleIdentifier />;
     if (view === "ChordProgressionBuilder") return <ChordProgressionBuilder />;
   }
 
-  if (fretboardIsReady && soundIsReady) {
+  if (fretboardIsReady) {
     return (
       <div className="appLayout">
         <Navbar />
@@ -125,10 +113,18 @@ function AppLayout() {
         ) : currentViewSection1 === "piano" ? (
           <PianoQuickSettings />
         ) : null}
+        {/* <Section1 view="keyChange" /> */}
         <Section1 view={currentViewSection1} />
         {/* <AudioQuickSettings />
         <TheoryQuickSettings /> */}
         <Section2 view={currentViewSection2} />
+        <p>markNotes</p>
+        <p>All: Select all notes that have the same letter</p>
+        <p>Identical: Select the note with the octave</p>
+        <p>
+          Single: Select the note with the octave, add a selectedOnStringsArr to
+          it
+        </p>
       </div>
     );
   } else {

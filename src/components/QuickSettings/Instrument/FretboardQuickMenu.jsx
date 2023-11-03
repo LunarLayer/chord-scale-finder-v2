@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import "./FretboardQuickMenu.scss";
-import "../../KeyChange/Keys.scss";
+import "../../KeyChangeOld/Keys.scss";
 import { useEffect } from "react";
 import { useState } from "react";
 import Button from "../../Button/Button";
@@ -8,13 +8,14 @@ import {
   setMarkNotes,
   setLabelNotes,
   setFretPosition,
-  setHighlightedNotes,
+  setHighlightNotes,
 } from "../../../Features/MusicTheory/MusicTheorySlice";
 import {
   setActiveTabForQuickMenu,
   toggleQuickMenu,
 } from "../../../Features/UI/UISlice";
-import Keys from "../../KeyChange/Keys";
+import Keys from "../../KeyChangeOld/Keys";
+import { note } from "tonal";
 
 function FretboardQuickMenu() {
   const dispatch = useDispatch();
@@ -58,11 +59,16 @@ function FretboardQuickMenu() {
       <div className="settings">
         <div className="setting dropdown markNotes">
           <p>Mark notes</p>
-          <button>Single</button>
+          <button>{markNotes}</button>
           <div className="dropdown-content">
-            <button>Single</button>
-            <button>IdenticalIdentical</button>
-            <button>All</button>
+            <button onClick={() => dispatch(setMarkNotes("Single"))}>
+              Single
+            </button>
+            <button onClick={() => dispatch(setMarkNotes("None"))}>None</button>
+            <button onClick={() => dispatch(setMarkNotes("All"))}>All</button>
+            <button onClick={() => dispatch(setMarkNotes("Identical"))}>
+              Identical
+            </button>
           </div>
         </div>
         <div className="setting dropdown labelNotes">

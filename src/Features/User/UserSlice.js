@@ -6,6 +6,7 @@ const UserSlice = createSlice({
   initialState: {
     username: undefined,
     settings: {
+      uiTheme: undefined,
       key: undefined,
       tonality: undefined,
       accidental: undefined,
@@ -54,10 +55,11 @@ const UserSlice = createSlice({
   reducers: {
     loginUser(state, action) {
       const user = action.payload;
+      state.settings.uiTheme = user.settings.uiTheme;
       state.settings.instrument = user.settings.instrument;
       state.settings.instrumentSound = user.settings.instrumentSound;
       state.settings.instrumentVariant = user.settings.instrumentVariant;
-      state.settings.theme = user.settings.theme;
+      state.settings.instrumentTheme = user.settings.instrumentTheme;
       state.settings.key = user.settings.key;
       state.settings.tuning = user.settings.tuning;
       state.settings.markNotes = user.settings.markNotes;

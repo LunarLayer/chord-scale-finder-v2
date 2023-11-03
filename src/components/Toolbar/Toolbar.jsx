@@ -16,7 +16,6 @@ function Toolbar() {
     (store) => store.ui.currentViewSection1
   );
   const key = useSelector((store) => store.musicTheory.key);
-  const tonality = useSelector((store) => store.musicTheory.tonality);
   const instrumentQuickMenu = useSelector(
     (store) => store.ui.quickMenus.instrumentQuickMenu
   );
@@ -37,13 +36,13 @@ function Toolbar() {
   return (
     <div id="toolbar">
       <div className="Tonality wrapper">
-        <h4>Tonality</h4>
+        <h4>Key</h4>
         <div className="content">
           <Button
             className={`${currentViewSection1 === "keyChange" ? "active" : ""}`}
             onClick={() => handleChangeView("keyChange")}
           >
-            {key.note + key.accidental} {tonality}
+            {key.tonic} {key.type}
           </Button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Fret from "./Fret";
 import "./Fretboard.scss";
 import FretNumbers from "./FretNumbers";
@@ -8,54 +8,52 @@ import StringVisual from "./StringVisual";
 import { useState } from "react";
 import { getFretsWithNotes } from "../../../Helpers/InstrumentHelper";
 import { soundEngine } from "../../../Helpers/SoundEngine";
+import { toggleNoteSelected } from "../../../Features/MusicTheory/MusicTheorySlice";
+import { Note } from "tonal";
 
 function Fretboard() {
-  const fretboardTheme = useSelector((store) => store.fretboard.fretboardTheme);
-  const fretboardWidth = useSelector((store) => store.fretboard.fretboardWidth);
-  const coloredNotes = useSelector((store) => store.fretboard.coloredNotes);
-  const fretWidths = useSelector((store) => store.fretboard.fretWidths);
-  const notesWidth = useSelector((store) => store.fretboard.notesWidth);
-  const stringCount = useSelector((store) => store.fretboard.stringCount);
-  const fretCount = useSelector((store) => store.fretboard.fretCount);
+  const dispatch = useDispatch();
+  const { fretboardTheme, fretboardWidth, fretWidths, notesWidth, fretCount } =
+    useSelector((store) => store.fretboard);
   const selectedNotes = useSelector((store) => store.musicTheory.selectedNotes);
   const allNotes = useSelector((store) => store.musicTheory.allNotes);
   const markNotes = useSelector((store) => store.musicTheory.markNotes);
-  const tuning = useSelector((store) => store.fretboard.tuning);
+  const tuning = useSelector((store) => store.musicTheory.tuning);
+  const coloredNotes = useSelector((store) => store.user.coloredNotes);
+  let stringCount = tuning.length;
   const [fretsWithNotes, setFretsWithNotes] = useState([]);
   const [stringAnimations, setStringAnimations] = useState(
     new Array(stringCount).fill(null).map(() => ({
-      animating: false,
-      timeout: null,
+      isAnimating: false,
+      hasTimeout: null,
     }))
   );
 
   useEffect(() => {
-    setFretsWithNotes(
-      getFretsWithNotes(tuning, selectedNotes, allNotes, markNotes)
-    );
-  }, [tuning, selectedNotes, allNotes, markNotes]);
+    setFretsWithNotes(getFretsWithNotes(tuning, allNotes));
+  }, [tuning, allNotes]);
 
   useEffect(() => {
     let fretboard = document.getElementById("DefaultFretboard");
     function handleNoteClicked(e) {
-      let note = e.target;
-      if (note.parentNode.classList.contains("note")) note = note.parentNode;
-      if (note.classList.contains("note")) {
-        let octave = note.getAttribute("data-octave");
-        let noteName = note.innerText;
-        let fret = note.parentNode;
+      let noteElem = e.target;
+      if (noteElem.parentNode.classList.contains("note"))
+        noteElem = noteElem.parentNode;
+      if (noteElem.classList.contains("note")) {
+        console.log(noteElem);
+        let octave = noteElem.getAttribute("data-octave");
+        let noteName = noteElem.innerText + octave;
+        let fret = noteElem.parentNode;
         let fretNumber = fret.getAttribute("data-fret");
         let fretNotes = Array.from(fret.children).filter((note) =>
           note.classList.contains("note")
         );
-        let noteIndex = fretNotes.indexOf(note);
-        let noteToPlay = noteName + octave;
-        let stringNumber = stringCount - fretNotes.indexOf(note);
+        let stringIndex = fretNotes.indexOf(noteElem);
 
-        soundEngine.playNote(noteToPlay, stringNumber);
-
+        soundEngine.playNote(noteName, stringIndex);
+        dispatch(toggleNoteSelected({ noteName, stringIndex }));
         animateStringPlayed(
-          noteIndex,
+          stringIndex,
           fretboardWidth,
           fretNumber,
           fretWidths,
@@ -70,13 +68,14 @@ function Fretboard() {
       fretboard.removeEventListener("click", handleNoteClicked);
     };
   }, [
+    dispatch,
     fretboardWidth,
     fretWidths,
     fretCount,
     stringAnimations,
     setStringAnimations,
-    allNotes,
     stringCount,
+    allNotes,
   ]);
 
   return (
@@ -96,14 +95,15 @@ function Fretboard() {
             );
           })}
         </div>
-        {fretsWithNotes.map((notesArr, index) => {
+        {fretsWithNotes.map((fretNotes, index) => {
           return (
             <Fret
               key={`fret${index}`}
-              notes={notesArr}
+              fretNotes={fretNotes}
               fretNumber={index}
               notesWidth={notesWidth}
               fretWidth={fretWidths?.[index]}
+              markNotes={markNotes}
             />
           );
         })}
