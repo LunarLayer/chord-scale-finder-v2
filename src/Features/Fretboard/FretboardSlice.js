@@ -40,17 +40,54 @@ const FretboardSlice = createSlice({
   name: "fretboard",
   initialState,
   reducers: {
-    toggleNoteSelectedOnString(state, action) {
-      const { note, stringIndex } = action.payload;
-      // set new selected state
-      let selected = !note.selected;
-
+    clearAllNotes(state, action) {
+      for (let string of state.strings) {
+        for (let fret of string.frets) {
+          fret.note.selected = false;
+          fret.note.highlighted = false;
+        }
+      }
+    },
+    toggleHighlightNote(state, action) {
+      console.log("toggleHighlightNote");
+      const note = action.payload;
+      console.log("highlight this: " + note);
+      for (let string of state.strings) {
+        for (let fret of string.frets) {
+          if (fret.note.pc.toLowerCase() === note) {
+            console.log("match");
+            fret.note.highlighted = !fret.note.highlighted;
+          }
+        }
+      }
+    },
+    highlightAllNotes(state) {
+      for (let string of state.strings) {
+        for (let fret of string.frets) {
+          fret.note.highlighted = true;
+        }
+      }
+    },
+    removeHighlightAllNotes(state) {
+      for (let string of state.strings) {
+        for (let fret of string.frets) {
+          fret.note.highlighted = false;
+        }
+      }
+    },
+    selectNoteOnString(state, action) {
+      const { note, stringIndex, markNotes } = action.payload;
       let fretIndex = state.strings[stringIndex].frets.findIndex(
         (fret) => fret.note.pc === note.pc && fret.note.oct === note.oct
       );
-
-      // Toggle selected state
-      state.strings[stringIndex].frets[fretIndex].note.selected = selected;
+      state.strings[stringIndex].frets[fretIndex].note.selected = true;
+    },
+    deselectNoteOnString(state, action) {
+      const { note, stringIndex, markNotes } = action.payload;
+      let fretIndex = state.strings[stringIndex].frets.findIndex(
+        (fret) => fret.note.pc === note.pc && fret.note.oct === note.oct
+      );
+      state.strings[stringIndex].frets[fretIndex].note.selected = false;
     },
     setPreferredFretCount(state, action) {
       state.preferredFretCount = action.payload;
@@ -150,7 +187,12 @@ function getStrings(tuning) {
       let fretNote = Note.get(Note.fromMidiSharps(midi));
       fret = {
         fretNumber,
-        note: { ...fretNote, selected: false, stringNumber },
+        note: {
+          ...fretNote,
+          selected: false,
+          stringNumber,
+          highlighted: false,
+        },
         // making a noteObject that's not similar to the original Note.get() object,
         // might cause problems further down the road
         // when working with Tonal.js and your modified note objects
@@ -497,7 +539,12 @@ function getFretWidths(
 export const {
   initializeFretboard,
   setFretboardSoundIsReady,
-  toggleNoteSelectedOnString,
+  clearAllNotes,
+  toggleHighlightNote,
+  highlightAllNotes,
+  removeHighlightAllNotes,
+  selectNoteOnString,
+  deselectNoteOnString,
   setPreferredFretCount,
 } = FretboardSlice.actions;
 

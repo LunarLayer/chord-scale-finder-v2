@@ -18,6 +18,7 @@ const Fret = memo(function Fret({ note, fretNumber, fretWidth }) {
         octave={note.oct}
         notesWidth={notesWidth}
         selected={note.selected}
+        highlighted={note.highlighted}
       />
     </div>
   );

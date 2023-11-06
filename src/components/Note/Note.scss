@@ -10,6 +10,14 @@
 
   span {
     opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    border-radius: 50%;
+    color: black;
+    background-color: white;
+    border: 1px solid black;
   }
 
   &:hover {
@@ -17,14 +25,22 @@
 
   &.selected {
     span {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
       opacity: 1;
-      border-radius: 50%;
-      color: white;
-      background-color: grey;
+      border: 2px solid blue;
+      // display: none; // make transparent
+      // display: flex;
+      // justify-content: center;
+      // align-items: center;
+      // border: 1px solid black;
+      // font-size: 12px;
+      // background-color: white;
+      // // background: rgba(0, 0, 0, 0); // make transparent
+    }
+  }
+
+  &.highlighted {
+    span {
+      opacity: 1;
 
       // display: none; // make transparent
       // display: flex;

@@ -1,7 +1,11 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 import { loginUser } from "../User/UserSlice";
 import { Note } from "tonal";
-import { toggleNoteSelectedOnString } from "../Fretboard/FretboardSlice";
+import {
+  clearAllNotes,
+  selectNoteOnString,
+  deselectNoteOnString,
+} from "../Fretboard/FretboardSlice";
 
 function getInitialState() {
   let key = undefined;
@@ -10,6 +14,7 @@ function getInitialState() {
   let labelNotes = undefined;
   let fretPosition = undefined;
   let selectedNotes = [];
+  let highlightedNotes = [];
 
   return {
     key,
@@ -18,6 +23,7 @@ function getInitialState() {
     labelNotes,
     fretPosition,
     selectedNotes,
+    highlightedNotes,
   };
 }
 
@@ -29,6 +35,7 @@ const MusicTheorySlice = createSlice({
       state.key = action.payload;
     },
     setMarkNotes(state, action) {
+      console.log(action.payload);
       state.markNotes = action.payload;
     },
     setLabelNotes(state, action) {
@@ -52,26 +59,25 @@ const MusicTheorySlice = createSlice({
         state.fretPosition = user.settings.fretPosition;
         state.highlightNotes = user.settings.highlightNotes;
       })
-      .addCase(toggleNoteSelectedOnString, (state, action) => {
+      .addCase(clearAllNotes, (state, action) => {
+        state.selectedNotes = [];
+      })
+      .addCase(selectNoteOnString, (state, action) => {
         const { note } = action.payload;
+        for (let selectedNote of state.selectedNotes) {
+          if (note.name === selectedNote.name) return;
+        }
         // Create a new Note obj to get rid of previous mutations
         let newNote = Note.get(note.name);
+        state.selectedNotes.push(newNote);
+      })
+      .addCase(deselectNoteOnString, (state, action) => {
+        const { note } = action.payload;
 
-        // set new selected state
-        let selected = !note.selected;
-        if (selected) {
-          state.selectedNotes.push(newNote);
-        } else {
-          let noteIndex = state.selectedNotes.findIndex(
-            (note) => note.name === newNote.name
-          );
-          state.selectedNotes.splice(noteIndex, 1);
-        }
-
-        console.log(current(state.selectedNotes));
-        // note.selected doesnt exist!
-        // let noteToAdd = Note.get(note.name);
-        // state.selectedNotes.push()
+        let noteIndex = state.selectedNotes.findIndex(
+          (selectedNote) => selectedNote.name === note.name
+        );
+        state.selectedNotes.splice(noteIndex, 1);
       });
   },
 });

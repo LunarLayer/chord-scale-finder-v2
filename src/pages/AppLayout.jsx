@@ -55,6 +55,8 @@ function AppLayout() {
           settings: {
             uiTheme: "default",
             key: Key.majorKey("C"),
+            tonality: "todo",
+            accidental: "#",
             instrument: {
               type: "guitar",
               soundFile: "jazzBass.mp3",
@@ -118,13 +120,6 @@ function AppLayout() {
         {/* <AudioQuickSettings />
         <TheoryQuickSettings /> */}
         <Section2 view={currentViewSection2} />
-        <p>markNotes</p>
-        <p>All: Select all notes that have the same letter</p>
-        <p>Identical: Select the note with the octave</p>
-        <p>
-          Single: Select the note with the octave, add a selectedOnStringsArr to
-          it
-        </p>
       </div>
     );
   } else {
