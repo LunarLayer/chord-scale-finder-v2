@@ -3,6 +3,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { getWindowWidth } from "../../Helpers/WindowHelper";
+import { loginUser } from "../User/UserSlice";
 
 const uiSlice = createSlice({
   name: "ui",
@@ -11,8 +12,8 @@ const uiSlice = createSlice({
     currentViewSection1: "fretboard", // - instrumentSettings - keyChange
     currentViewSection2: "chordAndScaleIdentifier", // - chordProgressionBuilder
     quickMenus: {
-      instrumentQuickMenu: { showing: true, activeTab: "markNotes" },
-      soundPlayerQuickMenu: { showing: true, activeTab: "markNotes" },
+      instrumentQuickMenu: { showing: true },
+      soundPlayerQuickMenu: { showing: true },
     },
   },
   reducers: {
@@ -33,6 +34,12 @@ const uiSlice = createSlice({
     setWindowWidth(state, action) {
       state.windowWidth = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(loginUser, (state, action) => {
+      const user = action.payload;
+      state.quickMenus = user.settings.quickMenus;
+    });
   },
 });
 

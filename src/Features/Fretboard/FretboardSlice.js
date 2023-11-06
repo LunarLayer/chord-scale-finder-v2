@@ -7,23 +7,10 @@ import { Note } from "tonal";
 
 const initialState = {
   fretboardIsReady: false,
-  strings: [],
-  /* [
-      {
-        stringNumber: 1, 
-        frets: [
-                  {
-                    fretNumber: 0, 
-                    note: {acc, letter, pc, etc...}
-                  },
-                ]
-      }
-    ]
-  */
   fretboardStyle: "default", // default / minimal
   fretboardTheme: "black", // black / blue / red etc.
   notesGap: undefined,
-  notesWidth: undefined,
+  notesLabelWidth: undefined,
   notesMinWidth: undefined,
   notesMaxWidth: undefined,
   fretboardPadding: undefined,
@@ -31,6 +18,7 @@ const initialState = {
   preferredFretCount: undefined,
   fretCap: undefined,
   fretboardWidth: undefined,
+  fretWidths: undefined,
   fretWidthsGrowthFactor: undefined,
   tuning: undefined,
   coloredNotes: undefined,
@@ -81,6 +69,50 @@ const FretboardSlice = createSlice({
         (fret) => fret.note.pc === note.pc && fret.note.oct === note.oct
       );
       state.strings[stringIndex].frets[fretIndex].note.selected = true;
+
+      //      // clean up all this
+      // if (markNotes !== "None") {
+      //   if (markNotes === "Single") {
+      //     for (let fret of strings[stringIndex].frets) {
+      //       if (fret.note.name === note.name) {
+      //         if (fret.note.selected) {
+      //           dispatch(deselectNoteOnString({ note, stringIndex }));
+      //         } else {
+      //           dispatch(selectNoteOnString({ note, stringIndex }));
+      //         }
+      //       }
+      //     }
+      //   }
+      //   if (markNotes === "Identical") {
+      //     for (let string of strings) {
+      //       for (let fret of string.frets) {
+      //         if (fret.note.name === note.name) {
+      //           stringIndex = strings.length - string.stringNumber;
+      //           if (selected) {
+      //             dispatch(deselectNoteOnString({ note, stringIndex }));
+      //           } else {
+      //             dispatch(selectNoteOnString({ note, stringIndex }));
+      //           }
+      //         }
+      //       }
+      //     }
+      //   }
+      //   if (markNotes === "All") {
+      //     for (let string of strings) {
+      //       for (let fret of string.frets) {
+      //         if (fret.note.pc === note.pc) {
+      //           stringIndex = strings.length - string.stringNumber;
+      //           note = fret.note;
+      //           if (selected) {
+      //             dispatch(deselectNoteOnString({ note, stringIndex }));
+      //           } else {
+      //             dispatch(selectNoteOnString({ note, stringIndex }));
+      //           }
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
     },
     deselectNoteOnString(state, action) {
       const { note, stringIndex, markNotes } = action.payload;
@@ -109,7 +141,6 @@ const FretboardSlice = createSlice({
           state.fretboardStyle = style;
           state.fretboardTheme = theme;
           state.tuning = tuning;
-          state.strings = getStrings(tuning);
           updateFretboard(state, windowWidth);
         }
       })
@@ -140,7 +171,10 @@ function updateFretboard(state, newWindowWidth) {
       state.fretWidthsGrowthFactor
     );
   }
-  state.notesWidth = getNotesWidth(state.fretboardStyle, state.fretWidths);
+  state.notesLabelWidth = getNotesLabelWidth(
+    state.fretboardStyle,
+    state.fretWidths
+  );
   state.fretCap = getFretCap(
     windowWidth,
     state.fretboardStyle,
@@ -189,8 +223,8 @@ function getStrings(tuning) {
         fretNumber,
         note: {
           ...fretNote,
-          selected: false,
           stringNumber,
+          selected: false,
           highlighted: false,
         },
         // making a noteObject that's not similar to the original Note.get() object,
@@ -221,7 +255,7 @@ function updateDefaultFretboard(state, newWindowWidth) {
       state.fretWidthsGrowthFactor
     );
   }
-  state.notesWidth = getNotesWidth_DefaultFretboard(state.fretWidths);
+  state.notesLabelWidth = getNotesLabelWidth_DefaultFretboard(state.fretWidths);
   state.fretCap = getFretCap_DefaultFretboard(
     windowWidth,
     state.fretboardPadding,
@@ -260,7 +294,7 @@ function updateMinimalFretboard(state, newWindowWidth) {
     state.fretCap,
     state.preferredFretCount
   );
-  state.notesWidth = getNotesWidth_MinimalFretboard(
+  state.notesLabelWidth = getNotesLabelWidth_MinimalFretboard(
     windowWidth,
     state.fretboardPadding,
     state.notesGap,
@@ -269,13 +303,13 @@ function updateMinimalFretboard(state, newWindowWidth) {
   );
   state.fretboardWidth = getFretboardWidth_MinimalFretboard(
     state.fretCount,
-    state.notesWidth,
+    state.notesLabelWidth,
     state.notesGap
   );
   state.fretboardIsReady = true;
 }
 
-function getNotesWidth(fretboardStyle, fretWidths) {
+function getNotesLabelWidth(fretboardStyle, fretWidths) {
   if (fretboardStyle === "default") return fretWidths[0] - 4;
   if (fretboardStyle === "minimal") return null;
 }
@@ -464,9 +498,14 @@ function getFretboardWidth(fretboardStyle, fretWidths, fretCount) {
   }
 }
 
-function getFretboardWidth_MinimalFretboard(fretCount, notesWidth, notesGap) {
+function getFretboardWidth_MinimalFretboard(
+  fretCount,
+  notesLabelWidth,
+  notesGap
+) {
   if (fretCount === 0) return 0;
-  let fretboardWidth = fretCount * notesWidth + (fretCount - 1) * notesGap + 2; // Account for subpixel rendering
+  let fretboardWidth =
+    fretCount * notesLabelWidth + (fretCount - 1) * notesGap + 2; // Account for subpixel rendering
   return fretboardWidth;
 }
 
@@ -480,25 +519,26 @@ function getFretWidths(
   let fretboardWidth = windowWidth - fretboardPadding * 2;
   let spaceForIncrements = fretboardWidth * fretWidthsGrowthFactor;
   let spaceForFrets = fretboardWidth - spaceForIncrements;
-  let notesWidth = (spaceForFrets - 100) / 25;
+  let notesLabelWidth = (spaceForFrets - 100) / 25;
 
-  if (notesWidth < notesMinWidth || notesWidth > notesMaxWidth) {
-    notesWidth = notesWidth < notesMinWidth ? notesMinWidth : notesMaxWidth;
-    spaceForFrets = (notesWidth + 4) * 25;
+  if (notesLabelWidth < notesMinWidth || notesLabelWidth > notesMaxWidth) {
+    notesLabelWidth =
+      notesLabelWidth < notesMinWidth ? notesMinWidth : notesMaxWidth;
+    spaceForFrets = (notesLabelWidth + 4) * 25;
     let newFretboardWidth = spaceForFrets / (1 - fretWidthsGrowthFactor);
     spaceForIncrements = newFretboardWidth * fretWidthsGrowthFactor;
   }
 
   let fretWidths = [];
   let incPart = spaceForIncrements / 276;
-  notesWidth += 4;
+  notesLabelWidth += 4;
 
-  fretWidths.push(notesWidth);
+  fretWidths.push(notesLabelWidth);
 
   for (let i = 23; i > 0; i--) {
-    fretWidths.push(notesWidth + i * incPart);
+    fretWidths.push(notesLabelWidth + i * incPart);
   }
-  fretWidths.push(notesWidth);
+  fretWidths.push(notesLabelWidth);
 
   return fretWidths;
 

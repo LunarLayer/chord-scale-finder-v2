@@ -8,7 +8,6 @@ import { useState } from "react";
 import { Note } from "tonal";
 
 const Keys = memo(function Keys({ noteSize, handleNoteClicked, accidental }) {
-  console.log("x" + accidental);
   return (
     <div id="Keys">
       <div className="notesWrapper">

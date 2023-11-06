@@ -4,15 +4,16 @@ import "./Fretboard.scss";
 import String from "./String";
 import { soundEngine } from "../../Helpers/SoundEngine";
 import { animateStringPlayed } from "../../Helpers/FretboardHelper";
-import {
-  selectNoteOnString,
-  deselectNoteOnString,
-} from "../../Features/Fretboard/FretboardSlice";
+import { Note } from "tonal";
+import { toggleNoteSelected } from "../../Features/MusicTheory/MusicTheorySlice";
 
 function Fretboard() {
   const dispatch = useDispatch();
-  const markNotes = useSelector((store) => store.musicTheory.markNotes);
-  const strings = useSelector((store) => store.fretboard.strings);
+  const allNotes = useSelector((store) => store.musicTheory.allNotes);
+  const markNotesSetting = useSelector(
+    (store) => store.musicTheory.markNotesSetting
+  );
+  const tuning = useSelector((store) => store.fretboard.tuning);
   const fretWidths = useSelector((store) => store.fretboard.fretWidths);
   const fretboardWidth = useSelector((store) => store.fretboard.fretboardWidth);
   const fretboardStyle = useSelector((store) => store.fretboard.fretboardStyle);
@@ -23,86 +24,51 @@ function Fretboard() {
     let noteElem = e.target;
     if (noteElem.parentNode.classList.contains("note"))
       noteElem = noteElem.parentNode;
+    let string = noteElem.parentNode;
     let octave = noteElem.getAttribute("data-octave");
-    let noteName = noteElem.getAttribute("data-notename");
-    let fret = noteElem.parentNode;
-    let fretNumber = fret.getAttribute("data-fretnumber");
-    let stringNumber = fret.parentNode.getAttribute("data-stringnumber");
-    let stringIndex = strings.findIndex(
-      (string) => string.stringNumber === parseInt(stringNumber)
-    );
-    let note = strings[stringIndex].frets[fretNumber].note;
-    let selected = note.selected;
+    let notePitchClass = noteElem.getAttribute("data-pitchclass");
+    let stringNumber = string.getAttribute("data-stringnumber");
+    let stringIndex = tuning.length - stringNumber;
+    let notesOnString = string.querySelectorAll(".note");
+    let noteIndex = Array.from(notesOnString).indexOf(noteElem);
+    let note = Note.get(notePitchClass + octave);
+    let wasSelected = noteElem.classList.contains("selected");
 
-    // clean up all this
-    if (markNotes !== "None") {
-      if (markNotes === "Single") {
-        for (let fret of strings[stringIndex].frets) {
-          if (fret.note.name === note.name) {
-            if (fret.note.selected) {
-              dispatch(deselectNoteOnString({ note, stringIndex }));
-            } else {
-              dispatch(selectNoteOnString({ note, stringIndex }));
-            }
-          }
-        }
-      }
-      if (markNotes === "Identical") {
-        for (let string of strings) {
-          for (let fret of string.frets) {
-            if (fret.note.name === note.name) {
-              stringIndex = strings.length - string.stringNumber;
-              if (selected) {
-                dispatch(deselectNoteOnString({ note, stringIndex }));
-              } else {
-                dispatch(selectNoteOnString({ note, stringIndex }));
-              }
-            }
-          }
-        }
-      }
-      if (markNotes === "All") {
-        for (let string of strings) {
-          for (let fret of string.frets) {
-            if (fret.note.pc === note.pc) {
-              stringIndex = strings.length - string.stringNumber;
-              note = fret.note;
-              if (selected) {
-                dispatch(deselectNoteOnString({ note, stringIndex }));
-              } else {
-                dispatch(selectNoteOnString({ note, stringIndex }));
-              }
-            }
-          }
-        }
-      }
+    if (markNotesSetting !== "None") {
+      dispatch(toggleNoteSelected({ note, stringNumber, wasSelected }));
     }
-    soundEngine.playNote(noteName + octave, stringNumber);
-    animateStringPlayed(stringIndex, fretboardWidth, fretNumber, fretWidths);
+    soundEngine.playNote(notePitchClass + octave, stringNumber);
+    animateStringPlayed(stringIndex, fretboardWidth, noteIndex, fretWidths);
   }
 
   return (
     <div
       id="Fretboard"
-      style={{ width: fretboardWidth, height: 175 }}
+      style={{ width: fretboardWidth, height: 145 }}
       onMouseDown={handleMouseDown}
     >
       <FretboardTheme
         style={fretboardStyle}
         theme={fretboardTheme}
-        strings={strings}
+        tuning={tuning}
         fretWidths={fretWidths}
         fretboardWidth={fretboardWidth}
       />
       <div className="strings">
-        {strings.map((string) => (
-          <String
-            key={`string${string.stringNumber}`}
-            frets={string.frets}
-            fretWidths={fretWidths}
-            stringNumber={string.stringNumber}
-          />
-        ))}
+        {tuning.map((rootNote, index) => {
+          let stringNumber = tuning.length - index;
+          let rootIndex = allNotes.findIndex(
+            (note) => note.name === rootNote.name
+          );
+          let notesForString = allNotes.slice(rootIndex, rootIndex + 25);
+          return (
+            <String
+              key={`string${stringNumber}`}
+              notes={notesForString}
+              stringNumber={stringNumber}
+            />
+          );
+        })}
       </div>
     </div>
   );

@@ -7,57 +7,122 @@ import {
   deselectNoteOnString,
 } from "../Fretboard/FretboardSlice";
 
-function getInitialState() {
-  let key = undefined;
-  let tuning = undefined;
-  let markNotes = undefined;
-  let labelNotes = undefined;
-  let fretPosition = undefined;
-  let selectedNotes = [];
-  let highlightedNotes = [];
-
-  return {
-    key,
-    tuning,
-    markNotes,
-    labelNotes,
-    fretPosition,
-    selectedNotes,
-    highlightedNotes,
-  };
-}
-
 const MusicTheorySlice = createSlice({
   name: "musicTheory",
-  initialState: getInitialState(),
+  initialState: {
+    key: undefined,
+    allNotes: [],
+    markNotesSetting: undefined,
+    labelNotesSetting: undefined,
+    fretPositionSetting: undefined,
+    highlightNotesSetting: undefined,
+  },
   reducers: {
     setKey(state, action) {
       state.key = action.payload;
     },
-    setMarkNotes(state, action) {
-      console.log(action.payload);
-      state.markNotes = action.payload;
+    setMarkNotesSetting(state, action) {
+      state.markNotesSetting = action.payload;
     },
-    setLabelNotes(state, action) {
-      state.labelNotes = action.payload;
+    setLabelNotesSetting(state, action) {
+      state.labelNotesSetting = action.payload;
     },
-    setFretPosition(state, action) {
-      state.fretPosition = action.payload;
+    setFretPositionSetting(state, action) {
+      state.fretPositionSetting = action.payload;
     },
-    sethighlightNotes(state, action) {
-      state.highlightNotes = action.payload;
+    setHighlightNotesSetting(state, action) {
+      state.highlightNotesSetting = action.payload;
     },
+    toggleNoteSelected(state, action) {
+      // This needs adjustment, but i need to know which other strings it appears on.
+      const { note, stringNumber, wasSelected } = action.payload;
+
+      let noteIndex = state.allNotes.findIndex(
+        (allNote) => allNote.name === note.name
+      );
+
+      if (wasSelected) {
+        switch (state.markNotesSetting) {
+          case "Single":
+            state.allNotes[noteIndex].onlySelectedOnStrings = state.allNotes[
+              noteIndex
+            ].onlySelectedOnStrings.filter(
+              (number) => number !== parseInt(stringNumber)
+            );
+            if (state.allNotes[noteIndex].onlySelectedOnStrings.length >= 1) {
+              state.allNotes[noteIndex].selected = true;
+            } else {
+              state.allNotes[noteIndex].selected = false;
+            }
+            console.log(
+              "after removal: " +
+                state.allNotes[noteIndex].onlySelectedOnStrings
+            );
+            break;
+          case "Identical":
+            state.allNotes[noteIndex].onlySelectedOnStrings = [];
+            state.allNotes[noteIndex].selected = false;
+            break;
+          case "All":
+            for (let octave = 0; octave < 8; octave++) {
+              noteIndex = state.allNotes.findIndex(
+                (allNote) => allNote.name === note.pc + octave
+              );
+              state.allNotes[noteIndex].selected = false;
+            }
+            break;
+          default:
+            state.allNotes[noteIndex].selected = true;
+        }
+      } else {
+        switch (state.markNotesSetting) {
+          case "Single":
+            state.allNotes[noteIndex].selected = true;
+            state.allNotes[noteIndex].onlySelectedOnStrings.push(
+              parseInt(stringNumber)
+            );
+            console.log(
+              "after adding: " + state.allNotes[noteIndex].onlySelectedOnStrings
+            );
+            break;
+          case "Idential":
+            state.allNotes[noteIndex].onlySelectedOnStrings = [];
+            state.allNotes[noteIndex].selected = true;
+            break;
+          case "All":
+            for (let octave = 0; octave < 8; octave++) {
+              noteIndex = state.allNotes.findIndex(
+                (allNote) => allNote.name === note.pc + octave
+              );
+              state.allNotes[noteIndex].selected = true;
+            }
+            break;
+          default:
+            state.allNotes[noteIndex].selected = true;
+        }
+      }
+
+      /* 
+        Single:
+        note.selected = true;
+        note.selectedOnlyOnStrings.push(stringNumber);
+      
+      
+      
+      */
+    },
+    deselectNote(state, action) {},
   },
   extraReducers: (builder) => {
     builder
       .addCase(loginUser, (state, action) => {
         const user = action.payload;
         state.key = user.settings.key;
-        state.tuning = user.settings.tuning;
-        state.markNotes = user.settings.markNotes;
-        state.labelNotes = user.settings.labelNotes;
-        state.fretPosition = user.settings.fretPosition;
-        state.highlightNotes = user.settings.highlightNotes;
+        state.allNotes = user.settings.allNotes;
+        state.markNotesSetting = user.settings.markNotesSetting;
+        state.labelNotesSetting = user.settings.labelNotesSetting;
+        state.fretPositionSetting = user.settings.fretPositionSetting;
+        state.highlightNotesSetting = user.settings.highlightNotesSetting;
       })
       .addCase(clearAllNotes, (state, action) => {
         state.selectedNotes = [];
@@ -84,11 +149,11 @@ const MusicTheorySlice = createSlice({
 
 export const {
   setKey,
-  setMarkNotes,
-  setLabelNotes,
-  setFretPosition,
-  setHighlightNotes,
-  selectNote,
+  setMarkNotesSetting,
+  setLabelNotesSetting,
+  setFretPositionSetting,
+  setHighlightNotesSetting,
+  toggleNoteSelected,
 } = MusicTheorySlice.actions;
 
 export default MusicTheorySlice.reducer;

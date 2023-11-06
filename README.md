@@ -1,3 +1,11 @@
+Applayout dispatch(loginUser(guest));
+
+-> init userSlice state
+-> musicTheorySlice -> state.notes = user.settings.notes
+-> fretboardSlice -> useselector musicTheory.notes -> Render strings
+
+
+
 > Actions involving selectedNotes
 <SoundEngine>
 > PlayNote (note)

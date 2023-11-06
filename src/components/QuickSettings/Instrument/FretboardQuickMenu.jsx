@@ -5,10 +5,10 @@ import { useEffect } from "react";
 import { useState } from "react";
 import Button from "../../Button/Button";
 import {
-  setMarkNotes,
-  setLabelNotes,
-  setFretPosition,
-  setHighlightNotes,
+  setMarkNotesSetting,
+  setLabelNotesSetting,
+  setFretPositionSetting,
+  setHighlightNotesSetting,
 } from "../../../Features/MusicTheory/MusicTheorySlice";
 import {
   setActiveTabForQuickMenu,
@@ -27,19 +27,31 @@ function FretboardQuickMenu() {
   const dispatch = useDispatch();
   const fretboardWidth = useSelector((store) => store.fretboard.fretboardWidth);
   const accidental = useSelector((store) => store.user.settings.accidental);
-  const markNotes = useSelector((store) => store.musicTheory.markNotes);
-  const labelNotes = useSelector((store) => store.musicTheory.labelNotes);
-  const fretPosition = useSelector((store) => store.musicTheory.fretPosition);
-  const highlightedNotes = useSelector(
-    (store) => store.musicTheory.highlightedNotes
+  const markNotesSetting = useSelector(
+    (store) => store.musicTheory.markNotesSetting
+  );
+  const labelNotesSetting = useSelector(
+    (store) => store.musicTheory.labelNotesSetting
+  );
+  const fretPositionSetting = useSelector(
+    (store) => store.musicTheory.fretPositionSetting
+  );
+  const highlightNotesSetting = useSelector(
+    (store) => store.musicTheory.highlightNotesSetting
   );
   const instrumentQuickMenu = useSelector(
     (store) => store.ui.quickMenus.instrumentQuickMenu
   );
-  const activeTab = useSelector(
-    (store) => store.ui.quickMenus.instrumentQuickMenu.activeTab
-  );
-  const [selectedSetting, setSelectedSetting] = useState("none");
+
+  useEffect(() => {
+    // add the margin/padding as well to get the correct height
+    let collapsible = document.getElementById("FretboardQuickMenu");
+    if (collapsible.style.maxHeight) {
+      collapsible.style.maxHeight = null;
+    } else {
+      collapsible.style.maxHeight = collapsible.scrollHeight + "px";
+    }
+  }, [instrumentQuickMenu]);
 
   function handleSetActiveTab(tabName) {
     dispatch(
@@ -68,37 +80,41 @@ function FretboardQuickMenu() {
       <div className="settings">
         <div className="setting dropdown markNotes">
           <p>Mark notes</p>
-          <button>{markNotes}</button>
+          <button>{markNotesSetting}</button>
           <div className="dropdown-content">
-            <button onClick={() => dispatch(setMarkNotes("Single"))}>
+            <button onClick={() => dispatch(setMarkNotesSetting("Single"))}>
               Single
             </button>
-            <button onClick={() => dispatch(setMarkNotes("None"))}>None</button>
-            <button onClick={() => dispatch(setMarkNotes("All"))}>All</button>
-            <button onClick={() => dispatch(setMarkNotes("Identical"))}>
+            <button onClick={() => dispatch(setMarkNotesSetting("None"))}>
+              None
+            </button>
+            <button onClick={() => dispatch(setMarkNotesSetting("All"))}>
+              All
+            </button>
+            <button onClick={() => dispatch(setMarkNotesSetting("Identical"))}>
               Identical
             </button>
           </div>
         </div>
         <div className="setting dropdown labelNotes">
           <p>Label notes</p>
-          <button>{labelNotes}</button>
+          <button>{labelNotesSetting}</button>
           <div className="dropdown-content">
             <button>Note</button>
-            <button onClick={() => dispatch(setLabelNotes("Interval"))}>
+            <button onClick={() => dispatch(setLabelNotesSetting("Interval"))}>
               Interval
             </button>
-            <button onClick={() => dispatch(setLabelNotes("Degree"))}>
+            <button onClick={() => dispatch(setLabelNotesSetting("Degree"))}>
               Degree
             </button>
-            <button onClick={() => dispatch(setLabelNotes("DoReMi"))}>
+            <button onClick={() => dispatch(setLabelNotesSetting("DoReMi"))}>
               DoReMi
             </button>
           </div>
         </div>
         <div className="setting dropdown fretPositions">
           <p>Position</p>
-          <button>All</button>
+          <button>{fretPositionSetting}</button>
           <div className="dropdown-content">
             <button>All</button>
             <button>1</button>
@@ -111,7 +127,7 @@ function FretboardQuickMenu() {
         <div className="setting dropdown highlight">
           <p>Highlight</p>
           {/* This button will be either None or All depending what was last used. */}
-          <button>None</button>
+          <button>{highlightNotesSetting}</button>
           <div className="dropdown-content highlight">
             <Keys
               noteSize={25}

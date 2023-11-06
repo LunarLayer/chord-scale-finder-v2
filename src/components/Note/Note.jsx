@@ -6,29 +6,40 @@ import { getNoteLabel } from "../../Helpers/InstrumentHelper";
 const Note = memo(function Note({
   pitchClass,
   octave,
-  notesWidth,
+  noteWidth,
+  labelWidth,
   selected,
   highlighted,
 }) {
-  const labelNotes = useSelector((store) => store.musicTheory.labelNotes);
+  const labelNotesSetting = useSelector(
+    (store) => store.musicTheory.labelNotesSetting
+  );
   const key = useSelector((store) => store.musicTheory.key);
-  let noteWidth = notesWidth > 25 ? 25 : notesWidth;
-  let label = getNoteLabel(pitchClass, labelNotes, key.scale, key.intervals);
+  let label = getNoteLabel(
+    pitchClass,
+    labelNotesSetting,
+    key.scale,
+    key.intervals
+  );
 
   return (
     <button
       className={`note ${selected ? "selected" : ""} ${
         highlighted ? "highlighted" : ""
       }`}
-      data-notename={pitchClass}
+      data-pitchclass={pitchClass}
       data-octave={octave}
+      style={{
+        minWidth: noteWidth,
+        maxWidth: noteWidth,
+      }}
     >
       <span
         style={{
-          minWidth: noteWidth,
-          maxWidth: noteWidth,
-          minHeight: noteWidth,
-          maxHeight: noteWidth,
+          minWidth: labelWidth,
+          maxWidth: labelWidth,
+          minHeight: labelWidth,
+          maxHeight: labelWidth,
         }}
       >
         {label}

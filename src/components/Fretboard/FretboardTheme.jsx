@@ -4,19 +4,19 @@ import { useState } from "react";
 import { animateStringPlayed } from "../../Helpers/FretboardHelper";
 import { useSelector } from "react-redux";
 
-function FretboardTheme({ style, theme, strings, fretWidths, fretboardWidth }) {
+function FretboardTheme({ style, theme, tuning, fretWidths, fretboardWidth }) {
   return (
     <div id="FretboardTheme" className={`${style} ${theme}`}>
       <div className="stringVisuals">
-        {strings.map((string) => (
-          <div
-            className="stringVisual"
-            key={`stringVisual${string.stringNumber}`}
-          >
-            <span className="staticPart" />
-            <span className="vibratingPart" />
-          </div>
-        ))}
+        {tuning.map((rootNote, index) => {
+          let stringNumber = tuning.length - index;
+          return (
+            <div className="stringVisual" key={`stringVisual${stringNumber}`}>
+              <span className="staticPart" />
+              <span className="vibratingPart" />
+            </div>
+          );
+        })}
       </div>
       <div className="fretVisuals">
         {fretWidths.map((fretWidth, index) => {

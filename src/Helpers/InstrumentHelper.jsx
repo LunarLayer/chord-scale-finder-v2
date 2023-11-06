@@ -20,22 +20,22 @@ export function getFretsWithNotes(tuning, allNotes) {
   return fretsWithNotes;
 }
 
-export function getNoteLabel(pitchClass, labelNotes, scale, intervals) {
+export function getNoteLabel(pitchClass, labelNotesSetting, scale, intervals) {
   // console.log(pitchClass + labelNotes + scale + intervals);
-  if (labelNotes === "Note") return pitchClass;
-  if (labelNotes === "Degree") {
+  if (labelNotesSetting === "Note") return pitchClass;
+  if (labelNotesSetting === "Degree") {
     for (let i = 0; i < scale.length; i++) {
       if (pitchClass === scale[i]) {
         return i + 1;
       }
     }
-  } else if (labelNotes === "Interval") {
+  } else if (labelNotesSetting === "Interval") {
     for (let i = 0; i < scale.length; i++) {
       if (pitchClass === scale[i]) {
         return intervals[i];
       }
     }
-  } else if (labelNotes === "DoReMi") {
+  } else if (labelNotesSetting === "DoReMi") {
     for (let i = 0; i < scale.length; i++) {
       if (pitchClass === scale[i]) {
         if (i === 0) return "Do";

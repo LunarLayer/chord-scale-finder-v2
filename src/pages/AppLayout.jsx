@@ -23,6 +23,7 @@ import FretboardQuickSettings from "../components/QuickSettings/Instrument/Fretb
 import PianoQuickSettings from "../components/QuickSettings/Instrument/PianoQuickMenu";
 import { Key, Note } from "tonal";
 import NewKeyChange from "../components/KeyChange/KeyChange";
+import { getGuestUser } from "../Helpers/LoginHelper";
 
 function AppLayout() {
   const dispatch = useDispatch();
@@ -49,38 +50,8 @@ function AppLayout() {
       let user = {};
       dispatch(loginUser(user));
     } else {
-      dispatch(
-        loginUser({
-          username: "Guest",
-          settings: {
-            uiTheme: "default",
-            key: Key.majorKey("C"),
-            tonality: "todo",
-            accidental: "#",
-            instrument: {
-              type: "guitar",
-              soundFile: "jazzBass.mp3",
-              style: "default",
-              theme: "default",
-              coloredNotes: false,
-              tuning: [
-                Note.get("G2"),
-                Note.get("D2"),
-                Note.get("A1"),
-                Note.get("E1"),
-              ],
-            },
-            markNotes: "Single",
-            labelNotes: "Note",
-            fretPosition: "All",
-            highlightedNotes: "None",
-            quickMenus: {
-              instrument: { showing: true, activeTab: "markNotes" },
-              soundPlayer: { showing: true, activeTab: "markNotes" },
-            },
-          },
-        })
-      );
+      let guest = getGuestUser();
+      dispatch(loginUser(guest));
     }
   }, [dispatch, loginSuccess]);
 
