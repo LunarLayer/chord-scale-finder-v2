@@ -134,6 +134,9 @@ function FretboardQuickMenu() {
               handleNoteClicked={handleHighlightNoteClicked}
               accidental={accidental}
             />
+            <button>All</button>
+            <button>None</button>
+            <button>Scale</button>
           </div>
         </div>
         <div className="setting dropdown clear">
