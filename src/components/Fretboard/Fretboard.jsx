@@ -27,7 +27,7 @@ function Fretboard() {
     let string = noteElem.parentNode;
     let octave = noteElem.getAttribute("data-octave");
     let notePitchClass = noteElem.getAttribute("data-pitchclass");
-    let stringNumber = string.getAttribute("data-stringnumber");
+    let stringNumber = parseInt(string.getAttribute("data-stringnumber"));
     let stringIndex = tuning.length - stringNumber;
     let notesOnString = string.querySelectorAll(".note");
     let noteIndex = Array.from(notesOnString).indexOf(noteElem);
@@ -57,10 +57,9 @@ function Fretboard() {
       <div className="strings">
         {tuning.map((rootNote, index) => {
           let stringNumber = tuning.length - index;
-          let rootIndex = allNotes.findIndex(
-            (note) => note.name === rootNote.name
+          let notesForString = allNotes.filter((note) =>
+            note.appearsOnStrings.includes(stringNumber)
           );
-          let notesForString = allNotes.slice(rootIndex, rootIndex + 25);
           return (
             <String
               key={`string${stringNumber}`}

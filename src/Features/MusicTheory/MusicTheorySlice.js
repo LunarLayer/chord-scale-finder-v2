@@ -36,31 +36,26 @@ const MusicTheorySlice = createSlice({
     toggleNoteSelected(state, action) {
       // This needs adjustment, but i need to know which other strings it appears on.
       const { note, stringNumber, wasSelected } = action.payload;
-
       let noteIndex = state.allNotes.findIndex(
         (allNote) => allNote.name === note.name
       );
+      let stringNumberIndex = state.allNotes[
+        noteIndex
+      ].selectedOnStrings.findIndex((num) => num === stringNumber);
 
       if (wasSelected) {
         switch (state.markNotesSetting) {
           case "Single":
-            state.allNotes[noteIndex].onlySelectedOnStrings = state.allNotes[
-              noteIndex
-            ].onlySelectedOnStrings.filter(
-              (number) => number !== parseInt(stringNumber)
+            state.allNotes[noteIndex].selectedOnStrings.splice(
+              stringNumberIndex,
+              1
             );
-            if (state.allNotes[noteIndex].onlySelectedOnStrings.length >= 1) {
-              state.allNotes[noteIndex].selected = true;
-            } else {
+            // completely deselect if not selected on any string
+            if (state.allNotes[noteIndex].selectedOnStrings.length === 0)
               state.allNotes[noteIndex].selected = false;
-            }
-            console.log(
-              "after removal: " +
-                state.allNotes[noteIndex].onlySelectedOnStrings
-            );
             break;
           case "Identical":
-            state.allNotes[noteIndex].onlySelectedOnStrings = [];
+            state.allNotes[noteIndex].selectedOnStrings = [];
             state.allNotes[noteIndex].selected = false;
             break;
           case "All":
@@ -68,6 +63,7 @@ const MusicTheorySlice = createSlice({
               noteIndex = state.allNotes.findIndex(
                 (allNote) => allNote.name === note.pc + octave
               );
+              state.allNotes[noteIndex].selectedOnStrings = [];
               state.allNotes[noteIndex].selected = false;
             }
             break;
@@ -78,15 +74,14 @@ const MusicTheorySlice = createSlice({
         switch (state.markNotesSetting) {
           case "Single":
             state.allNotes[noteIndex].selected = true;
-            state.allNotes[noteIndex].onlySelectedOnStrings.push(
-              parseInt(stringNumber)
-            );
-            console.log(
-              "after adding: " + state.allNotes[noteIndex].onlySelectedOnStrings
-            );
+            state.allNotes[noteIndex].selectedOnStrings.push(stringNumber);
             break;
-          case "Idential":
-            state.allNotes[noteIndex].onlySelectedOnStrings = [];
+          case "Identical":
+            state.allNotes[noteIndex].selectedOnStrings = [];
+            for (let stringNumber of state.allNotes[noteIndex]
+              .appearsOnStrings) {
+              state.allNotes[noteIndex].selectedOnStrings.push(stringNumber);
+            }
             state.allNotes[noteIndex].selected = true;
             break;
           case "All":
@@ -94,11 +89,14 @@ const MusicTheorySlice = createSlice({
               noteIndex = state.allNotes.findIndex(
                 (allNote) => allNote.name === note.pc + octave
               );
+              state.allNotes[noteIndex].selectedOnStrings = [];
+              for (let stringNumber of state.allNotes[noteIndex]
+                .appearsOnStrings) {
+                state.allNotes[noteIndex].selectedOnStrings.push(stringNumber);
+              }
               state.allNotes[noteIndex].selected = true;
             }
             break;
-          default:
-            state.allNotes[noteIndex].selected = true;
         }
       }
 
@@ -119,6 +117,11 @@ const MusicTheorySlice = createSlice({
         const user = action.payload;
         state.key = user.settings.key;
         state.allNotes = user.settings.allNotes;
+        if (user.settings.instrument.type === "Fretboard") {
+          let tuning = user.settings.instrument.tuning;
+
+          initAllNotesForFretboard(state.allNotes, tuning);
+        }
         state.markNotesSetting = user.settings.markNotesSetting;
         state.labelNotesSetting = user.settings.labelNotesSetting;
         state.fretPositionSetting = user.settings.fretPositionSetting;
@@ -146,6 +149,16 @@ const MusicTheorySlice = createSlice({
       });
   },
 });
+
+function initAllNotesForFretboard(allNotes, tuning) {
+  for (let i = 0; i < 4; i++) {
+    let rootNote = tuning[i].name;
+    let rootIndex = allNotes.findIndex((note) => note.name === rootNote);
+    for (let j = 0; j <= 24; j++) {
+      allNotes[rootIndex + j].appearsOnStrings.push(tuning.length - i);
+    }
+  }
+}
 
 export const {
   setKey,

@@ -69,50 +69,6 @@ const FretboardSlice = createSlice({
         (fret) => fret.note.pc === note.pc && fret.note.oct === note.oct
       );
       state.strings[stringIndex].frets[fretIndex].note.selected = true;
-
-      //      // clean up all this
-      // if (markNotes !== "None") {
-      //   if (markNotes === "Single") {
-      //     for (let fret of strings[stringIndex].frets) {
-      //       if (fret.note.name === note.name) {
-      //         if (fret.note.selected) {
-      //           dispatch(deselectNoteOnString({ note, stringIndex }));
-      //         } else {
-      //           dispatch(selectNoteOnString({ note, stringIndex }));
-      //         }
-      //       }
-      //     }
-      //   }
-      //   if (markNotes === "Identical") {
-      //     for (let string of strings) {
-      //       for (let fret of string.frets) {
-      //         if (fret.note.name === note.name) {
-      //           stringIndex = strings.length - string.stringNumber;
-      //           if (selected) {
-      //             dispatch(deselectNoteOnString({ note, stringIndex }));
-      //           } else {
-      //             dispatch(selectNoteOnString({ note, stringIndex }));
-      //           }
-      //         }
-      //       }
-      //     }
-      //   }
-      //   if (markNotes === "All") {
-      //     for (let string of strings) {
-      //       for (let fret of string.frets) {
-      //         if (fret.note.pc === note.pc) {
-      //           stringIndex = strings.length - string.stringNumber;
-      //           note = fret.note;
-      //           if (selected) {
-      //             dispatch(deselectNoteOnString({ note, stringIndex }));
-      //           } else {
-      //             dispatch(selectNoteOnString({ note, stringIndex }));
-      //           }
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
     },
     deselectNoteOnString(state, action) {
       const { note, stringIndex, markNotes } = action.payload;
@@ -136,7 +92,7 @@ const FretboardSlice = createSlice({
         let windowWidth = getWindowWidth();
         const { type, soundFile, style, theme, tuning } =
           action.payload.settings.instrument;
-        if (type === "guitar") {
+        if (type === "Fretboard") {
           soundEngine.loadSoundFile(soundFile);
           state.fretboardStyle = style;
           state.fretboardTheme = theme;

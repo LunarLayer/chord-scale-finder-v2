@@ -13,8 +13,8 @@ const String = memo(function String({ notes, stringNumber }) {
       {notes.map((note, index) => {
         let selected = note.selected;
         if (
-          note.onlySelectedOnStrings.length > 0 &&
-          !note.onlySelectedOnStrings.includes(stringNumber)
+          note.selectedOnStrings.length > 0 &&
+          !note.selectedOnStrings.includes(stringNumber)
         ) {
           selected = false;
         }

@@ -119,7 +119,7 @@ export function getGuestUser() {
         { ...Note.get("B8") },
       ],
       instrument: {
-        type: "guitar",
+        type: "Fretboard",
         soundFile: "jazzBass.mp3",
         style: "default",
         theme: "default",
@@ -144,7 +144,8 @@ export function getGuestUser() {
   for (let note of guest.settings.allNotes) {
     note.selected = false;
     note.highlighted = false;
-    note.onlySelectedOnStrings = [];
+    note.selectedOnStrings = [];
+    note.appearsOnStrings = [];
   }
   return guest;
 }
