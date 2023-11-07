@@ -11,13 +11,8 @@ const String = memo(function String({ notes, stringNumber }) {
   return (
     <div className="string" data-stringnumber={stringNumber}>
       {notes.map((note, index) => {
-        let selected = note.selected;
-        if (
-          note.selectedOnStrings.length > 0 &&
-          !note.selectedOnStrings.includes(stringNumber)
-        ) {
-          selected = false;
-        }
+        let selected = note.selectedOnStrings.includes(stringNumber);
+
         return (
           <Note
             key={`note${note.name}string${stringNumber}`}
