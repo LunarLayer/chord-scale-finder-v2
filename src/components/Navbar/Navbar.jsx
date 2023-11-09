@@ -1,34 +1,19 @@
-// import { NavLink } from "react-router-dom";
-
 import "./Navbar.scss";
+
+import SoundController from "../SoundController/SoundController";
 
 function Navbar() {
   return (
-    <nav id="navbar">
+    <nav id="Navbar">
       <div className="flex-wrapper">
-        <button>Projects</button>
-        {/* <div className="quickSettings">
-           <button>🛠️</button>
-          <button>🎹</button>
-          <button>🎵</button>
-          <button>🔊</button> 
-        </div>*/}
-        <button>Login</button>
+        <div className="userSettings">
+          <button>Login</button>
+          <button>Projects</button>
+        </div>
+        <SoundController />
       </div>
     </nav>
   );
 }
 
 export default Navbar;
-
-// <ul>
-//   <li>
-
-//   </li>
-//   <li>
-//     <NavLink to="login">Login</NavLink>
-//   </li>
-//   <li>
-//     <NavLink to="countries">Countries</NavLink>
-//   </li>
-// </ul>

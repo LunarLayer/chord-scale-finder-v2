@@ -1,17 +1,23 @@
-#navbar {
+#Navbar {
   border-bottom: 1px solid black;
   padding: 2px 0;
 
   .flex-wrapper {
+    max-height: 26px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     max-width: var(--large);
     margin: 0 auto;
     padding: 0 20px;
-    .quickMenus {
-      display: flex;
-      gap: 10px;
+
+    .userSettings {
+      button {
+        background-color: white;
+        padding: 0;
+        border: none;
+        outline: 1px solid;
+      }
     }
   }
 }

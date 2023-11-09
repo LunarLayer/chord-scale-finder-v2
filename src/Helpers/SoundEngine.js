@@ -17,10 +17,14 @@ let strings = [
 ];
 let noteLength = 3000;
 let sound;
+let loadingProgress;
 
 export const soundEngine = {
   state() {
     return sound.state();
+  },
+  getLoadingProgress() {
+    return loadingProgress;
   },
   loadSoundFile(soundFile) {
     sound = new Howl({

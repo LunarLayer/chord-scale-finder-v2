@@ -27,7 +27,7 @@ import { getGuestUser } from "../Helpers/LoginHelper";
 
 function AppLayout() {
   const dispatch = useDispatch();
-  const [soundIsReady, setSoundIsReady] = useState(false);
+
   const currentViewSection1 = useSelector(
     (store) => store.ui.currentViewSection1
   );
@@ -91,6 +91,7 @@ function AppLayout() {
         {/* <AudioQuickSettings />
         <TheoryQuickSettings /> */}
         <Section2 view={currentViewSection2} />
+        <p>Need a sound icon that shows loading and when ready</p>
       </div>
     );
   } else {

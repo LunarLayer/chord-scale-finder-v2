@@ -1,0 +1,36 @@
+#SoundController {
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  overflow: hidden;
+  outline: 1px solid black;
+  background-color: white;
+  // max-width: 26px;
+
+  &.showing {
+    .volumeSlider {
+      display: block;
+    }
+  }
+
+  > button {
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    background-color: white;
+
+    img {
+    }
+    span {
+    }
+  }
+
+  .volumeSlider {
+    display: none;
+    margin: 0;
+    appearance: slider-vertical;
+    margin: 5px 0;
+    max-width: 26px;
+  }
+}
