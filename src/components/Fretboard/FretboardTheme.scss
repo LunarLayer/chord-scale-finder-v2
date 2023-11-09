@@ -6,6 +6,7 @@
   right: 0;
   bottom: 0;
   left: 0;
+  pointer-events: none;
   // background-image: url("/intrumentGraphics/QuiltedMaple2.jpg");
   // background-size: auto;
   // background-repeat: no-repeat;
@@ -157,7 +158,13 @@
         background-color: #e3dac9;
       }
 
-      .fretBand {
+      &:nth-child(25) {
+        .fretband:nth-child(1) {
+          left: 100%;
+        }
+      }
+
+      .fretband {
         position: absolute;
         left: 0;
         top: 0;

@@ -3,9 +3,14 @@ import FretboardTheme from "./FretboardTheme";
 import "./Fretboard.scss";
 import String from "./String";
 import { soundEngine } from "../../Helpers/SoundEngine";
-import { animateStringPlayed } from "../../Helpers/FretboardHelper";
+import {
+  animateStringPlayed,
+  initFretboardScroll,
+} from "../../Helpers/FretboardHelper";
 import { Note } from "tonal";
 import { toggleNoteSelected } from "../../Features/MusicTheory/MusicTheorySlice";
+import { useEffect } from "react";
+import { snapToScrollPos } from "../../Features/Fretboard/FretboardSlice";
 
 function Fretboard() {
   const dispatch = useDispatch();
@@ -14,12 +19,19 @@ function Fretboard() {
     (store) => store.musicTheory.markNotesSetting
   );
   const tuning = useSelector((store) => store.fretboard.tuning);
+  const fretCount = useSelector((store) => store.fretboard.fretCount);
   const fretWidths = useSelector((store) => store.fretboard.fretWidths);
   const fretboardWidth = useSelector((store) => store.fretboard.fretboardWidth);
   const fretboardStyle = useSelector((store) => store.fretboard.fretboardStyle);
   const fretboardTheme = useSelector((store) => store.fretboard.fretboardTheme);
 
+  useEffect(() => {
+    const strings = document.querySelector(".strings");
+    initFretboardScroll(strings, dispatch, snapToScrollPos);
+  }, []);
+
   function handleMouseDown(e) {
+    console.log("handling");
     // Todo: optionally add notes while mouse is held down and hovered over notes
     let noteElem = e.target;
     if (noteElem.parentNode.classList.contains("note"))
@@ -45,16 +57,16 @@ function Fretboard() {
     <div
       id="Fretboard"
       style={{ width: fretboardWidth, height: 145 }}
-      onMouseDown={handleMouseDown}
+      // onClick={handleMouseDown}
     >
-      <FretboardTheme
-        style={fretboardStyle}
-        theme={fretboardTheme}
-        tuning={tuning}
-        fretWidths={fretWidths}
-        fretboardWidth={fretboardWidth}
-      />
       <div className="strings">
+        <FretboardTheme
+          style={fretboardStyle}
+          theme={fretboardTheme}
+          tuning={tuning}
+          fretWidths={fretWidths}
+          fretboardWidth={fretboardWidth}
+        />
         {tuning.map((rootNote, index) => {
           let stringNumber = tuning.length - index;
           let notesForString = allNotes.filter((note) =>

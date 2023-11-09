@@ -14,9 +14,9 @@ import "./SoundController.scss";
 
 function SoundController({ loadingSoundProgress }) {
   const volumeSlider = useRef(null);
-  const [soundIsLoading, setSoundIsLoading] = useState(false);
+  const [soundIsLoading, setSoundIsLoading] = useState(true);
   const [speakerIcon, setSpeakerIcon] = useState(SpeakerFull);
-  const [volumeSliderShowing, setVolumeSliderShowing] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [volumeSliderTimeout, setVolumeSliderTimeout] = useState(null);
   const [volume, setVolume] = useState(10);
 
@@ -30,49 +30,55 @@ function SoundController({ loadingSoundProgress }) {
         setSoundIsLoading(false);
         clearInterval(checkSoundIsReady);
       }
-    }, 100);
+    }, 50);
     return () => {
       clearInterval(checkSoundIsReady);
     };
   }, [soundFile]);
 
   function handleToggleVolumeSlider() {
-    if (volumeSliderTimeout) clearTimeout(volumeSliderTimeout);
+    if (!soundIsLoading) {
+      if (volumeSliderTimeout) clearTimeout(volumeSliderTimeout);
 
-    setVolumeSliderShowing(!volumeSliderShowing);
+      setExpanded(!expanded);
 
-    const autoCloseVolumeControl = setTimeout(() => {
-      setVolumeSliderShowing(false);
-    }, 2000);
-    setVolumeSliderTimeout(autoCloseVolumeControl);
+      const autoCloseVolumeControl = setTimeout(() => {
+        setExpanded(false);
+      }, 2000);
+      setVolumeSliderTimeout(autoCloseVolumeControl);
+    }
   }
 
   function handleVolumeChanged() {
-    if (volumeSliderTimeout) clearTimeout(volumeSliderTimeout);
+    if (!soundIsLoading) {
+      if (volumeSliderTimeout) clearTimeout(volumeSliderTimeout);
 
-    let newVolume = parseInt(volumeSlider.current.value);
-    setVolume(newVolume);
-    if (newVolume === 0) setSpeakerIcon(SpeakerMuted);
-    if (newVolume > 0 && newVolume <= 3) setSpeakerIcon(SpeakerLow);
-    if (newVolume > 3 && newVolume <= 7) setSpeakerIcon(SpeakerMedium);
-    if (newVolume > 7 && newVolume <= 10) setSpeakerIcon(SpeakerFull);
-    let newVolumeAsDecimal = newVolume / 10;
-    Howler.volume(newVolumeAsDecimal);
+      let newVolume = parseInt(volumeSlider.current.value);
+      setVolume(newVolume);
+      if (newVolume === 0) setSpeakerIcon(SpeakerMuted);
+      if (newVolume > 0 && newVolume <= 3) setSpeakerIcon(SpeakerLow);
+      if (newVolume > 3 && newVolume <= 7) setSpeakerIcon(SpeakerMedium);
+      if (newVolume > 7 && newVolume <= 10) setSpeakerIcon(SpeakerFull);
+      let newVolumeAsDecimal = newVolume / 10;
+      Howler.volume(newVolumeAsDecimal);
 
-    const autoCloseVolumeControl = setTimeout(() => {
-      setVolumeSliderShowing(false);
-    }, 2000);
-    setVolumeSliderTimeout(autoCloseVolumeControl);
+      const autoCloseVolumeControl = setTimeout(() => {
+        setExpanded(false);
+      }, 2000);
+      setVolumeSliderTimeout(autoCloseVolumeControl);
+    }
   }
 
   return (
     <div
       id="SoundController"
-      className={`${volumeSliderShowing ? "showing" : ""}`}
+      className={`${expanded ? "expanded" : ""} ${
+        soundIsLoading ? "loadingSound" : ""
+      }`}
     >
       <button onClick={() => handleToggleVolumeSlider()}>
         <img id="speakerIcon" src={speakerIcon} alt="Volume icon" />
-        <span className="loader" />
+        <div className="loader"></div>
       </button>
       <input
         className="volumeSlider"

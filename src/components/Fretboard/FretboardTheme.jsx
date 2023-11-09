@@ -1,12 +1,15 @@
-import { useEffect } from "react";
 import "./FretboardTheme.scss";
-import { useState } from "react";
-import { animateStringPlayed } from "../../Helpers/FretboardHelper";
-import { useSelector } from "react-redux";
 
 function FretboardTheme({ style, theme, tuning, fretWidths, fretboardWidth }) {
+  let themeWidth = fretWidths.reduce((sum, value) => {
+    return sum + value;
+  });
   return (
-    <div id="FretboardTheme" className={`${style} ${theme}`}>
+    <div
+      id="FretboardTheme"
+      className={`${style} ${theme}`}
+      style={{ width: themeWidth }}
+    >
       <div className="stringVisuals">
         {tuning.map((rootNote, index) => {
           let stringNumber = tuning.length - index;
@@ -26,7 +29,7 @@ function FretboardTheme({ style, theme, tuning, fretWidths, fretboardWidth }) {
               style={{ minWidth: fretWidth }}
               key={`fretVisual${index}`}
             >
-              <span className="fretBand" />
+              <span className="fretband" />
               {[3, 5, 7, 9, 15, 17, 19, 21].includes(index) ? (
                 <span className="fretMarker" />
               ) : null}
@@ -36,6 +39,7 @@ function FretboardTheme({ style, theme, tuning, fretWidths, fretboardWidth }) {
                   <span className="fretMarker" />
                 </>
               ) : null}
+              {[24].includes(index) ? <span className="fretband" /> : null}
             </div>
           );
         })}

@@ -28,6 +28,62 @@ const FretboardSlice = createSlice({
   name: "fretboard",
   initialState,
   reducers: {
+    snapToScrollPos(state, action) {
+      const scrollPos = action.payload;
+      const strings = document.querySelector(".strings");
+
+      let fretWidthsSum = 0;
+      let newFretboardWidth = 0;
+
+      for (let i = 0; i < state.fretWidths.length; i++) {
+        if (
+          scrollPos > fretWidthsSum &&
+          scrollPos < fretWidthsSum + state.fretWidths[i]
+        ) {
+          let distanceToLeftFret = scrollPos - fretWidthsSum;
+          let distanceToRightFret =
+            fretWidthsSum + state.fretWidths[i] - scrollPos;
+
+          if (distanceToLeftFret < distanceToRightFret) {
+            for (let j = 0; j < state.fretCount; j++) {
+              newFretboardWidth += state.fretWidths[i + j];
+            }
+
+            state.fretboardWidth = newFretboardWidth;
+            animateSnap(strings, strings.scrollLeft, fretWidthsSum, 250);
+          } else {
+            for (let j = 1; j <= state.fretCount; j++) {
+              newFretboardWidth += state.fretWidths[i + j];
+            }
+            state.fretboardWidth = newFretboardWidth + 1; // +1 for subpixel rendering
+            animateSnap(
+              strings,
+              strings.scrollLeft,
+              fretWidthsSum + state.fretWidths[i],
+              250
+            );
+          }
+          break;
+        } else {
+          fretWidthsSum += state.fretWidths[i];
+        }
+      }
+      function animateSnap(strings, start, target, duration) {
+        const startTime = performance.now();
+        function easeOut(t) {
+          return 1 - Math.pow(1 - t, 3); // Cubic ease-out
+        }
+        function step(timestamp) {
+          const elapsedTime = timestamp - startTime;
+          const progress = Math.min(elapsedTime / duration, 1);
+          strings.scrollLeft = start + (target - start) * easeOut(progress);
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          }
+        }
+        requestAnimationFrame(step);
+      }
+    },
     clearAllNotes(state, action) {
       for (let string of state.strings) {
         for (let fret of string.frets) {
@@ -37,13 +93,10 @@ const FretboardSlice = createSlice({
       }
     },
     toggleHighlightNote(state, action) {
-      console.log("toggleHighlightNote");
       const note = action.payload;
-      console.log("highlight this: " + note);
       for (let string of state.strings) {
         for (let fret of string.frets) {
           if (fret.note.pc.toLowerCase() === note) {
-            console.log("match");
             fret.note.highlighted = !fret.note.highlighted;
           }
         }
@@ -137,6 +190,7 @@ function updateFretboard(state, newWindowWidth) {
     state.fretboardPadding,
     state.fretWidths
   );
+
   state.fretCount = getFretCount(
     state.fretboardStyle,
     state.preferredFretCount,
@@ -401,7 +455,7 @@ function getFretCap_MinimalFretboard(
 
 function getFretCount(fretboardStyle, preferredFretCount, fretCap) {
   if (fretboardStyle === "default") {
-    if (preferredFretCount === 0 || preferredFretCount > 0) {
+    if (preferredFretCount) {
       return Math.min(preferredFretCount, fretCap);
     } else {
       return fretCap;
@@ -534,7 +588,9 @@ function getFretWidths(
 
 export const {
   initializeFretboard,
+  snapToScrollPos,
   setFretboardSoundIsReady,
+  setFretboardWidth,
   clearAllNotes,
   toggleHighlightNote,
   highlightAllNotes,

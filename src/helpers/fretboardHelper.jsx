@@ -1,3 +1,4 @@
+import store from "../Store";
 import { addKeyframeStringVibration } from "../animations/keyframes";
 
 let stringAnimations = [
@@ -49,8 +50,6 @@ export function animateStringPlayed(
   stringAnimations = updatedStringAnimations;
 
   stringAnimations[stringIndex].timeout = setTimeout(() => {
-    // staticPart.style.width = `100%`;
-    // vibratingPart.style.width = 0;
     const resetStringAnimationState = [...stringAnimations];
     resetStringAnimationState[stringIndex].isAnimating = false;
     stringAnimations = resetStringAnimationState;
@@ -58,58 +57,110 @@ export function animateStringPlayed(
   }, 3000);
 }
 
-// export function animateStringPlayedOld(
-//   stringIndex,
-//   fretboardWidth,
-//   fretIndex,
-//   fretWidths,
-//   fretCount,
-//   stringAnimations,
-//   setStringAnimations
-// ) {
-//   let vibrationLength = getVibrationLength(
-//     fretCount,
-//     fretIndex,
-//     fretWidths,
-//     fretboardWidth
-//   );
-//   console.log(stringIndex);
-//   addKeyframeStringVibration(vibrationLength, fretboardWidth);
-//   console.log(vibrationLength);
-//   console.log(fretboardWidth);
+export function initFretboardScroll(strings, dispatch, snapToScrollPos) {
+  console.log("initFretboardScroll");
+  let startX;
+  let scrollPos;
+  let isDown;
+  let x;
+  let distanceX;
+  let mouseLeft;
 
-//   let stringVisual =
-//     document.getElementsByClassName("stringVisual")[stringIndex];
-//   let staticPart = stringVisual.querySelector(".staticPart");
-//   let vibratingPart = stringVisual.querySelector(".vibratingPart");
+  strings.addEventListener("mousedown", (e) => mouseIsDown(e));
+  strings.addEventListener("mouseup", (e) => mouseUp(e));
+  strings.addEventListener("mouseleave", (e) => mouseLeave(e));
+  strings.addEventListener("mousemove", (e) => mouseMove(e));
+  strings.addEventListener("touchstart", (e) => touchStart(e));
+  strings.addEventListener("touchmove", (e) => touchMove(e));
+  strings.addEventListener("touchend", (e) => touchEnd(e));
 
-//   if (stringAnimations[stringIndex].timeout)
-//     clearTimeout(stringAnimations[stringIndex].timeout);
+  function mouseIsDown(e) {
+    isDown = true;
+    mouseLeft = false;
+    startX = e.pageX - strings.offsetLeft;
+    scrollPos = strings.scrollLeft;
+  }
+  function mouseUp(e) {
+    if (!mouseLeft) {
+      scrollPos = strings.scrollLeft;
+      dispatch(snapToScrollPos(scrollPos));
+      isDown = false;
+    }
+  }
+  function mouseLeave(e) {
+    mouseLeft = true;
+    scrollPos = strings.scrollLeft;
+    dispatch(snapToScrollPos(scrollPos));
+    isDown = false;
+  }
+  function mouseMove(e) {
+    if (isDown) {
+      e.preventDefault();
+      x = e.pageX - strings.offsetLeft;
+      distanceX = x - startX;
+      strings.scrollLeft = scrollPos - distanceX;
+    }
+  }
 
-//   vibratingPart.classList.remove("animate");
-//   void vibratingPart.offsetWidth; // Trigger reflow (stop animation so a new can start)
+  function touchStart(e) {
+    isDown = true;
+    startX = e.touches[0].pageX - strings.offsetLeft;
+    scrollPos = strings.scrollLeft;
+  }
+  function touchMove(e) {
+    if (isDown) {
+      e.preventDefault();
+      x = e.touches[0].pageX - strings.offsetLeft;
+      distanceX = x - startX;
+      strings.scrollLeft = scrollPos - distanceX;
+    }
+  }
+  function touchEnd(e) {
+    scrollPos = strings.scrollLeft;
+    dispatch(snapToScrollPos(scrollPos));
+    isDown = false;
+  }
 
-//   staticPart.style.width = `calc(100% - ${vibrationLength}px)`;
-//   vibratingPart.style.width = `${vibrationLength}px`;
-//   vibratingPart.classList.add("animate");
+  // function snapToFret(strings, scrollPos, fretWidths, fretCount) {
+  //   let fretWidthsSum = 0;
+  //   for (let i = 0; i < fretWidths.length; i++) {
+  //     if (
+  //       scrollPos > fretWidthsSum &&
+  //       scrollPos < fretWidthsSum + fretWidths[i]
+  //     ) {
+  //       let distanceToLeftFret = scrollPos - fretWidthsSum;
+  //       let distanceToRightFret = fretWidthsSum + fretWidths[i] - scrollPos;
+  //       if (distanceToLeftFret < distanceToRightFret) {
+  //         // dispatch(updateFretboardWidth());
+  //         animateSnap(strings, strings.scrollLeft, fretWidthsSum, 150);
+  //       } else {
+  //         animateSnap(
+  //           strings,
+  //           strings.scrollLeft,
+  //           fretWidthsSum + fretWidths[i],
+  //           150
+  //         );
+  //       }
+  //       break;
+  //     } else {
+  //       fretWidthsSum += fretWidths[i];
+  //     }
+  //   }
+  // }
 
-//   const updatedStringAnimations = [...stringAnimations];
-//   updatedStringAnimations[stringIndex].animating = true;
-//   setStringAnimations(updatedStringAnimations);
-
-//   stringAnimations[stringIndex].timeout = setTimeout(() => {
-//     staticPart.style.width = `100%`;
-//     vibratingPart.style.width = 0;
-//     const resetAnimationState = [...stringAnimations];
-//     resetAnimationState[stringIndex].animating = false;
-//     setStringAnimations(resetAnimationState);
-//   }, 3000);
-// }
-
-// function getVibrationLength(fretCount, fretIndex, fretWidths, fretboardWidth) {
-//   let vibrationStartPos = 0;
-//   for (let i = 0; i < fretCount; i++) {
-//     if (i <= fretIndex) vibrationStartPos += fretWidths[i];
-//   }
-//   return fretboardWidth - vibrationStartPos;
-// }
+  // function animateSnap(strings, start, target, duration) {
+  //   const startTime = performance.now();
+  //   function easeOut(t) {
+  //     return 1 - Math.pow(1 - t, 3); // Cubic ease-out
+  //   }
+  //   function step(timestamp) {
+  //     const elapsedTime = timestamp - startTime;
+  //     const progress = Math.min(elapsedTime / duration, 1);
+  //     strings.scrollLeft = start + (target - start) * easeOut(progress);
+  //     if (progress < 1) {
+  //       requestAnimationFrame(step);
+  //     }
+  //   }
+  //   requestAnimationFrame(step);
+  // }
+}
