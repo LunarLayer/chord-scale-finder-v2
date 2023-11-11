@@ -1,4 +1,3 @@
-import store from "../Store";
 import { addKeyframeStringVibration } from "../animations/keyframes";
 
 let stringAnimations = [
@@ -57,110 +56,149 @@ export function animateStringPlayed(
   }, 3000);
 }
 
-export function initFretboardScroll(strings, dispatch, snapToScrollPos) {
-  console.log("initFretboardScroll");
+export function initFretboardScroll(
+  dispatch,
+  snapContainerToScrollPos,
+  nutIsFixed
+) {
   let startX;
-  let scrollPos;
+  let scrollPosition;
   let isDown;
   let x;
   let distanceX;
   let mouseLeft;
+  const fretboard = document.getElementById("Fretboard");
+  fretboard.addEventListener("mousedown", mouseIsDown);
+  fretboard.addEventListener("touchstart", touchStart);
 
-  strings.addEventListener("mousedown", (e) => mouseIsDown(e));
-  strings.addEventListener("mouseup", (e) => mouseUp(e));
-  strings.addEventListener("mouseleave", (e) => mouseLeave(e));
-  strings.addEventListener("mousemove", (e) => mouseMove(e));
-  strings.addEventListener("touchstart", (e) => touchStart(e));
-  strings.addEventListener("touchmove", (e) => touchMove(e));
-  strings.addEventListener("touchend", (e) => touchEnd(e));
+  let containersToScroll = [];
+  if (nutIsFixed) {
+    let strings = document.getElementById("Strings");
+    let fretVisuals = document.getElementById("FretVisuals");
+    containersToScroll.push(strings);
+    containersToScroll.push(fretVisuals);
+  } else {
+    containersToScroll.push(fretboard);
+  }
 
   function mouseIsDown(e) {
+    fretboard.addEventListener("mousemove", mouseMove);
+    fretboard.addEventListener("mouseup", mouseUp);
+    fretboard.addEventListener("mouseleave", mouseLeave);
+
     isDown = true;
     mouseLeft = false;
-    startX = e.pageX - strings.offsetLeft;
-    scrollPos = strings.scrollLeft;
-  }
-  function mouseUp(e) {
-    if (!mouseLeft) {
-      scrollPos = strings.scrollLeft;
-      dispatch(snapToScrollPos(scrollPos));
-      isDown = false;
-    }
-  }
-  function mouseLeave(e) {
-    mouseLeft = true;
-    scrollPos = strings.scrollLeft;
-    dispatch(snapToScrollPos(scrollPos));
-    isDown = false;
+    startX = e.pageX - fretboard.offsetLeft;
+    scrollPosition = containersToScroll[0].scrollLeft;
   }
   function mouseMove(e) {
     if (isDown) {
       e.preventDefault();
-      x = e.pageX - strings.offsetLeft;
+      x = e.pageX - fretboard.offsetLeft;
       distanceX = x - startX;
-      strings.scrollLeft = scrollPos - distanceX;
+      for (let i = 0; i < containersToScroll.length; i++) {
+        containersToScroll[i].scrollLeft = scrollPosition - distanceX;
+      }
     }
+  }
+  function mouseUp(e) {
+    if (!mouseLeft) {
+      let scrollPos = containersToScroll[0].scrollLeft;
+      for (let i = 0; i < containersToScroll.length; i++) {
+        dispatch(
+          snapContainerToScrollPos({
+            containerId: containersToScroll[i].id,
+            scrollPos,
+          })
+        );
+      }
+      isDown = false;
+    }
+    fretboard.removeEventListener("mouseleave", mouseLeave);
+    fretboard.removeEventListener("mouseup", mouseUp);
+    fretboard.removeEventListener("mousemove", mouseMove);
+  }
+  function mouseLeave(e) {
+    // Ugh, scroll should work outside container too please
+    mouseLeft = true;
+    for (let i = 0; i < containersToScroll.length; i++) {
+      let scrollPos = containersToScroll[i].scrollLeft;
+      dispatch(
+        snapContainerToScrollPos({
+          containerId: containersToScroll[i].id,
+          scrollPos,
+        })
+      );
+    }
+    isDown = false;
+    fretboard.removeEventListener("mouseleave", mouseLeave);
+    fretboard.removeEventListener("mousemove", mouseMove);
   }
 
   function touchStart(e) {
+    fretboard.addEventListener("touchmove", touchMove);
+    fretboard.addEventListener("touchend", touchEnd);
     isDown = true;
-    startX = e.touches[0].pageX - strings.offsetLeft;
-    scrollPos = strings.scrollLeft;
+    startX = e.touches[0].pageX - fretboard.offsetLeft;
+    scrollPos = fretboard.scrollLeft;
   }
   function touchMove(e) {
     if (isDown) {
       e.preventDefault();
-      x = e.touches[0].pageX - strings.offsetLeft;
+      x = e.touches[0].pageX - fretboard.offsetLeft;
       distanceX = x - startX;
-      strings.scrollLeft = scrollPos - distanceX;
+      // fretboard.scrollLeft = scrollPos - distanceX;
+      for (let container of containersToScroll) {
+        container.scrollLeft = scrollPos - distanceX;
+      }
     }
   }
   function touchEnd(e) {
-    scrollPos = strings.scrollLeft;
+    scrollPos = fretboard.scrollLeft;
     dispatch(snapToScrollPos(scrollPos));
     isDown = false;
+    fretboard.removeEventListener("touchmove", touchMove);
+    fretboard.removeEventListener("touchend", touchEnd);
+  }
+}
+
+export function getStringVisualsWidth(fretWidths, nutIsFixed) {
+  let totalWidth = 0;
+  if (nutIsFixed) {
+    for (let i = 1; i < fretWidths.length; i++) {
+      totalWidth += fretWidths[i];
+    }
+  } else {
+    for (let i = 0; i < fretWidths.length; i++) {
+      totalWidth += fretWidths[i];
+    }
+  }
+  return totalWidth;
+}
+
+export function getNotesForFretboard(allNotes, tuning) {
+  let notesForFretboard = [];
+  let notesForString = [];
+  for (let i = 0; i < tuning.length; i++) {
+    let stringNumber = tuning.length - i;
+    notesForString = allNotes.filter((note) =>
+      note.appearsOnStrings.includes(stringNumber)
+    );
+    notesForFretboard.push(notesForString);
   }
 
-  // function snapToFret(strings, scrollPos, fretWidths, fretCount) {
-  //   let fretWidthsSum = 0;
-  //   for (let i = 0; i < fretWidths.length; i++) {
-  //     if (
-  //       scrollPos > fretWidthsSum &&
-  //       scrollPos < fretWidthsSum + fretWidths[i]
-  //     ) {
-  //       let distanceToLeftFret = scrollPos - fretWidthsSum;
-  //       let distanceToRightFret = fretWidthsSum + fretWidths[i] - scrollPos;
-  //       if (distanceToLeftFret < distanceToRightFret) {
-  //         // dispatch(updateFretboardWidth());
-  //         animateSnap(strings, strings.scrollLeft, fretWidthsSum, 150);
-  //       } else {
-  //         animateSnap(
-  //           strings,
-  //           strings.scrollLeft,
-  //           fretWidthsSum + fretWidths[i],
-  //           150
-  //         );
-  //       }
-  //       break;
-  //     } else {
-  //       fretWidthsSum += fretWidths[i];
-  //     }
-  //   }
-  // }
+  return notesForFretboard;
+}
 
-  // function animateSnap(strings, start, target, duration) {
-  //   const startTime = performance.now();
-  //   function easeOut(t) {
-  //     return 1 - Math.pow(1 - t, 3); // Cubic ease-out
-  //   }
-  //   function step(timestamp) {
-  //     const elapsedTime = timestamp - startTime;
-  //     const progress = Math.min(elapsedTime / duration, 1);
-  //     strings.scrollLeft = start + (target - start) * easeOut(progress);
-  //     if (progress < 1) {
-  //       requestAnimationFrame(step);
-  //     }
-  //   }
-  //   requestAnimationFrame(step);
-  // }
+export function getNotesForString(allNotes, stringNumber) {
+  let notesForString = allNotes.filter((note) =>
+    note.appearsOnStrings.includes(stringNumber)
+  );
+  return notesForString;
+}
+export function getNotesForNut(allNotes) {
+  // let notesForString = allNotes.filter((note) =>
+  //   note.appearsOnStrings.includes(stringNumber)
+  // );
+  // return notesForString;
 }

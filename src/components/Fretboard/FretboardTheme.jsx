@@ -1,16 +1,19 @@
+import { getStringVisualsWidth } from "../../Helpers/FretboardHelper";
 import "./FretboardTheme.scss";
 
-function FretboardTheme({ style, theme, tuning, fretWidths, fretboardWidth }) {
-  let themeWidth = fretWidths.reduce((sum, value) => {
-    return sum + value;
-  });
+function FretboardTheme({
+  style,
+  theme,
+  tuning,
+  fretWidths,
+  fretboardWidth,
+  nutIsFixed,
+}) {
+  let stringVisualsWidth = getStringVisualsWidth(fretWidths, nutIsFixed);
+
   return (
-    <div
-      id="FretboardTheme"
-      className={`${style} ${theme}`}
-      style={{ width: themeWidth }}
-    >
-      <div className="stringVisuals">
+    <>
+      <div id="StringVisuals" style={{ width: stringVisualsWidth }}>
         {tuning.map((rootNote, index) => {
           let stringNumber = tuning.length - index;
           return (
@@ -21,11 +24,25 @@ function FretboardTheme({ style, theme, tuning, fretWidths, fretboardWidth }) {
           );
         })}
       </div>
-      <div className="fretVisuals">
+      {nutIsFixed ? (
+        <div className="nutVisual" style={{ minWidth: fretWidths[0] + "px" }} />
+      ) : null}
+      <div
+        id="FretVisuals"
+        style={{
+          left: nutIsFixed ? fretWidths[0] + "px" : "auto",
+          right: nutIsFixed ? 0 : "auto",
+        }}
+      >
         {fretWidths.map((fretWidth, index) => {
+          if (index === 0 && nutIsFixed) return null;
           return (
             <div
-              className="fretVisual"
+              className={
+                !nutIsFixed && index === 0
+                  ? "fretVisual nutVisual"
+                  : "fretVisual"
+              }
               style={{ minWidth: fretWidth }}
               key={`fretVisual${index}`}
             >
@@ -44,7 +61,7 @@ function FretboardTheme({ style, theme, tuning, fretWidths, fretboardWidth }) {
           );
         })}
       </div>
-    </div>
+    </>
   );
 }
 

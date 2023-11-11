@@ -1,18 +1,27 @@
 #Fretboard {
   position: relative;
+  display: flex;
   margin: 0 auto;
   resize: both;
-  overflow: auto;
+  overflow: hidden;
   transition: all 0.1s ease;
+  // border-top: 1px solid black;
+  // border-bottom: 1px solid black;
 
-  > .strings {
-    overflow: hidden;
-    z-index: 2;
+  .nut {
+    z-index: 25;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    // background-color: red;
+    height: 145px;
+  }
+
+  > #Strings {
+    z-index: 25;
     position: absolute;
-    top: 0;
     right: 0;
-    bottom: 0;
-    left: 0;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     // transition: transform 0.5s ease;

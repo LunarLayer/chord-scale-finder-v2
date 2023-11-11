@@ -2,7 +2,6 @@
   z-index: 20;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   overflow: hidden;
   outline: 1px solid black;
   background-color: white;
@@ -53,7 +52,7 @@
   .volumeSlider {
     display: none;
     margin: 0;
-    appearance: slider-vertical;
+    writing-mode: vertical-lr;
     margin: 5px 0;
     max-width: 26px;
   }
