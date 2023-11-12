@@ -59,15 +59,16 @@ export function animateStringPlayed(
 export function initFretboardScroll(
   dispatch,
   snapContainerToScrollPos,
-  nutIsFixed
+  nutIsFixed,
+  setIsScrolling
 ) {
   let startX;
   let scrollPosition;
-  let isDown;
+  let isScrolling = false;
   let x;
   let distanceX;
-  let mouseLeft;
   const fretboard = document.getElementById("Fretboard");
+
   fretboard.addEventListener("mousedown", mouseIsDown);
   fretboard.addEventListener("touchstart", touchStart);
 
@@ -82,27 +83,62 @@ export function initFretboardScroll(
   }
 
   function mouseIsDown(e) {
-    fretboard.addEventListener("mousemove", mouseMove);
-    fretboard.addEventListener("mouseup", mouseUp);
-    fretboard.addEventListener("mouseleave", mouseLeave);
-
-    isDown = true;
-    mouseLeft = false;
-    startX = e.pageX - fretboard.offsetLeft;
-    scrollPosition = containersToScroll[0].scrollLeft;
+    if (fretboard.clientWidth !== fretboard.scrollWidth) {
+      document.addEventListener("mousemove", mouseMove);
+      document.addEventListener("mouseup", mouseUp);
+      startX = e.pageX - fretboard.offsetLeft;
+      scrollPosition = containersToScroll[0].scrollLeft;
+    } else {
+      // not scrollable, all frets are showing
+    }
+  }
+  function touchStart(e) {
+    if (fretboard.clientWidth !== fretboard.scrollWidth) {
+      document.addEventListener("touchmove", touchMove);
+      document.addEventListener("touchend", touchEnd);
+      startX = e.touches[0].pageX - fretboard.offsetLeft;
+      scrollPosition = containersToScroll[0].scrollLeft;
+    } else {
+      // not scrollable, all frets are showing
+    }
   }
   function mouseMove(e) {
-    if (isDown) {
-      e.preventDefault();
-      x = e.pageX - fretboard.offsetLeft;
-      distanceX = x - startX;
+    e.preventDefault();
+    x = e.pageX - fretboard.offsetLeft;
+    distanceX = x - startX;
+
+    // if cursor moves more than 25px
+    if (Math.abs(distanceX) > 10) {
+      setIsScrolling(true);
+      isScrolling = true;
+    }
+
+    if (isScrolling) {
       for (let i = 0; i < containersToScroll.length; i++) {
         containersToScroll[i].scrollLeft = scrollPosition - distanceX;
       }
     }
   }
-  function mouseUp(e) {
-    if (!mouseLeft) {
+  function touchMove(e) {
+    e.preventDefault();
+    x = e.touches[0].pageX - fretboard.offsetLeft;
+    distanceX = x - startX;
+
+    // if cursor moves more than 25px
+    if (Math.abs(distanceX) > 10) {
+      setIsScrolling(true);
+      isScrolling = true;
+    }
+
+    if (isScrolling) {
+      for (let i = 0; i < containersToScroll.length; i++) {
+        containersToScroll[i].scrollLeft = scrollPosition - distanceX;
+      }
+    }
+  }
+
+  function mouseUp() {
+    if (isScrolling) {
       let scrollPos = containersToScroll[0].scrollLeft;
       for (let i = 0; i < containersToScroll.length; i++) {
         dispatch(
@@ -112,67 +148,40 @@ export function initFretboardScroll(
           })
         );
       }
-      isDown = false;
+      isScrolling = false;
     }
-    fretboard.removeEventListener("mouseleave", mouseLeave);
-    fretboard.removeEventListener("mouseup", mouseUp);
-    fretboard.removeEventListener("mousemove", mouseMove);
+    document.removeEventListener("mouseup", mouseUp);
+    document.removeEventListener("mousemove", mouseMove);
   }
-  function mouseLeave(e) {
-    // Ugh, scroll should work outside container too please
-    mouseLeft = true;
-    for (let i = 0; i < containersToScroll.length; i++) {
-      let scrollPos = containersToScroll[i].scrollLeft;
-      dispatch(
-        snapContainerToScrollPos({
-          containerId: containersToScroll[i].id,
-          scrollPos,
-        })
-      );
-    }
-    isDown = false;
-    fretboard.removeEventListener("mouseleave", mouseLeave);
-    fretboard.removeEventListener("mousemove", mouseMove);
-  }
-
-  function touchStart(e) {
-    fretboard.addEventListener("touchmove", touchMove);
-    fretboard.addEventListener("touchend", touchEnd);
-    isDown = true;
-    startX = e.touches[0].pageX - fretboard.offsetLeft;
-    scrollPos = fretboard.scrollLeft;
-  }
-  function touchMove(e) {
-    if (isDown) {
-      e.preventDefault();
-      x = e.touches[0].pageX - fretboard.offsetLeft;
-      distanceX = x - startX;
-      // fretboard.scrollLeft = scrollPos - distanceX;
-      for (let container of containersToScroll) {
-        container.scrollLeft = scrollPos - distanceX;
+  function touchEnd() {
+    if (isScrolling) {
+      let scrollPos = containersToScroll[0].scrollLeft;
+      for (let i = 0; i < containersToScroll.length; i++) {
+        dispatch(
+          snapContainerToScrollPos({
+            containerId: containersToScroll[i].id,
+            scrollPos,
+          })
+        );
       }
+      isScrolling = false;
     }
-  }
-  function touchEnd(e) {
-    scrollPos = fretboard.scrollLeft;
-    dispatch(snapToScrollPos(scrollPos));
-    isDown = false;
-    fretboard.removeEventListener("touchmove", touchMove);
-    fretboard.removeEventListener("touchend", touchEnd);
+    document.removeEventListener("touchmove", touchMove);
+    document.removeEventListener("touchend", touchEnd);
   }
 }
 
 export function getStringVisualsWidth(fretWidths, nutIsFixed) {
   let totalWidth = 0;
-  if (nutIsFixed) {
-    for (let i = 1; i < fretWidths.length; i++) {
-      totalWidth += fretWidths[i];
-    }
-  } else {
-    for (let i = 0; i < fretWidths.length; i++) {
-      totalWidth += fretWidths[i];
-    }
+  // if (nutIsFixed) {
+  for (let i = 0; i < fretWidths.length; i++) {
+    totalWidth += fretWidths[i];
   }
+  // } else {
+  //   for (let i = 0; i < fretWidths.length; i++) {
+  //     totalWidth += fretWidths[i];
+  //   }
+  // }
   return totalWidth;
 }
 

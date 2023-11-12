@@ -88,6 +88,7 @@ function AppLayout() {
         ) : null}
         {/* <Section1 view="keyChange" /> */}
         <Section1 view={currentViewSection1} />
+        <p id="howfar">UNSET</p>
         {/* <AudioQuickSettings />
         <TheoryQuickSettings /> */}
         <Section2 view={currentViewSection2} />

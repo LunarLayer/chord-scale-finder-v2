@@ -11,6 +11,14 @@
     margin: 0 auto;
     padding: 0 20px;
 
+    .nutFixedButton {
+      background-color: red;
+
+      &.active {
+        background-color: green;
+      }
+    }
+
     .userSettings {
       button {
         background-color: white;

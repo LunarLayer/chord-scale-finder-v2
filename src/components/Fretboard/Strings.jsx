@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { getNotesForString } from "../../Helpers/FretboardHelper";
 import String from "./String";
 
@@ -13,6 +14,8 @@ function Strings({ tuning, nutIsFixed, allNotes, fretWidths }) {
     >
       {tuning.map((rootNote, index) => {
         let stringNumber = tuning.length - index;
+
+        // Consider memoizing "notesForString";
         let notesForString = getNotesForString(allNotes, stringNumber);
         if (nutIsFixed) notesForString = notesForString.slice(1);
 

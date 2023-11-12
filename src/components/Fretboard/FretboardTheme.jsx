@@ -29,6 +29,7 @@ function FretboardTheme({
       ) : null}
       <div
         id="FretVisuals"
+        className={`${nutIsFixed ? "nutIsFixed" : ""}`}
         style={{
           left: nutIsFixed ? fretWidths[0] + "px" : "auto",
           right: nutIsFixed ? 0 : "auto",

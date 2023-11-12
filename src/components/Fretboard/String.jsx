@@ -21,7 +21,7 @@ const String = memo(function String({ notes, stringNumber }) {
             octave={note.oct}
             noteWidth={noteWidth}
             labelWidth={notesLabelWidth}
-            selected={true}
+            selected={selected}
             // selected={selected}
             highlighted={note.highlighted}
           />

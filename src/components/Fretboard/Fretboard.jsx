@@ -14,8 +14,10 @@ import { snapContainerToScrollPos } from "../../Features/Fretboard/FretboardSlic
 import Nut from "./Nut";
 import { useMemo } from "react";
 import Strings from "./Strings";
+import { useState } from "react";
 
 function Fretboard() {
+  const [isScrolling, setIsScrolling] = useState(false);
   const dispatch = useDispatch();
   const allNotes = useSelector((store) => store.musicTheory.allNotes);
   const markNotesSetting = useSelector(
@@ -29,37 +31,49 @@ function Fretboard() {
   const fretboardTheme = useSelector((store) => store.fretboard.fretboardTheme);
 
   useEffect(() => {
-    initFretboardScroll(dispatch, snapContainerToScrollPos, nutIsFixed);
+    initFretboardScroll(
+      dispatch,
+      snapContainerToScrollPos,
+      nutIsFixed,
+      setIsScrolling
+    );
   }, []);
 
-  function handleMouseDown(e) {
-    console.log("handling");
-    // Todo: optionally add notes while mouse is held down and hovered over notes
-    let noteElem = e.target;
-    if (noteElem.parentNode.classList.contains("note"))
-      noteElem = noteElem.parentNode;
-    let string = noteElem.parentNode;
-    let octave = noteElem.getAttribute("data-octave");
-    let notePitchClass = noteElem.getAttribute("data-pitchclass");
-    let stringNumber = parseInt(string.getAttribute("data-stringnumber"));
-    let stringIndex = tuning.length - stringNumber;
-    let notesOnString = string.querySelectorAll(".note");
-    let noteIndex = Array.from(notesOnString).indexOf(noteElem);
-    let note = Note.get(notePitchClass + octave);
-    let wasSelected = noteElem.classList.contains("selected");
+  function handleFretboardClicked(e) {
+    if (isScrolling) {
+      // Dont play a note if we're scrolling
+      setIsScrolling(false);
+    } else {
+      // Todo: optionally add notes while mouse is held down and hovered over notes
+      let noteElem = e.target;
+      if (noteElem.parentNode.classList.contains("note"))
+        noteElem = noteElem.parentNode;
+      if (noteElem.classList.contains("note")) {
+        let string = noteElem.parentNode;
+        let octave = noteElem.getAttribute("data-octave");
+        let notePitchClass = noteElem.getAttribute("data-pitchclass");
+        let stringNumber = parseInt(string.getAttribute("data-stringnumber"));
+        let stringIndex = tuning.length - stringNumber;
+        let notesOnString = string.querySelectorAll(".note");
+        let noteIndex = Array.from(notesOnString).indexOf(noteElem);
+        let note = Note.get(notePitchClass + octave);
+        let wasSelected = noteElem.classList.contains("selected");
 
-    if (markNotesSetting !== "None") {
-      dispatch(toggleNoteSelected({ note, stringNumber, wasSelected }));
+        if (markNotesSetting !== "None") {
+          dispatch(toggleNoteSelected({ note, stringNumber, wasSelected }));
+        }
+        soundEngine.playNote(notePitchClass + octave, stringNumber);
+        animateStringPlayed(stringIndex, fretboardWidth, noteIndex, fretWidths);
+      }
     }
-    soundEngine.playNote(notePitchClass + octave, stringNumber);
-    animateStringPlayed(stringIndex, fretboardWidth, noteIndex, fretWidths);
   }
 
   return (
     <div
       id="Fretboard"
       style={{ width: fretboardWidth, height: 145 }}
-      // onClick={handleMouseDown}
+      onClick={handleFretboardClicked}
+      // onMouseDown={handleFretboardClicked}
     >
       {nutIsFixed ? <Nut tuning={tuning} nutIsFixed={nutIsFixed} /> : null}
       <Strings
