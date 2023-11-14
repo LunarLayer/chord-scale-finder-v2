@@ -1,3 +1,13 @@
+This project is still being worked on. 
+It's found in the state that it is while I'm currently working on it.
+
+In short, it will become a web-app for musicians to use, to look up chords, scales.
+The dream is that it will eventually be able to suggest chords and scales to play over a specified chord progression, however it can be used for much more, granted the aim is to provide a very simple and user friendly experience.
+
+
+
+
+
 Applayout dispatch(loginUser(guest));
 
 -> init userSlice state
