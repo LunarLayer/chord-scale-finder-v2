@@ -2,14 +2,16 @@ import { useMemo } from "react";
 import { getNotesForString } from "../../Helpers/FretboardHelper";
 import String from "./String";
 
-function Strings({ tuning, nutIsFixed, allNotes, fretWidths }) {
+function Strings({ tuning, nutIsFixed, allNotes, fretWidths, width }) {
   return (
     <div
       id="Strings"
       style={{
         height: "145px",
         left: nutIsFixed ? fretWidths[0] + "px" : "auto",
-        right: nutIsFixed ? 0 : "auto",
+        right: nutIsFixed ? "unset" : "auto",
+        // overflow: nutIsFixed ? "visible" : "hidden",
+        maxWidth: nutIsFixed ? width : "auto",
       }}
     >
       {tuning.map((rootNote, index) => {

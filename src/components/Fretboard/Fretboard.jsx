@@ -31,12 +31,7 @@ function Fretboard() {
   const fretboardTheme = useSelector((store) => store.fretboard.fretboardTheme);
 
   useEffect(() => {
-    initFretboardScroll(
-      dispatch,
-      snapContainerToScrollPos,
-      nutIsFixed,
-      setIsScrolling
-    );
+    initFretboardScroll(dispatch, snapContainerToScrollPos, setIsScrolling);
   }, []);
 
   function handleFretboardClicked(e) {
@@ -71,6 +66,7 @@ function Fretboard() {
   return (
     <div
       id="Fretboard"
+      className={nutIsFixed ? "nutIsFixed" : ""}
       style={{ width: fretboardWidth, height: 145 }}
       onClick={handleFretboardClicked}
       // onMouseDown={handleFretboardClicked}
@@ -81,6 +77,7 @@ function Fretboard() {
         nutIsFixed={nutIsFixed}
         allNotes={allNotes}
         fretWidths={fretWidths}
+        width={fretboardWidth - fretWidths[0]}
       />
       <FretboardTheme
         style={fretboardStyle}
@@ -89,6 +86,7 @@ function Fretboard() {
         fretWidths={fretWidths}
         fretboardWidth={fretboardWidth}
         nutIsFixed={nutIsFixed}
+        width={fretboardWidth - fretWidths[0]}
       />
     </div>
   );

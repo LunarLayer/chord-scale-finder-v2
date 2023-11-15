@@ -47,14 +47,10 @@ const FretboardSlice = createSlice({
       for (let i = 0; i < state.fretWidths.length; i++) {
         if (cantScrollFurther) {
           if (state.nutIsFixed) {
-            console.log("cantScrollFurther state.nutIsFixed");
             newFretboardWidth = fretWidths
               .slice(-state.fretCount + 1)
               .reduce((sum, acc) => sum + acc);
-            console.log("new: " + newFretboardWidth);
-            console.log("add: " + fretWidths[0] + 1);
             newFretboardWidth += fretWidths[fretWidths.length - 1] + 1;
-            console.log("total: " + newFretboardWidth);
             state.fretboardWidth = newFretboardWidth;
             animateSnap(
               container,
@@ -64,7 +60,7 @@ const FretboardSlice = createSlice({
             );
             break;
           }
-          console.log("cantScrollFurther");
+
           newFretboardWidth = fretWidths
             .slice(-state.fretCount + 1)
             .reduce((sum, acc) => sum + acc);
@@ -86,10 +82,17 @@ const FretboardSlice = createSlice({
           let distanceToRightFret = fretWidthsSum + fretWidths[i] - scrollPos;
           let fretCount = state.fretCount;
           if (scrollPos !== 0) {
-            fretCount -= 1;
-          }
-          if (scrollPos === 0 && state.nutIsFixed) {
-            fretCount -= 1;
+            if (scrollPos >= fretWidths[0] / 2) {
+              fretCount -= 1;
+            } else {
+              if (state.nutIsFixed) {
+                fretCount -= 1;
+              }
+            }
+          } else {
+            if (state.nutIsFixed) {
+              fretCount -= 1;
+            }
           }
 
           if (distanceToLeftFret < distanceToRightFret) {
@@ -561,53 +564,125 @@ function getMinimalNotesWidth(
 }
 
 function getFretboardWidth(fretboardStyle, fretWidths, fretCount, nutIsFixed) {
-  let container;
+  let scrollableContainers = [];
   let scrollLeft;
   if (nutIsFixed) {
-    container = document.getElementById("Strings");
+    // can i push without initializing scrollableContainers as array?
+    let strings = document.getElementById("Strings");
+    let fretVisuals = document.getElementById("FretVisuals");
+    if (strings && fretVisuals) {
+      scrollableContainers.push(strings);
+      scrollableContainers.push(fretVisuals);
+    }
   } else {
-    container = document.getElementById("Fretboard");
+    let fretboard = document.getElementById("Fretboard");
+    if (fretboard) {
+      scrollableContainers.push(fretboard);
+    } else {
+      console.log("notFound");
+    }
   }
 
-  if (container) {
-    scrollLeft = container.scrollLeft;
-    let cantScrollFurther =
-      container.scrollLeft + container.clientWidth === container.scrollWidth;
-    if (cantScrollFurther) {
-      if (container.clientWidth === container.scrollWidth) {
+  if (scrollableContainers.length > 0) {
+    console.log(scrollableContainers);
+    console.log(scrollableContainers[0].scrollLeft);
+    let hitScrollEnd =
+      scrollableContainers[0].scrollLeft +
+        scrollableContainers[0].clientWidth ===
+      scrollableContainers[0].scrollWidth;
+    if (hitScrollEnd) {
+      console.log("hitScrollEnd");
+      if (nutIsFixed) {
+        console.log("if (nutIsFixed)");
+        // Add up fretWidths, but starting from the end of the fretWidths arr.
+        let newFretboardWidth = fretWidths
+          .slice(-fretCount + 1)
+          .reduce((sum, acc) => sum + acc); // +1 for subpixel rendering
+
+        for (let container of scrollableContainers) {
+          animateSnap(
+            container,
+            container.scrollLeft,
+            container.scrollWidth,
+            250
+          );
+        }
+        return newFretboardWidth + fretWidths[0] + 1;
+      }
+      if (
+        scrollableContainers[0].clientWidth ===
+        scrollableContainers[0].scrollWidth
+      ) {
+        console.log("container.clientWidth === container.scrollWidth");
         let newFretboardWidth = 0;
         for (let i = 0; i < fretCount; i++) {
           newFretboardWidth += fretWidths[i];
         }
         return newFretboardWidth;
       } else {
+        console.log("Else !container.clientWidth === container.scrollWidth");
         let newFretboardWidth =
           fretWidths.slice(-fretCount + 1).reduce((sum, acc) => sum + acc) + 1; // +1 for subpixel rendering
+        if (fretCount === 25) {
+          newFretboardWidth += fretWidths[0];
+        }
         animateSnap(
-          container,
-          container.scrollLeft,
-          container.scrollWidth,
+          scrollableContainers[0],
+          scrollableContainers[0].scrollLeft,
+          scrollableContainers[0].scrollWidth,
           250
         );
         return newFretboardWidth;
       }
     }
+    scrollLeft = scrollableContainers[0].scrollLeft;
     if (scrollLeft !== 0) {
+      console.log("scrollLeft !== 0");
       let fretWidthsSum = 0;
-      for (let i = 0; i < fretWidths.length; i++) {
-        if (scrollLeft === Math.floor(fretWidthsSum)) {
-          let newFretboardWidth = 0;
-          for (let j = 0; j < fretCount - 1; j++) {
-            newFretboardWidth += fretWidths[i + j];
+
+      if (nutIsFixed) {
+        for (let i = 1; i < fretWidths.length; i++) {
+          // found scrollPosition matching the fret
+          if (scrollLeft === Math.floor(fretWidthsSum)) {
+            let newFretboardWidth = 0;
+            for (let j = 0; j < fretCount - 1; j++) {
+              newFretboardWidth += fretWidths[i + j];
+            }
+            if (nutIsFixed) {
+              console.log("nutFixed do this instead");
+              return newFretboardWidth + fretWidths[0] + 1;
+            } else {
+              console.log("elsing");
+              return newFretboardWidth + 1;
+            }
+          } else {
+            fretWidthsSum += fretWidths[i];
           }
-          return newFretboardWidth + 1;
         }
-        fretWidthsSum += fretWidths[i];
+      } else {
+        for (let i = 0; i < fretWidths.length; i++) {
+          // found scrollPosition matching the fret
+          if (scrollLeft === Math.floor(fretWidthsSum)) {
+            console.log("match");
+            let newFretboardWidth = 0;
+            for (let j = 0; j < fretCount - 1; j++) {
+              newFretboardWidth += fretWidths[i + j];
+            }
+            if (nutIsFixed) {
+              console.log("nutFixed do this instead");
+              return newFretboardWidth + fretWidths[0] + 1;
+            } else {
+              console.log("elsing");
+              return newFretboardWidth + 1;
+            }
+          } else {
+            fretWidthsSum += fretWidths[i];
+          }
+        }
       }
     }
   }
   if (fretboardStyle === "default") {
-    console.log("default");
     let newFretboardWidth = 0;
     for (let i = 0; i < fretCount; i++) {
       newFretboardWidth += fretWidths[i];

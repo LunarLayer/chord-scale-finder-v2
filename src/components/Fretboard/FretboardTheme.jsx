@@ -8,6 +8,7 @@ function FretboardTheme({
   fretWidths,
   fretboardWidth,
   nutIsFixed,
+  width,
 }) {
   let stringVisualsWidth = getStringVisualsWidth(fretWidths, nutIsFixed);
 
@@ -44,7 +45,10 @@ function FretboardTheme({
                   ? "fretVisual nutVisual"
                   : "fretVisual"
               }
-              style={{ minWidth: fretWidth }}
+              style={{
+                minWidth: fretWidth,
+                maxWidth: nutIsFixed ? width : "auto",
+              }}
               key={`fretVisual${index}`}
             >
               <span className="fretband" />
