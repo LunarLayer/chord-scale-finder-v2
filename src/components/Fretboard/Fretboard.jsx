@@ -10,7 +10,7 @@ import {
 import { Note } from "tonal";
 import { toggleNoteSelected } from "../../Features/MusicTheory/MusicTheorySlice";
 import { useEffect } from "react";
-import { snapContainerToScrollPos } from "../../Features/Fretboard/FretboardSlice";
+import { scrollToNearestFret } from "../../Features/Fretboard/FretboardSlice";
 import Nut from "./Nut";
 import { useMemo } from "react";
 import Strings from "./Strings";
@@ -31,7 +31,7 @@ function Fretboard() {
   const fretboardTheme = useSelector((store) => store.fretboard.fretboardTheme);
 
   useEffect(() => {
-    initFretboardScroll(dispatch, snapContainerToScrollPos, setIsScrolling);
+    initFretboardScroll(dispatch, scrollToNearestFret, setIsScrolling);
   }, []);
 
   function handleFretboardClicked(e) {

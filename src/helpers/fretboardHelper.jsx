@@ -58,7 +58,7 @@ export function animateStringPlayed(
 
 export function initFretboardScroll(
   dispatch,
-  snapContainerToScrollPos,
+  scrollToNearestFret,
   setIsScrolling
 ) {
   let startX;
@@ -143,10 +143,11 @@ export function initFretboardScroll(
   function mouseUp() {
     if (isScrolling) {
       let scrollPos = containersToScroll[0].scrollLeft;
+
       // animate and snap each containers scroll position to the closest fret
       for (let i = 0; i < containersToScroll.length; i++) {
         dispatch(
-          snapContainerToScrollPos({
+          scrollToNearestFret({
             containerId: containersToScroll[i].id,
             scrollPos,
           })
@@ -162,7 +163,7 @@ export function initFretboardScroll(
       let scrollPos = containersToScroll[0].scrollLeft;
       for (let i = 0; i < containersToScroll.length; i++) {
         dispatch(
-          snapContainerToScrollPos({
+          scrollToNearestFret({
             containerId: containersToScroll[i].id,
             scrollPos,
           })

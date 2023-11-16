@@ -32,102 +32,159 @@ const FretboardSlice = createSlice({
     setNutIsFixed(state, action) {
       state.nutIsFixed = action.payload;
     },
-    snapContainerToScrollPos(state, action) {
+    // snapContainerToScrollPosOLD(state, action) {
+    //   const { containerId, scrollPos } = action.payload;
+    //   const container = document.getElementById(containerId);
+    //   let scrolledToEnd =
+    //     container.scrollLeft + container.clientWidth === container.scrollWidth;
+
+    //   let fretWidthsSum = 0;
+    //   let newFretboardWidth = 0;
+    //   let fretWidths = state.nutIsFixed
+    //     ? state.fretWidths.slice(1)
+    //     : state.fretWidths;
+
+    //   for (let i = 0; i < fretWidths.length; i++) {
+    //     if (scrolledToEnd) {
+    //       if (state.nutIsFixed) {
+    //         console.log("scrolledToEnd and nut is fixed");
+    //         newFretboardWidth = fretWidths
+    //           .slice(-state.fretCount + 1)
+    //           .reduce((sum, acc) => sum + acc);
+    //         newFretboardWidth += fretWidths[fretWidths.length - 1] + 1;
+    //         state.fretboardWidth = newFretboardWidth;
+    //         animateSnap(
+    //           container,
+    //           container.scrollLeft,
+    //           container.scrollWidth,
+    //           250
+    //         );
+    //         break;
+    //       }
+
+    //       newFretboardWidth = fretWidths
+    //         .slice(-state.fretCount + 1)
+    //         .reduce((sum, acc) => sum + acc);
+    //       state.fretboardWidth = newFretboardWidth + 1;
+    //       animateSnap(
+    //         container,
+    //         container.scrollLeft,
+    //         container.scrollWidth,
+    //         250
+    //       );
+    //       break;
+    //     }
+
+    //     if (
+    //       scrollPos >= fretWidthsSum &&
+    //       scrollPos < fretWidthsSum + fretWidths[i]
+    //     ) {
+    //       let distanceToLeftFret = scrollPos - fretWidthsSum;
+    //       let distanceToRightFret = fretWidthsSum + fretWidths[i] - scrollPos;
+    //       let fretCount = state.fretCount;
+    //       if (scrollPos !== 0) {
+    //         if (scrollPos >= fretWidths[0] / 2) {
+    //           fretCount -= 1;
+    //         } else {
+    //           if (state.nutIsFixed) {
+    //             fretCount -= 1;
+    //           }
+    //         }
+    //       } else {
+    //         if (state.nutIsFixed) {
+    //           fretCount -= 1;
+    //         }
+    //       }
+
+    //       if (distanceToLeftFret < distanceToRightFret) {
+    //         for (let j = 0; j < fretCount; j++) {
+    //           newFretboardWidth += fretWidths[i + j];
+    //         }
+    //         if (state.nutIsFixed) {
+    //           state.fretboardWidth =
+    //             newFretboardWidth + state.fretWidths[0] + 1;
+    //         } else {
+    //           state.fretboardWidth = newFretboardWidth + 1;
+    //         }
+    //         animateSnap(container, container.scrollLeft, fretWidthsSum, 250);
+    //       } else {
+    //         for (let j = 1; j <= fretCount; j++) {
+    //           newFretboardWidth += fretWidths[i + j];
+    //         }
+    //         if (state.nutIsFixed) {
+    //           state.fretboardWidth =
+    //             newFretboardWidth + state.fretWidths[0] + 1;
+    //         } else {
+    //           state.fretboardWidth = newFretboardWidth + 1;
+    //         }
+    //         animateSnap(
+    //           container,
+    //           container.scrollLeft,
+    //           fretWidthsSum + fretWidths[i],
+    //           250
+    //         );
+    //       }
+    //       break;
+    //     } else {
+    //       fretWidthsSum += fretWidths[i];
+    //     }
+    //   }
+    // },
+    // rename
+    scrollToNearestFret(state, action) {
       const { containerId, scrollPos } = action.payload;
       const container = document.getElementById(containerId);
-      let cantScrollFurther =
+      let newFretboardWidth,
+        fretWidths,
+        startIndex,
+        endIndex,
+        fretCount,
+        newScrollPos;
+
+      fretCount = state.fretCount - 1;
+      if (state.nutIsFixed) {
+        fretWidths = state.fretWidths.slice(1);
+        newFretboardWidth += state.fretWidths[0];
+      } else {
+        newFretboardWidth = 0;
+        fretWidths = state.fretWidths;
+      }
+
+      // get a startIndex and endIndex to use for getting fretboardWidth based on fretWidths array
+      if (scrollPos === 0) {
+        startIndex = 0;
+        endIndex = fretCount + 1; // +1 because nut is not counted as a fret, yet it is visible at scrollPos0
+      }
+
+      let scrolledToEnd =
         container.scrollLeft + container.clientWidth === container.scrollWidth;
-
-      let fretWidthsSum = 0;
-      let newFretboardWidth = 0;
-      let fretWidths = state.nutIsFixed
-        ? state.fretWidths.slice(1)
-        : state.fretWidths;
-
-      for (let i = 0; i < state.fretWidths.length; i++) {
-        if (cantScrollFurther) {
-          if (state.nutIsFixed) {
-            newFretboardWidth = fretWidths
-              .slice(-state.fretCount + 1)
-              .reduce((sum, acc) => sum + acc);
-            newFretboardWidth += fretWidths[fretWidths.length - 1] + 1;
-            state.fretboardWidth = newFretboardWidth;
-            animateSnap(
-              container,
-              container.scrollLeft,
-              container.scrollWidth,
-              250
-            );
-            break;
-          }
-
-          newFretboardWidth = fretWidths
-            .slice(-state.fretCount + 1)
-            .reduce((sum, acc) => sum + acc);
-          state.fretboardWidth = newFretboardWidth + 1;
-          animateSnap(
-            container,
-            container.scrollLeft,
-            container.scrollWidth,
-            250
-          );
-          break;
-        }
-
-        if (
-          scrollPos >= fretWidthsSum &&
-          scrollPos < fretWidthsSum + fretWidths[i]
-        ) {
-          let distanceToLeftFret = scrollPos - fretWidthsSum;
-          let distanceToRightFret = fretWidthsSum + fretWidths[i] - scrollPos;
-          let fretCount = state.fretCount;
-          if (scrollPos !== 0) {
-            if (scrollPos >= fretWidths[0] / 2) {
-              fretCount -= 1;
-            } else {
-              if (state.nutIsFixed) {
-                fretCount -= 1;
-              }
-            }
-          } else {
-            if (state.nutIsFixed) {
-              fretCount -= 1;
-            }
-          }
-
-          if (distanceToLeftFret < distanceToRightFret) {
-            for (let j = 0; j < fretCount; j++) {
-              newFretboardWidth += fretWidths[i + j];
-            }
-            if (state.nutIsFixed) {
-              state.fretboardWidth =
-                newFretboardWidth + state.fretWidths[0] + 1;
-            } else {
-              state.fretboardWidth = newFretboardWidth + 1;
-            }
-            animateSnap(container, container.scrollLeft, fretWidthsSum, 250);
-          } else {
-            for (let j = 1; j <= fretCount; j++) {
-              newFretboardWidth += fretWidths[i + j];
-            }
-            if (state.nutIsFixed) {
-              state.fretboardWidth =
-                newFretboardWidth + state.fretWidths[0] + 1;
-            } else {
-              state.fretboardWidth = newFretboardWidth + 1;
-            }
-            animateSnap(
-              container,
-              container.scrollLeft,
-              fretWidthsSum + fretWidths[i],
-              250
-            );
-          }
-          break;
+      if (scrollPos > 0 && !scrolledToEnd) {
+        startIndex = getClosestFretnumber(scrollPos, fretWidths);
+        if (startIndex === 0) {
+          endIndex = startIndex + fretCount + 1;
         } else {
-          fretWidthsSum += fretWidths[i];
+          endIndex = startIndex + fretCount;
         }
       }
+      if (scrolledToEnd) {
+        startIndex = state.fretWidths.length - fretCount;
+        endIndex = state.fretWidths.length;
+      }
+
+      newFretboardWidth += fretWidths
+        .slice(startIndex, endIndex)
+        .reduce((sum, current) => sum + current);
+
+      if (startIndex === 0) {
+        newScrollPos = 0;
+      } else {
+        newScrollPos = fretWidths
+          .slice(0, startIndex)
+          .reduce((sum, current) => sum + current);
+      }
+
+      animateSnap(container, container.scrollLeft, newScrollPos, 250);
+      state.fretboardWidth = newFretboardWidth + 1; // +1 to account for subpixel-rendering
     },
     clearAllNotes(state, action) {
       for (let string of state.strings) {
@@ -212,6 +269,49 @@ const FretboardSlice = createSlice({
       });
   },
 });
+
+function getClosestFretnumber(scrollPos, fretWidths) {
+  let sum = 0;
+
+  for (let i = 0; i < fretWidths.length; i++) {
+    let nextSum = sum + fretWidths[i];
+
+    // Check if scrollPos is in the current fret range
+    if (scrollPos >= sum && scrollPos < nextSum) {
+      let distanceToLeftFret = scrollPos - sum;
+      let distanceToRightFret = nextSum - scrollPos;
+
+      // Return the index of the closest fret
+      return distanceToLeftFret < distanceToRightFret ? i : i + 1;
+    } else {
+      sum += fretWidths[i];
+    }
+  }
+
+  // This line will only be reached if scrollPos is at the end of the frets
+  return fretWidths.length - 1;
+}
+
+// function getClosestFretnumber(scrollPos, fretWidths) {
+//   let sum = 0;
+//   for (let i = 0; i < fretWidths.length; i++) {
+//     let nextSum = sum + fretWidths[i + 1];
+//     if (scrollPos >= sum && scrollPos <= nextSum) {
+//       let distanceToLeftFret = scrollPos - sum;
+//       let distanceToRightFret = nextSum - scrollPos;
+//       console.log("distLeft: " + distanceToLeftFret);
+//       console.log("distRight: " + distanceToRightFret);
+
+//       if (distanceToLeftFret < distanceToRightFret) {
+//         return i;
+//       } else {
+//         return i + 1;
+//       }
+//     } else {
+//       sum += fretWidths[i];
+//     }
+//   }
+// }
 
 function animateSnap(container, start, target, duration) {
   const startTime = performance.now();
@@ -773,7 +873,7 @@ export const {
   refreshFretboard,
   initializeFretboard,
   setNutIsFixed,
-  snapContainerToScrollPos,
+  scrollToNearestFret,
   setFretboardSoundIsReady,
   setFretboardWidth,
   clearAllNotes,
