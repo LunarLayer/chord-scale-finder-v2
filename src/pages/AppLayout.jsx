@@ -37,13 +37,14 @@ function AppLayout() {
   const fretboardIsReady = useSelector(
     (store) => store.fretboard.fretboardIsReady
   );
+  console.log(fretboardIsReady);
   const fretboardVariant = useSelector(
     (store) => store.fretboard.fretboardVariant
   );
   const loginSuccess = useSelector((store) => store.user.loginSuccess);
 
   let note = Note.get("Cb2");
-  console.log(note);
+  // console.log(note);
 
   useEffect(() => {
     if (loginSuccess) {

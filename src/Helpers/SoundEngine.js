@@ -48,9 +48,6 @@ export const soundEngine = {
     }
   },
   playNote(noteName, stringNumber) {
-    // console.log("XXX");
-    // console.log(noteName);
-    // console.log(stringNumber);
     let string = strings[stringNumber];
     let spriteIndex = note(noteName).midi.toString();
     if (string.timeout) clearTimeout(string.timeout);

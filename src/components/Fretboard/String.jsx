@@ -22,8 +22,8 @@ const String = memo(function String({ notes, stringNumber }) {
             noteWidth={noteWidth}
             labelWidth={notesLabelWidth}
             selected={selected}
-            // selected={selected}
             highlighted={note.highlighted}
+            stringNumber={stringNumber}
           />
         );
       })}

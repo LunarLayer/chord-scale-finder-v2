@@ -47,7 +47,7 @@ function Fretboard() {
         let string = noteElem.parentNode;
         let octave = noteElem.getAttribute("data-octave");
         let notePitchClass = noteElem.getAttribute("data-pitchclass");
-        let stringNumber = parseInt(string.getAttribute("data-stringnumber"));
+        let stringNumber = parseInt(noteElem.getAttribute("data-stringnumber"));
         let stringIndex = tuning.length - stringNumber;
         let notesOnString = string.querySelectorAll(".note");
         let noteIndex = Array.from(notesOnString).indexOf(noteElem);
@@ -62,7 +62,6 @@ function Fretboard() {
       }
     }
   }
-
   return (
     <div
       id="Fretboard"
@@ -71,7 +70,9 @@ function Fretboard() {
       onClick={handleFretboardClicked}
       // onMouseDown={handleFretboardClicked}
     >
-      {nutIsFixed ? <Nut tuning={tuning} nutIsFixed={nutIsFixed} /> : null}
+      {nutIsFixed ? (
+        <Nut tuning={tuning} allNotes={allNotes} nutIsFixed={nutIsFixed} />
+      ) : null}
       <Strings
         tuning={tuning}
         nutIsFixed={nutIsFixed}

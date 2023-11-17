@@ -93,13 +93,20 @@ export function initFretboardScroll(
     }
   }
   function touchStart(e) {
-    if (fretboard.clientWidth !== fretboard.scrollWidth) {
+    containersToScroll = [];
+    if (fretboard.classList.contains("nutIsFixed")) {
+      containersToScroll.push(strings);
+      containersToScroll.push(fretVisuals);
+    } else {
+      containersToScroll.push(fretboard);
+    }
+
+    let fretboardIsScrollable = fretboard.clientWidth !== fretboard.scrollWidth;
+    if (fretboardIsScrollable) {
       document.addEventListener("touchmove", touchMove);
       document.addEventListener("touchend", touchEnd);
       startX = e.touches[0].pageX - fretboard.offsetLeft;
       scrollPosition = containersToScroll[0].scrollLeft;
-    } else {
-      // not scrollable, all frets are showing
     }
   }
   function mouseMove(e) {
@@ -107,7 +114,7 @@ export function initFretboardScroll(
     x = e.pageX - fretboard.offsetLeft;
     distanceX = x - startX;
 
-    let scrollDistance = Math.abs(distanceX); // needed?
+    let scrollDistance = Math.abs(distanceX);
     // To avoid scrolling in case a user clicks a note and moves the mouse a bit
     if (scrollDistance > 10) {
       setIsScrolling(true);
@@ -126,15 +133,16 @@ export function initFretboardScroll(
     x = e.touches[0].pageX - fretboard.offsetLeft;
     distanceX = x - startX;
 
-    // if cursor moves more than 25px
-    if (Math.abs(distanceX) > 10) {
+    let scrollDistance = Math.abs(distanceX);
+    // To avoid scrolling in case a user clicks a note and moves the mouse a bit
+    if (scrollDistance > 10) {
       setIsScrolling(true);
       isScrolling = true;
     }
 
     if (isScrolling) {
+      // Scroll the container(s)
       for (let i = 0; i < containersToScroll.length; i++) {
-        console.log(containersToScroll[i]);
         containersToScroll[i].scrollLeft = scrollPosition - distanceX;
       }
     }
@@ -143,8 +151,6 @@ export function initFretboardScroll(
   function mouseUp() {
     if (isScrolling) {
       let scrollPos = containersToScroll[0].scrollLeft;
-
-      // animate and snap each containers scroll position to the closest fret
       for (let i = 0; i < containersToScroll.length; i++) {
         dispatch(
           scrollToNearestFret({

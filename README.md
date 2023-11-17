@@ -37,6 +37,8 @@ Render: if selectedNotes.includes(note (already has oct)) -> note.selected = tru
 
 
 ### Todo:
+<FretboardSlice>
+> Consider if fretCount should be 1 less. (look at scrollToNearestFret reducer)
 <soundEngine>
 > Load a sound on/off symbol instead of delaying everything until the instrument audio has loaded.
 <Fretboard> 

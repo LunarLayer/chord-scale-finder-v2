@@ -10,13 +10,12 @@ function Strings({ tuning, nutIsFixed, allNotes, fretWidths, width }) {
         height: "145px",
         left: nutIsFixed ? fretWidths[0] + "px" : "auto",
         right: nutIsFixed ? "unset" : "auto",
-        // overflow: nutIsFixed ? "visible" : "hidden",
-        maxWidth: nutIsFixed ? width : "auto",
+        overflow: nutIsFixed ? "hidden" : "visible",
+        maxWidth: nutIsFixed ? width : "100%",
       }}
     >
       {tuning.map((rootNote, index) => {
         let stringNumber = tuning.length - index;
-
         // Consider memoizing "notesForString";
         let notesForString = getNotesForString(allNotes, stringNumber);
         if (nutIsFixed) notesForString = notesForString.slice(1);

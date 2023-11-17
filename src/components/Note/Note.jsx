@@ -10,6 +10,7 @@ const Note = memo(function Note({
   labelWidth,
   selected,
   highlighted,
+  stringNumber,
 }) {
   const labelNotesSetting = useSelector(
     (store) => store.musicTheory.labelNotesSetting
@@ -29,6 +30,7 @@ const Note = memo(function Note({
       }`}
       data-pitchclass={pitchClass}
       data-octave={octave}
+      data-stringnumber={stringNumber}
       style={{
         minWidth: noteWidth,
         maxWidth: noteWidth,

@@ -2,10 +2,7 @@ import "./Navbar.scss";
 
 import SoundController from "../SoundController/SoundController";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  refreshFretboard,
-  setNutIsFixed,
-} from "../../Features/Fretboard/FretboardSlice";
+import { setNutIsFixed } from "../../Features/Fretboard/FretboardSlice";
 
 function Navbar() {
   const dispatch = useDispatch();
@@ -13,7 +10,6 @@ function Navbar() {
 
   function handleToggleNutIsFixed() {
     dispatch(setNutIsFixed(!nutIsFixed));
-    dispatch(refreshFretboard());
   }
 
   return (
