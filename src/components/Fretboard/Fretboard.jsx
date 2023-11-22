@@ -1,20 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
-import FretboardTheme from "./FretboardTheme";
+import { useState, useEffect } from "react";
+import { Note } from "tonal";
+
 import "./Fretboard.scss";
-import String from "./String";
+import Nut from "./Nut";
+import Strings from "./Strings";
+import FretboardTheme from "./FretboardTheme";
+
 import { soundEngine } from "../../Helpers/SoundEngine";
 import {
   animateStringPlayed,
   initFretboardScroll,
 } from "../../Helpers/FretboardHelper";
-import { Note } from "tonal";
 import { toggleNoteSelected } from "../../Features/MusicTheory/MusicTheorySlice";
-import { useEffect } from "react";
 import { scrollToNearestFret } from "../../Features/Fretboard/FretboardSlice";
-import Nut from "./Nut";
-import { useMemo } from "react";
-import Strings from "./Strings";
-import { useState } from "react";
 
 function Fretboard() {
   const [isScrolling, setIsScrolling] = useState(false);
@@ -39,7 +38,6 @@ function Fretboard() {
       // Dont play a note if we're scrolling
       setIsScrolling(false);
     } else {
-      // Todo: optionally add notes while mouse is held down and hovered over notes
       let noteElem = e.target;
       if (noteElem.parentNode.classList.contains("note"))
         noteElem = noteElem.parentNode;
@@ -53,7 +51,6 @@ function Fretboard() {
         let noteIndex = Array.from(notesOnString).indexOf(noteElem);
         let note = Note.get(notePitchClass + octave);
         let wasSelected = noteElem.classList.contains("selected");
-
         if (markNotesSetting !== "None") {
           dispatch(toggleNoteSelected({ note, stringNumber, wasSelected }));
         }

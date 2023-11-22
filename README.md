@@ -7,6 +7,14 @@ The dream is that it will eventually be able to suggest chords and scales to pla
 
 
 
+> Currently working on:
+Fretboard scroll. 
+getFretboardWidth needs to run the if (fretboardIsReady && preferredFretCount)
+
+
+
+
+
 
 Applayout dispatch(loginUser(guest));
 

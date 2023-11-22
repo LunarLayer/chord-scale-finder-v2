@@ -37,7 +37,6 @@ function AppLayout() {
   const fretboardIsReady = useSelector(
     (store) => store.fretboard.fretboardIsReady
   );
-  console.log(fretboardIsReady);
   const fretboardVariant = useSelector(
     (store) => store.fretboard.fretboardVariant
   );

@@ -113,9 +113,8 @@ export function initFretboardScroll(
     e.preventDefault();
     x = e.pageX - fretboard.offsetLeft;
     distanceX = x - startX;
-
     let scrollDistance = Math.abs(distanceX);
-    // To avoid scrolling in case a user clicks a note and moves the mouse a bit
+    // To avoid scrolling in case a user clicks a note and accidentally moves the mouse a bit
     if (scrollDistance > 10) {
       setIsScrolling(true);
       isScrolling = true;
@@ -132,7 +131,6 @@ export function initFretboardScroll(
     e.preventDefault();
     x = e.touches[0].pageX - fretboard.offsetLeft;
     distanceX = x - startX;
-
     let scrollDistance = Math.abs(distanceX);
     // To avoid scrolling in case a user clicks a note and moves the mouse a bit
     if (scrollDistance > 10) {
