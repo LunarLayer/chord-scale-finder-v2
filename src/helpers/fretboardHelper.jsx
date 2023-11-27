@@ -22,10 +22,13 @@ export function animateStringPlayed(
   fretWidths
 ) {
   let vibrationLength = fretboardWidth;
+  console.log("before: " + vibrationLength);
+  console.log("fretNumber: " + fretNumber);
   for (let i = 0; i <= fretNumber; i++) {
     vibrationLength -= fretWidths[i];
   }
-  vibrationLength += 20;
+  console.log(vibrationLength);
+  vibrationLength += 20; // looks better visually
 
   addKeyframeStringVibration(vibrationLength, fretboardWidth);
 
@@ -56,11 +59,7 @@ export function animateStringPlayed(
   }, 3000);
 }
 
-export function initFretboardScroll(
-  dispatch,
-  scrollToNearestFret,
-  setIsScrolling
-) {
+export function initFretboardScroll(dispatch, scrollFretboard, setIsScrolling) {
   let startX;
   let scrollPosition;
   let isScrolling = false;
@@ -148,14 +147,9 @@ export function initFretboardScroll(
 
   function mouseUp() {
     if (isScrolling) {
-      let scrollPos = containersToScroll[0].scrollLeft;
+      // let scrollPos = containersToScroll[0].scrollLeft;
       for (let i = 0; i < containersToScroll.length; i++) {
-        dispatch(
-          scrollToNearestFret({
-            containerId: containersToScroll[i].id,
-            scrollPos,
-          })
-        );
+        dispatch(scrollFretboard());
       }
       isScrolling = false;
     }
@@ -164,20 +158,29 @@ export function initFretboardScroll(
   }
   function touchEnd() {
     if (isScrolling) {
-      let scrollPos = containersToScroll[0].scrollLeft;
-      for (let i = 0; i < containersToScroll.length; i++) {
-        dispatch(
-          scrollToNearestFret({
-            containerId: containersToScroll[i].id,
-            scrollPos,
-          })
-        );
-      }
+      // let scrollPos = containersToScroll[0].scrollLeft;
+      dispatch(scrollFretboard());
       isScrolling = false;
     }
     document.removeEventListener("touchmove", touchMove);
     document.removeEventListener("touchend", touchEnd);
   }
+}
+
+export function animateScroll(container, start, target, duration) {
+  const startTime = performance.now();
+  function easeOut(t) {
+    return 1 - Math.pow(1 - t, 3); // Cubic ease-out
+  }
+  function step(timestamp) {
+    const elapsedTime = timestamp - startTime;
+    const progress = Math.min(elapsedTime / duration, 1);
+    container.scrollLeft = start + (target - start) * easeOut(progress);
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    }
+  }
+  requestAnimationFrame(step);
 }
 
 export function getStringVisualsWidth(fretWidths, nutIsFixed) {

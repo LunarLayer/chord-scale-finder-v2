@@ -9,11 +9,12 @@ import FretboardTheme from "./FretboardTheme";
 
 import { soundEngine } from "../../Helpers/SoundEngine";
 import {
+  animateScroll,
   animateStringPlayed,
   initFretboardScroll,
 } from "../../Helpers/FretboardHelper";
 import { toggleNoteSelected } from "../../Features/MusicTheory/MusicTheorySlice";
-import { scrollToNearestFret } from "../../Features/Fretboard/FretboardSlice";
+import { scrollFretboard } from "../../Features/Fretboard/FretboardSlice";
 
 function Fretboard() {
   const [isScrolling, setIsScrolling] = useState(false);
@@ -22,6 +23,8 @@ function Fretboard() {
   const markNotesSetting = useSelector(
     (store) => store.musicTheory.markNotesSetting
   );
+
+  const scrollPosition = useSelector((store) => store.fretboard.scrollPosition);
   const tuning = useSelector((store) => store.fretboard.tuning);
   const fretWidths = useSelector((store) => store.fretboard.fretWidths);
   const nutIsFixed = useSelector((store) => store.fretboard.nutIsFixed);
@@ -30,12 +33,11 @@ function Fretboard() {
   const fretboardTheme = useSelector((store) => store.fretboard.fretboardTheme);
 
   useEffect(() => {
-    initFretboardScroll(dispatch, scrollToNearestFret, setIsScrolling);
-  }, []);
+    initFretboardScroll(dispatch, scrollFretboard, setIsScrolling);
+  }, [dispatch]);
 
   function handleFretboardClicked(e) {
     if (isScrolling) {
-      // Dont play a note if we're scrolling
       setIsScrolling(false);
     } else {
       let noteElem = e.target;
