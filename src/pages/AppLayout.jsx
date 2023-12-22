@@ -86,13 +86,7 @@ function AppLayout() {
         ) : currentViewSection1 === "piano" ? (
           <PianoQuickSettings />
         ) : null}
-        {/* <Section1 view="keyChange" /> */}
         <Section1 view={currentViewSection1} />
-        <p id="howfar">UNSET</p>
-        {/* <AudioQuickSettings />
-        <TheoryQuickSettings /> */}
-        <Section2 view={currentViewSection2} />
-        <p>Need a sound icon that shows loading and when ready</p>
       </div>
     );
   } else {

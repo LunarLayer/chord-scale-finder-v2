@@ -9,8 +9,8 @@ import FretboardTheme from "./FretboardTheme";
 
 import { soundEngine } from "../../Helpers/SoundEngine";
 import {
-  animateScroll,
   animateStringPlayed,
+  getStringVisualsWidth,
   initFretboardScroll,
 } from "../../Helpers/FretboardHelper";
 import { toggleNoteSelected } from "../../Features/MusicTheory/MusicTheorySlice";
@@ -24,7 +24,6 @@ function Fretboard() {
     (store) => store.musicTheory.markNotesSetting
   );
 
-  const scrollPosition = useSelector((store) => store.fretboard.scrollPosition);
   const tuning = useSelector((store) => store.fretboard.tuning);
   const fretWidths = useSelector((store) => store.fretboard.fretWidths);
   const nutIsFixed = useSelector((store) => store.fretboard.nutIsFixed);
@@ -57,7 +56,13 @@ function Fretboard() {
           dispatch(toggleNoteSelected({ note, stringNumber, wasSelected }));
         }
         soundEngine.playNote(notePitchClass + octave, stringNumber);
-        animateStringPlayed(stringIndex, fretboardWidth, noteIndex, fretWidths);
+        let stringVisualsWidth = getStringVisualsWidth(fretWidths, nutIsFixed);
+        animateStringPlayed(
+          stringIndex,
+          stringVisualsWidth,
+          noteIndex,
+          fretWidths
+        );
       }
     }
   }

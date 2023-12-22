@@ -14,11 +14,18 @@ function FretboardTheme({
 
   return (
     <>
-      <div id="StringVisuals" style={{ width: stringVisualsWidth }}>
+      <div
+        id="StringVisuals"
+        style={{ width: nutIsFixed ? fretboardWidth : stringVisualsWidth }}
+      >
         {tuning.map((rootNote, index) => {
           let stringNumber = tuning.length - index;
           return (
-            <div className="stringVisual" key={`stringVisual${stringNumber}`}>
+            <div
+              className="stringVisual"
+              key={`stringVisual${stringNumber}`}
+              style={{ width: nutIsFixed ? stringVisualsWidth : "auto" }}
+            >
               <span className="staticPart" />
               <span className="vibratingPart" />
             </div>

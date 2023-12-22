@@ -17,20 +17,17 @@ let stringAnimations = [
 
 export function animateStringPlayed(
   stringIndex,
-  fretboardWidth,
+  stringVisualsWidth,
   fretNumber,
   fretWidths
 ) {
-  let vibrationLength = fretboardWidth;
-  console.log("before: " + vibrationLength);
-  console.log("fretNumber: " + fretNumber);
-  for (let i = 0; i <= fretNumber; i++) {
+  let vibrationLength = stringVisualsWidth;
+  for (let i = 0; i < fretNumber; i++) {
     vibrationLength -= fretWidths[i];
   }
-  console.log(vibrationLength);
-  vibrationLength += 20; // looks better visually
+  // vibrationLength += 20; // looks better visually
 
-  addKeyframeStringVibration(vibrationLength, fretboardWidth);
+  addKeyframeStringVibration(vibrationLength, stringVisualsWidth);
 
   let stringVisual =
     document.getElementsByClassName("stringVisual")[stringIndex];
@@ -70,20 +67,24 @@ export function initFretboardScroll(dispatch, scrollFretboard, setIsScrolling) {
   let fretboard = document.getElementById("Fretboard");
   let strings = document.getElementById("Strings");
   let fretVisuals = document.getElementById("FretVisuals");
+  let stringVisuals = document.getElementById("StringVisuals");
 
-  fretboard.addEventListener("mousedown", mouseIsDown);
+  fretboard.addEventListener("mousedown", mouseDown);
   fretboard.addEventListener("touchstart", touchStart);
 
-  function mouseIsDown(e) {
+  function mouseDown(e) {
     containersToScroll = [];
+    let fretboardIsScrollable;
     if (fretboard.classList.contains("nutIsFixed")) {
+      fretboardIsScrollable = strings.clientWidth !== strings.scrollWidth;
       containersToScroll.push(strings);
       containersToScroll.push(fretVisuals);
+      containersToScroll.push(stringVisuals);
     } else {
+      fretboardIsScrollable = fretboard.clientWidth !== fretboard.scrollWidth;
       containersToScroll.push(fretboard);
     }
 
-    let fretboardIsScrollable = fretboard.clientWidth !== fretboard.scrollWidth;
     if (fretboardIsScrollable) {
       document.addEventListener("mousemove", mouseMove);
       document.addEventListener("mouseup", mouseUp);
@@ -93,14 +94,17 @@ export function initFretboardScroll(dispatch, scrollFretboard, setIsScrolling) {
   }
   function touchStart(e) {
     containersToScroll = [];
+    let fretboardIsScrollable;
     if (fretboard.classList.contains("nutIsFixed")) {
+      fretboardIsScrollable = strings.clientWidth !== strings.scrollWidth;
       containersToScroll.push(strings);
       containersToScroll.push(fretVisuals);
+      containersToScroll.push(stringVisuals);
     } else {
+      fretboardIsScrollable = fretboard.clientWidth !== fretboard.scrollWidth;
       containersToScroll.push(fretboard);
     }
 
-    let fretboardIsScrollable = fretboard.clientWidth !== fretboard.scrollWidth;
     if (fretboardIsScrollable) {
       document.addEventListener("touchmove", touchMove);
       document.addEventListener("touchend", touchEnd);
@@ -131,7 +135,7 @@ export function initFretboardScroll(dispatch, scrollFretboard, setIsScrolling) {
     x = e.touches[0].pageX - fretboard.offsetLeft;
     distanceX = x - startX;
     let scrollDistance = Math.abs(distanceX);
-    // To avoid scrolling in case a user clicks a note and moves the mouse a bit
+    // To avoid scrolling in case a user clicks a note and accidentally moves the mouse a bit
     if (scrollDistance > 10) {
       setIsScrolling(true);
       isScrolling = true;
@@ -147,9 +151,9 @@ export function initFretboardScroll(dispatch, scrollFretboard, setIsScrolling) {
 
   function mouseUp() {
     if (isScrolling) {
-      // let scrollPos = containersToScroll[0].scrollLeft;
+      let scrollPosition = containersToScroll[0].scrollLeft;
       for (let i = 0; i < containersToScroll.length; i++) {
-        dispatch(scrollFretboard());
+        dispatch(scrollFretboard(scrollPosition));
       }
       isScrolling = false;
     }
@@ -158,29 +162,15 @@ export function initFretboardScroll(dispatch, scrollFretboard, setIsScrolling) {
   }
   function touchEnd() {
     if (isScrolling) {
-      // let scrollPos = containersToScroll[0].scrollLeft;
-      dispatch(scrollFretboard());
+      let scrollPosition = containersToScroll[0].scrollLeft;
+      for (let i = 0; i < containersToScroll.length; i++) {
+        dispatch(scrollFretboard(scrollPosition));
+      }
       isScrolling = false;
     }
-    document.removeEventListener("touchmove", touchMove);
-    document.removeEventListener("touchend", touchEnd);
+    document.removeEventListener("mouseup", mouseUp);
+    document.removeEventListener("mousemove", mouseMove);
   }
-}
-
-export function animateScroll(container, start, target, duration) {
-  const startTime = performance.now();
-  function easeOut(t) {
-    return 1 - Math.pow(1 - t, 3); // Cubic ease-out
-  }
-  function step(timestamp) {
-    const elapsedTime = timestamp - startTime;
-    const progress = Math.min(elapsedTime / duration, 1);
-    container.scrollLeft = start + (target - start) * easeOut(progress);
-    if (progress < 1) {
-      requestAnimationFrame(step);
-    }
-  }
-  requestAnimationFrame(step);
 }
 
 export function getStringVisualsWidth(fretWidths, nutIsFixed) {
