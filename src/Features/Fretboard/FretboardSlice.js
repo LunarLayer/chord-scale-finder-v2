@@ -33,31 +33,24 @@ const FretboardSlice = createSlice({
   reducers: {
     setNutIsFixed(state, action) {
       state.nutIsFixed = action.payload;
-      updateFretboard(state);
-      // state.fretboardWidth = getFretboardWidth(
-      //   state.fretWidths,
-      //   state.visibleFretsRange,
-      //   state.nutIsFixed
-      // );
-      // let scrollPosition = getScrollPosition(
-      //   state.nutIsFixed,
-      //   state.fretWidths,
-      //   state.visibleFretsRange
-      // );
-      // ScrollTo(state, scrollPosition);
+      state.fretboardWidth = getFretboardWidth(state);
+      ScrollToNearestFretFrom(state);
     },
     scrollFretboard(state, action) {
-      let currentScrollPosition = action.payload;
       state.preferredFretCount = state.fretCount;
       state.visibleFretsRange = getVisibleFretsRange(state);
-      // state.visibleFrets = getVisibleFrets(state);
-
-      // update fretboard width
       state.fretboardWidth = getFretboardWidth(state);
-
-      // snap scroll to closest fret
-      console.log("scrolling to: " + state.visibleFretsRange.start);
-      ScrollToFret(state, currentScrollPosition, state.visibleFretsRange.start);
+      ScrollToNearestFretFrom(state);
+    },
+    setPreferredFretCount(state, action) {
+      state.preferredFretCount = action.payload;
+      state.fretCount = getFretCount(state);
+      state.visibleFretsRange = getVisibleFretsRange(
+        state,
+        "setPreferredFretCount"
+      );
+      state.fretboardWidth = getFretboardWidth(state);
+      ScrollToNearestFretFrom(state);
     },
     clearAllNotes(state, action) {
       for (let string of state.strings) {
@@ -105,14 +98,7 @@ const FretboardSlice = createSlice({
       );
       state.strings[stringIndex].frets[fretIndex].note.selected = false;
     },
-    setPreferredFretCount(state, action) {
-      state.preferredFretCount = action.payload;
-      state.visibleFretsRange = getVisibleFretsRange(
-        state,
-        "setPreferredFretCount"
-      );
-      updateFretboard(state);
-    },
+
     refreshFretboard(state) {
       updateFretboard(state);
     },
@@ -120,7 +106,7 @@ const FretboardSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(setWindowWidth, (state) => {
-        updateFretboard(state, "resize");
+        updateFretboard(state);
       })
       .addCase(loginUser, (state, action) => {
         let windowWidth = getWindowWidth();
@@ -158,35 +144,43 @@ function getVisibleFrets(state) {
   }
 }
 
-function getVisibleFretsRange(state) {
-  if (!state.visibleFretsRange || state.fretCount === 25)
-    return { start: 0, end: state.fretCount };
+function getVisibleFretsRange(state, trigger) {
+  if (!state.visibleFretsRange || state.fretCount === 25) {
+    if (state.nutIsFixed) {
+      console.log("#test");
+      return { start: 1, end: state.fretCount - 1 };
+    } else {
+      console.log("#test");
+      return { start: 0, end: state.fretCount - 1 };
+    }
+  }
 
   let start, end;
   let container = state.nutIsFixed
     ? document.getElementById("Strings")
     : document.getElementById("Fretboard");
-  let atScrollEnd =
+
+  let cantScrollFurther =
     container.scrollLeft + container.clientWidth === container.scrollWidth;
-
-  if (state.nutIsFixed) {
-    if (atScrollEnd) {
-      start = 25 - state.fretCount + 1;
-      end = 25;
-    } else {
-      start = getClosestFretnumber(state, container.scrollLeft);
-
-      end = start + state.fretCount;
-    }
+  if (cantScrollFurther && trigger !== "setPreferredFretCount") {
+    console.log("can't scroll further");
+    start = 24 - state.fretCount + 2;
+    end = 24;
+  } else if (state.nutIsFixed) {
+    console.log("nutIsFixed");
+    start = getClosestFretnumber(state, container.scrollLeft);
+    end = start + state.fretCount - 2;
   } else {
-    if (atScrollEnd) {
-      start = 25 - state.fretCount + 1;
-      end = 25;
-    } else {
-      start = getClosestFretnumber(state, container.scrollLeft);
-      end = start + state.fretCount;
-      if (start > 0) end -= 1;
-    }
+    console.log("notfixed");
+    start = getClosestFretnumber(state, container.scrollLeft);
+    end = start + state.fretCount - 1;
+    if (start > 0) end -= 1;
+  }
+
+  // While loop to cap fretsRange.end
+  while (end > 24) {
+    start -= 1;
+    end -= 1;
   }
 
   console.log("start: " + start + " | end: " + end);
@@ -213,9 +207,11 @@ function getFretboardScrollPosition(nutIsFixed, fretWidths, visibleFretsRange) {
   return scrollPos;
 }
 
-function ScrollToFret(state, currentScrollPosition, fretNumber) {
+function ScrollToNearestFretFrom(state) {
   // reset previously scrollable container(s)
-  let container;
+  let containersToScroll = getContainersToScroll(state.nutIsFixed);
+  if (containersToScroll[0] === null) return;
+
   if (state.nutIsFixed) {
     document.getElementById("Fretboard").scrollLeft = 0;
   } else {
@@ -225,13 +221,17 @@ function ScrollToFret(state, currentScrollPosition, fretNumber) {
   }
 
   let newScrollPosition = 0;
-  for (let i = 0; i < fretNumber; i++) {
+  for (let i = 0; i < state.visibleFretsRange.start; i++) {
     newScrollPosition += state.fretWidths[i];
+    // console.log("newScrollPosition [" + i + "] adding: " + state.fretWidths[i]);
   }
 
-  let containersToScroll = getContainersToScroll(state.nutIsFixed);
+  if (state.nutIsFixed) newScrollPosition -= state.fretWidths[0];
+
+  // console.log("scrolling to: " + newScrollPosition);
+
   for (let container of containersToScroll) {
-    animateScroll(container, currentScrollPosition, newScrollPosition);
+    animateScroll(container, container.scrollLeft, newScrollPosition);
   }
 }
 
@@ -290,8 +290,8 @@ function updateFretboard(state) {
   state.fretCount = getFretCount(state);
 
   state.visibleFretsRange = getVisibleFretsRange(state);
-
   state.fretboardWidth = getFretboardWidth(state);
+  // ScrollToNearestFretFrom(state);
 
   state.fretboardIsReady = true;
 }
@@ -587,17 +587,17 @@ function getFretboardWidth(state) {
   let fretboardWidth = 0;
   for (
     let i = state.visibleFretsRange.start;
-    i < state.visibleFretsRange.end;
+    i <= state.visibleFretsRange.end;
     i++
   ) {
     fretboardWidth += state.fretWidths[i];
-    console.log("[" + i + "] adding: " + state.fretWidths[i]);
+    // console.log("[" + i + "] adding: " + state.fretWidths[i]);
   }
   // add the width of the fixed nut
 
-  if (state.nutIsFixed) {
+  if (state.nutIsFixed && state.visibleFretsRange.start !== 0) {
     fretboardWidth += state.fretWidths[0];
-    console.log("[0] adding nut: " + state.fretWidths[0]);
+    // console.log("[0] adding nut: " + state.fretWidths[0]);
   }
 
   return fretboardWidth + 1; // +1 to account for subpixel rendering
