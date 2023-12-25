@@ -4,6 +4,10 @@ import { Key, Note } from "tonal";
 import { useState } from "react";
 import { setKey } from "../../Features/MusicTheory/MusicTheorySlice";
 
+// TODO:
+// Modal -> Add collapse all, show all, and let all be expanded when it opens at first.
+//
+
 function KeyChange() {
   const dispatch = useDispatch();
   const key = useSelector((store) => store.musicTheory.key);
@@ -11,6 +15,7 @@ function KeyChange() {
   let keyNote = Note.get(key.tonic).letter;
 
   function handleSetKey(note, accidental) {
+    console.log("handleSetKey");
     if (key.type === "major") {
       dispatch(setKey(Key.majorKey(note + accidental)));
     } else {
@@ -19,6 +24,7 @@ function KeyChange() {
   }
 
   function handleSelectScale(scale) {
+    console.log("handleSelectScale");
     if (scale === "major") {
       dispatch(setKey(Key.majorKey(key.tonic)));
     } else {
@@ -27,6 +33,7 @@ function KeyChange() {
   }
 
   function handleToggleDropdown(id) {
+    console.log("handleToggleDropdown");
     let collapsible = document.getElementById(id);
     if (collapsible.style.maxHeight) {
       collapsible.style.maxHeight = null;
@@ -36,7 +43,7 @@ function KeyChange() {
   }
 
   function handleToggleScalesModal() {
-    console.log("handling");
+    console.log("handleToggleScalesModal");
     setScalesModalShowing(!scalesModalShowing);
   }
 

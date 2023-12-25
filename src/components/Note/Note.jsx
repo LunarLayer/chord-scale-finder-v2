@@ -12,16 +12,9 @@ const Note = memo(function Note({
   highlighted,
   stringNumber,
 }) {
-  const labelNotesSetting = useSelector(
-    (store) => store.musicTheory.labelNotesSetting
-  );
+  const labelNotes = useSelector((store) => store.musicTheory.labelNotes);
   const key = useSelector((store) => store.musicTheory.key);
-  let label = getNoteLabel(
-    pitchClass,
-    labelNotesSetting,
-    key.scale,
-    key.intervals
-  );
+  let label = getNoteLabel(pitchClass, labelNotes, key.scale, key.intervals);
 
   return (
     <button

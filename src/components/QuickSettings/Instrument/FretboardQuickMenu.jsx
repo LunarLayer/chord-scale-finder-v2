@@ -5,14 +5,14 @@ import { useEffect } from "react";
 import { useState } from "react";
 import Button from "../../Button/Button";
 import {
-  setMarkNotesSetting,
-  setLabelNotesSetting,
-  setFretPositionSetting,
-  setHighlightNotesSetting,
+  setMarkNotes,
+  setLabelNotes,
+  setFretPosition,
+  setHighlightNotes,
 } from "../../../Features/MusicTheory/MusicTheorySlice";
 import {
   setActiveTabForQuickMenu,
-  toggleQuickMenu,
+  toggleMenu,
 } from "../../../Features/UI/UISlice";
 import Keys from "../../KeyChangeOld/Keys";
 import { note } from "tonal";
@@ -21,27 +21,23 @@ import {
   toggleHighlightNote,
   highlightAllNotes,
   removeHighlightAllNotes,
+  setNutIsFixed,
 } from "../../../Features/Fretboard/FretboardSlice";
 
 function FretboardQuickMenu() {
   const dispatch = useDispatch();
   const fretboardWidth = useSelector((store) => store.fretboard.fretboardWidth);
-  const accidental = useSelector((store) => store.user.settings.accidental);
-  const markNotesSetting = useSelector(
-    (store) => store.musicTheory.markNotesSetting
-  );
-  const labelNotesSetting = useSelector(
-    (store) => store.musicTheory.labelNotesSetting
-  );
-  const fretPositionSetting = useSelector(
-    (store) => store.musicTheory.fretPositionSetting
-  );
-  const highlightNotesSetting = useSelector(
-    (store) => store.musicTheory.highlightNotesSetting
+  const accidental = useSelector((store) => store.user.accidental);
+  const markNotes = useSelector((store) => store.musicTheory.markNotes);
+  const labelNotes = useSelector((store) => store.musicTheory.labelNotes);
+  const fretPosition = useSelector((store) => store.musicTheory.fretPosition);
+  const highlightNotes = useSelector(
+    (store) => store.musicTheory.highlightNotes
   );
   const instrumentQuickMenu = useSelector(
-    (store) => store.ui.quickMenus.instrumentQuickMenu
+    (store) => store.ui.instrumentQuickMenu
   );
+  const nutIsFixed = useSelector((store) => store.fretboard.nutIsFixed);
 
   useEffect(() => {
     // add the margin/padding as well to get the correct height
@@ -62,8 +58,12 @@ function FretboardQuickMenu() {
     );
   }
 
-  function handleToggleQuickMenu(name) {
-    dispatch(toggleQuickMenu(name));
+  function handleToggleNutIsFixed() {
+    dispatch(setNutIsFixed(!nutIsFixed));
+  }
+
+  function handleToggleMenu(name) {
+    dispatch(toggleMenu(name));
   }
 
   function handleHighlightNoteClicked(note, accidental) {
@@ -80,41 +80,39 @@ function FretboardQuickMenu() {
       <div className="settings">
         <div className="setting dropdown markNotes">
           <p>Mark notes</p>
-          <button>{markNotesSetting}</button>
+          <button>{markNotes}</button>
           <div className="dropdown-content">
-            <button onClick={() => dispatch(setMarkNotesSetting("Single"))}>
+            <button onClick={() => dispatch(setMarkNotes("single"))}>
               Single
             </button>
-            <button onClick={() => dispatch(setMarkNotesSetting("None"))}>
-              None
-            </button>
-            <button onClick={() => dispatch(setMarkNotesSetting("All"))}>
-              All
-            </button>
-            <button onClick={() => dispatch(setMarkNotesSetting("Identical"))}>
+            <button onClick={() => dispatch(setMarkNotes("none"))}>None</button>
+            <button onClick={() => dispatch(setMarkNotes("all"))}>All</button>
+            <button onClick={() => dispatch(setMarkNotes("identical"))}>
               Identical
             </button>
           </div>
         </div>
         <div className="setting dropdown labelNotes">
           <p>Label notes</p>
-          <button>{labelNotesSetting}</button>
+          <button>{labelNotes}</button>
           <div className="dropdown-content">
-            <button>Note</button>
-            <button onClick={() => dispatch(setLabelNotesSetting("Interval"))}>
+            <button onClick={() => dispatch(setLabelNotes("note"))}>
+              Note
+            </button>
+            <button onClick={() => dispatch(setLabelNotes("interval"))}>
               Interval
             </button>
-            <button onClick={() => dispatch(setLabelNotesSetting("Degree"))}>
+            <button onClick={() => dispatch(setLabelNotes("degree"))}>
               Degree
             </button>
-            <button onClick={() => dispatch(setLabelNotesSetting("DoReMi"))}>
+            <button onClick={() => dispatch(setLabelNotes("doReMi"))}>
               DoReMi
             </button>
           </div>
         </div>
         <div className="setting dropdown fretPositions">
           <p>Position</p>
-          <button>{fretPositionSetting}</button>
+          <button>{fretPosition}</button>
           <div className="dropdown-content">
             <button>All</button>
             <button>1</button>
@@ -127,7 +125,7 @@ function FretboardQuickMenu() {
         <div className="setting dropdown highlight">
           <p>Highlight</p>
           {/* This button will be either None or All depending what was last used. */}
-          <button>{highlightNotesSetting}</button>
+          <button>{highlightNotes}</button>
           <div className="dropdown-content highlight">
             <Keys
               noteSize={25}
@@ -149,6 +147,15 @@ function FretboardQuickMenu() {
               Highlighted
             </button>
           </div>
+        </div>
+        <div className="setting dropdown fixNut">
+          <p>Fixed nut</p>
+          <button
+            className={nutIsFixed ? "nutFixedButton active" : "nutFixedButton"}
+            onClick={() => handleToggleNutIsFixed()}
+          >
+            {nutIsFixed ? "Fixed" : "Normal"}
+          </button>
         </div>
         {/* <div className="setting labelNotes">
 

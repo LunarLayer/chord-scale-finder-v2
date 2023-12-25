@@ -5,15 +5,26 @@
   resize: both;
   overflow: hidden;
   transition: all 0.1s ease;
-  // border-top: 1px solid black;
-  // border-bottom: 1px solid black;
+  border: 1px solid silver;
+
+  // display: flex;
+  // overflow: hidden;
+  // position: absolute;
+  // top: 0;
+  // right: 0;
+  // bottom: 0;
+  // left: 0;
+  // pointer-events: none;
+  background-image: url("/intrumentGraphics/QuiltedMaple2.jpg");
+  background-size: auto;
+  background-repeat: no-repeat;
+  background-position: center;
 
   .nut {
     z-index: 25;
     position: fixed;
     display: flex;
     flex-direction: column;
-    // background-color: red;
     height: 145px;
   }
 

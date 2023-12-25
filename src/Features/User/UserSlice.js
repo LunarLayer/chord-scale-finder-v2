@@ -5,88 +5,67 @@ const UserSlice = createSlice({
   name: "user",
   initialState: {
     username: undefined,
-    settings: {
-      uiTheme: undefined,
-      key: undefined,
-      tonality: undefined,
-      accidental: undefined,
-      instrument: undefined,
-      instrumentSound: undefined,
-      instrumentVariant: undefined,
-      instrumentTheme: undefined,
-      coloredNotes: undefined,
-      tuning: undefined,
-      markNotes: undefined,
-      labelNotes: undefined,
-      fretPosition: undefined,
-      highlightedNotes: undefined,
-      quickMenus: {
-        instrumentQuickMenu: { showing: true, activeTab: "markNotes" },
-        soundPlayerQuickMenu: { showing: true, activeTab: "unusedForNow" },
-      },
-    },
-    projects: [
-      {
-        title: "dance with the devil in Am",
-        projectSettings: {
-          key: undefined,
-          tonality: undefined,
-          accidental: undefined,
-          instrument: undefined,
-          instrumentSound: undefined,
-          instrumentVariant: undefined,
-          theme: undefined,
-          coloredNotes: undefined,
-          tuning: undefined,
-          quickMenus: {
-            instrumentQuickMenu: { showing: true, activeTab: "markNotes" },
-            soundPlayerQuickMenu: { showing: false, activeTab: "strum" },
-          },
-        },
-      },
-    ],
-
-    // projects: [],
-    // The user will have a general preference for what instrument to use,
-    // quickSettings etc.
-    // The user will also have projects that contain preferences for the project.
-    // These could vary from a users general preference.
+    key: undefined,
+    tonality: undefined,
+    accidental: undefined,
+    allNotes: undefined,
+    instrument: undefined,
+    nutIsFixed: undefined,
+    soundFile: undefined,
+    instrumentStyle: undefined,
+    instrumentTheme: undefined,
+    coloredNotes: undefined,
+    tuning: undefined,
+    instrumentQuickMenu: undefined,
+    soundPlayerQuickMenu: undefined,
+    keyChangeMenu: undefined,
+    projects: undefined,
+    markNotes: undefined,
+    labelNotes: undefined,
+    fretPosition: undefined,
+    highlightNotes: undefined,
   },
   reducers: {
     loginUser(state, action) {
+      console.log("loginUser reducer");
       const user = action.payload;
-      state.settings.uiTheme = user.settings.uiTheme;
-      state.settings.instrument = user.settings.instrument;
-      state.settings.instrumentSound = user.settings.instrumentSound;
-      state.settings.instrumentVariant = user.settings.instrumentVariant;
-      state.settings.instrumentTheme = user.settings.instrumentTheme;
-      state.settings.key = user.settings.key;
-      state.settings.tonality = user.settings.tonality;
-      state.settings.accidental = user.settings.accidental;
-      state.settings.tuning = user.settings.tuning;
-      state.settings.markNotes = user.settings.markNotes;
-      state.settings.labelNotes = user.settings.labelNotes;
-      state.settings.fretPosition = user.settings.fretPosition;
-      state.settings.highlightedNotes = user.settings.highlightedNotes;
-      state.settings.quickMenus = user.settings.quickMenus;
+      state.username = user.username;
+      state.key = user.key;
+      state.tonality = user.tonality;
+      state.accidental = user.accidental;
+      state.allNotes = user.allNotes;
+      state.instrument = user.instrument;
+      state.nutIsFixed = user.nutIsFixed;
+      state.soundFile = user.soundFile;
+      state.instrumentStyle = user.instrumentStyle;
+      state.instrumentTheme = user.instrumentTheme;
+      state.coloredNotes = user.coloredNotes;
+      state.tuning = user.tuning;
+      state.instrumentQuickMenu = user.instrumentQuickMenu;
+      state.soundPlayerQuickMenu = user.soundPlayerQuickMenu;
+      state.keyChangeMenu = user.keyChangeMenu;
       state.projects = user.projects;
+      state.markNotes = user.markNotes;
+      state.labelNotes = user.labelNotes;
+      state.fretPosition = user.fretPosition;
+      state.highlightNotes = user.highlightNotes;
     },
-    setInstrumentSound(state, action) {
-      state.instrumentSound = action.payload;
-      soundEngine.setInstrumentSound(action.payload);
-    },
-    setInstrumentDetails(state, action) {
-      let instrumentDetails = action.payload;
-      state.instrument = instrumentDetails.instrument;
-      // state.instrumentSound = instrumentDetails.instrumentSound;
-      state.instrumentVariant = instrumentDetails.instrumentVariant;
-      state.instrumentTheme = instrumentDetails.instrumentTheme;
-      state.tuning = instrumentDetails.tuning;
-    },
+    // setInstrumentSound(state, action) {
+    //   state.instrumentSound = action.payload;
+    //   soundEngine.setInstrumentSound(action.payload);
+    // },
+    // setInstrumentDetails(state, action) {
+    //   let instrumentDetails = action.payload;
+    //   state.instrument = instrumentDetails.instrument;
+    //   // state.instrumentSound = instrumentDetails.instrumentSound;
+    //   state.instrumentVariant = instrumentDetails.instrumentVariant;
+    //   state.instrumentTheme = instrumentDetails.instrumentTheme;
+    //   state.tuning = instrumentDetails.tuning;
+    // },
   },
 });
 
-export const { loginUser, setInstrumentDetails } = UserSlice.actions;
+export const { loginUser } = UserSlice.actions;
 
 export default UserSlice.reducer;
 

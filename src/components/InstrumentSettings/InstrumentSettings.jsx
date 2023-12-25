@@ -5,7 +5,6 @@ import InstrumentTabContent from "./InstrumentTabContent";
 import ThemeTabContent from "./ThemeTabContent";
 import TuningTabContent from "./TuningTabContent";
 import { useDispatch } from "react-redux";
-import { setInstrumentDetails } from "../../Features/User/UserSlice";
 import { setCurrentViewSection1 } from "../../Features/UI/UISlice";
 
 function InstrumentSettings() {
@@ -24,7 +23,6 @@ function InstrumentSettings() {
 
     dispatch(setInstrumentDetails(instrumentDetails));
     dispatch(setCurrentViewSection1("fretboard"));
-    // setCurrentViewSection1("fretboard");
   }
 
   return (

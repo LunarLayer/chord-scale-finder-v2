@@ -1,16 +1,16 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 import { getWindowWidth } from "../../Helpers/WindowHelper";
 import { setWindowWidth } from "../UI/UISlice";
-import { loginUser, setInstrumentDetails } from "../User/UserSlice";
+import { loginUser } from "../User/UserSlice";
 import { soundEngine } from "../../Helpers/SoundEngine";
 import { Note } from "tonal";
 
 const initialState = {
   fretboardIsReady: false,
   fretboardStyle: undefined, // default / minimal
-  fretboardTheme: "black", // black / blue / red etc.
+  fretboardTheme: undefined, // black / blue / red etc.
   scrollPosition: undefined,
-  nutIsFixed: false,
+  nutIsFixed: undefined,
   notesGap: undefined,
   notesLabelWidth: undefined,
   notesMinWidth: undefined,
@@ -33,14 +33,14 @@ const FretboardSlice = createSlice({
   reducers: {
     setNutIsFixed(state, action) {
       state.nutIsFixed = action.payload;
-      state.fretboardWidth = getFretboardWidth(state, "setNutIsFixed");
-      ScrollToNearestFretFrom(state);
+      state.fretboardWidth = getFretboardWidth(state);
+      snapScrollToNearestFret(state);
     },
-    scrollFretboard(state, action) {
+    scrollFretboard(state) {
       state.preferredFretCount = state.fretCount;
       state.visibleFretsRange = getVisibleFretsRange(state, "scrollFretboard");
       state.fretboardWidth = getFretboardWidth(state);
-      ScrollToNearestFretFrom(state);
+      snapScrollToNearestFret(state);
     },
     setPreferredFretCount(state, action) {
       state.preferredFretCount = action.payload;
@@ -50,9 +50,9 @@ const FretboardSlice = createSlice({
         "setPreferredFretCount"
       );
       state.fretboardWidth = getFretboardWidth(state);
-      ScrollToNearestFretFrom(state);
+      snapScrollToNearestFret(state);
     },
-    clearAllNotes(state, action) {
+    clearAllNotes(state) {
       for (let string of state.strings) {
         for (let fret of string.frets) {
           fret.note.selected = false;
@@ -98,10 +98,6 @@ const FretboardSlice = createSlice({
       );
       state.strings[stringIndex].frets[fretIndex].note.selected = false;
     },
-
-    refreshFretboard(state) {
-      updateFretboard(state);
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -117,17 +113,17 @@ const FretboardSlice = createSlice({
         state.fretCount = getFretCount(state);
         state.visibleFretsRange = getVisibleFretsRange(state, "setWindowWidth");
         state.fretboardWidth = getFretboardWidth(state);
-        ScrollToNearestFretFrom(state);
-        state.fretboardIsReady = true;
+        snapScrollToNearestFret(state);
       })
       .addCase(loginUser, (state, action) => {
-        const { type, soundFile, style, theme, tuning } =
-          action.payload.settings.instrument;
-        if (type === "Fretboard") {
-          soundEngine.loadSoundFile(soundFile);
-          state.fretboardStyle = style;
-          state.fretboardTheme = theme;
-          state.tuning = tuning;
+        const user = action.payload;
+        if (user.instrument === "Fretboard") {
+          soundEngine.loadSoundFile(user.soundFile);
+          state.fretboardStyle = user.instrumentStyle;
+          state.fretboardTheme = user.instrumentTheme;
+          state.tuning = user.tuning;
+          state.nutIsFixed = user.nutIsFixed;
+
           var windowWidth = getWindowWidth();
           state.notesMinWidth = getNotesMinWidth(state, windowWidth);
           state.notesMaxWidth = getNotesMaxWidth(state, windowWidth);
@@ -139,19 +135,19 @@ const FretboardSlice = createSlice({
           state.fretCount = getFretCount(state);
           state.visibleFretsRange = getVisibleFretsRange(state, "loginUser");
           state.fretboardWidth = getFretboardWidth(state);
-          // ScrollToNearestFretFrom(state);
           state.fretboardIsReady = true;
         }
-      })
-      .addCase(setInstrumentDetails, (state, action) => {
-        let windowWidth = getWindowWidth();
-        const { instrument, instrumentVariant, theme } = action.payload;
-        if (instrument === "fretboard") {
-          state.fretboardVariant = instrumentVariant;
-          state.fretboardTheme = theme;
-          updateFretboard(state, windowWidth);
-        }
       });
+    // .addCase(setInstrumentDetails, (state, action) => {
+    //   console.log("setInstrumentDetails");
+    //   let windowWidth = getWindowWidth();
+    //   const { instrument, instrumentVariant, theme } = action.payload;
+    //   if (instrument === "fretboard") {
+    //     state.fretboardVariant = instrumentVariant;
+    //     state.fretboardTheme = theme;
+    //     updateFretboard(state, windowWidth);
+    //   }
+    // });
   },
 });
 
@@ -243,9 +239,7 @@ function getVisibleFretsRange(state, trigger) {
       return { start: 0, end: state.fretCount - 1 };
     }
   }
-  // While loop to cap fretsRange.end
 
-  console.log("start: " + start + " | end: " + end);
   return { start, end };
 }
 
@@ -269,7 +263,7 @@ function getFretboardScrollPosition(nutIsFixed, fretWidths, visibleFretsRange) {
   return scrollPos;
 }
 
-function ScrollToNearestFretFrom(state) {
+function snapScrollToNearestFret(state) {
   // reset previously scrollable container(s)
   let containersToScroll = getContainersToScroll(state.nutIsFixed);
   if (containersToScroll[0] === null) return;
@@ -285,15 +279,11 @@ function ScrollToNearestFretFrom(state) {
   let newScrollPosition = 0;
   for (let i = 0; i < state.visibleFretsRange.start; i++) {
     newScrollPosition += state.fretWidths[i];
-    console.log("newScrollPosition [" + i + "] adding: " + state.fretWidths[i]);
   }
 
   if (state.nutIsFixed) {
-    console.log("adding nut: " + state.fretWidths[0]);
     newScrollPosition -= state.fretWidths[0];
   }
-
-  // console.log("scrolling to: " + newScrollPosition);
 
   for (let container of containersToScroll) {
     animateScroll(container, container.scrollLeft, newScrollPosition);
@@ -357,7 +347,7 @@ function updateFretboard(state, trigger) {
   state.visibleFretsRange = getVisibleFretsRange(state);
 
   state.fretboardWidth = getFretboardWidth(state);
-  // ScrollToNearestFretFrom(state);
+  // snapScrollToNearestFret(state);
 
   state.fretboardIsReady = true;
 }
@@ -657,13 +647,11 @@ function getFretboardWidth(state) {
     i++
   ) {
     fretboardWidth += state.fretWidths[i];
-    // console.log("[" + i + "] adding: " + state.fretWidths[i]);
   }
-  // add the width of the fixed nut
 
   if (state.nutIsFixed && state.visibleFretsRange.start !== 0) {
+    // add the width of the fixed nut
     fretboardWidth += state.fretWidths[0];
-    // console.log("[0] adding nut: " + state.fretWidths[0]);
   }
 
   return fretboardWidth + 1; // +1 to account for subpixel rendering

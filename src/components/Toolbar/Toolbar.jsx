@@ -5,10 +5,7 @@ import "./Toolbar.scss";
 import Button from "../Button/Button";
 import FretCountSlider from "../fretCountSlider/fretCountSlider";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setCurrentViewSection1,
-  toggleQuickMenu,
-} from "../../Features/UI/UISlice";
+import { setCurrentViewSection1, toggleMenu } from "../../Features/UI/UISlice";
 
 function Toolbar() {
   const dispatch = useDispatch();
@@ -17,7 +14,7 @@ function Toolbar() {
   );
   const key = useSelector((store) => store.musicTheory.key);
   const instrumentQuickMenu = useSelector(
-    (store) => store.ui.quickMenus.instrumentQuickMenu
+    (store) => store.ui.instrumentQuickMenu
   );
   function handleChangeView(view) {
     if (currentViewSection1 === view) {
@@ -27,8 +24,8 @@ function Toolbar() {
     }
   }
 
-  function handleToggleQuickMenu(name) {
-    dispatch(toggleQuickMenu(name));
+  function handleToggleMenu(name) {
+    dispatch(toggleMenu(name));
   }
 
   function handleClearNotes() {}
@@ -40,7 +37,7 @@ function Toolbar() {
         <div className="content">
           <Button
             className={`${currentViewSection1 === "keyChange" ? "active" : ""}`}
-            onClick={() => handleChangeView("keyChange")}
+            onClick={() => handleToggleMenu("keyChange")}
           >
             {key.tonic} {key.type}
           </Button>
@@ -68,7 +65,7 @@ function Toolbar() {
             className={`${
               instrumentQuickMenu.showing === true ? "active" : ""
             }`}
-            onClick={() => handleToggleQuickMenu("instrumentQuickMenu")}
+            onClick={() => handleToggleMenu("instrumentQuickMenu")}
           >
             🎹
           </Button>

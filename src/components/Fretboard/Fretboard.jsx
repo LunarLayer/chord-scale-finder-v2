@@ -13,16 +13,18 @@ import {
   getStringVisualsWidth,
   initFretboardScroll,
 } from "../../Helpers/FretboardHelper";
-import { toggleNoteSelected } from "../../Features/MusicTheory/MusicTheorySlice";
+import {
+  selectNotesInKey,
+  toggleNoteSelected,
+} from "../../Features/MusicTheory/MusicTheorySlice";
 import { scrollFretboard } from "../../Features/Fretboard/FretboardSlice";
 
 function Fretboard() {
   const [isScrolling, setIsScrolling] = useState(false);
   const dispatch = useDispatch();
+  const key = useSelector((store) => store.musicTheory.key);
   const allNotes = useSelector((store) => store.musicTheory.allNotes);
-  const markNotesSetting = useSelector(
-    (store) => store.musicTheory.markNotesSetting
-  );
+  const markNotes = useSelector((store) => store.musicTheory.markNotes);
 
   const tuning = useSelector((store) => store.fretboard.tuning);
   const fretWidths = useSelector((store) => store.fretboard.fretWidths);
@@ -34,6 +36,12 @@ function Fretboard() {
   useEffect(() => {
     initFretboardScroll(dispatch, scrollFretboard, setIsScrolling);
   }, [dispatch]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      console.log(allNotes);
+    }, 1000);
+  }, [allNotes]);
 
   function handleFretboardClicked(e) {
     if (isScrolling) {
@@ -52,7 +60,7 @@ function Fretboard() {
         let noteIndex = Array.from(notesOnString).indexOf(noteElem);
         let note = Note.get(notePitchClass + octave);
         let wasSelected = noteElem.classList.contains("selected");
-        if (markNotesSetting !== "None") {
+        if (markNotes !== "none") {
           dispatch(toggleNoteSelected({ note, stringNumber, wasSelected }));
         }
         soundEngine.playNote(notePitchClass + octave, stringNumber);

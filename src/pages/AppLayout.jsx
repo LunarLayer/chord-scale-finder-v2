@@ -24,6 +24,7 @@ import PianoQuickSettings from "../components/QuickSettings/Instrument/PianoQuic
 import { Key, Note } from "tonal";
 import NewKeyChange from "../components/KeyChange/KeyChange";
 import { getGuestUser } from "../Helpers/LoginHelper";
+import KeyChange from "../components/KeyChange/KeyChange";
 
 function AppLayout() {
   const dispatch = useDispatch();
@@ -40,10 +41,8 @@ function AppLayout() {
   const fretboardVariant = useSelector(
     (store) => store.fretboard.fretboardVariant
   );
+  const keyChangeMenu = useSelector((store) => store.ui.keyChangeMenu);
   const loginSuccess = useSelector((store) => store.user.loginSuccess);
-
-  let note = Note.get("Cb2");
-  // console.log(note);
 
   useEffect(() => {
     if (loginSuccess) {
@@ -81,12 +80,18 @@ function AppLayout() {
       <div className="appLayout">
         <Navbar />
         <Toolbar />
+        {keyChangeMenu.showing ? <KeyChange /> : null}
         {currentViewSection1 === "fretboard" ? (
           <FretboardQuickSettings />
         ) : currentViewSection1 === "piano" ? (
           <PianoQuickSettings />
         ) : null}
         <Section1 view={currentViewSection1} />
+        <p>
+          TODO: if you scroll almost to the end of the fretboard at 15 frets and
+          increase to 24 frets, the nut does not reappear when the nut is not
+          fixed.
+        </p>
       </div>
     );
   } else {

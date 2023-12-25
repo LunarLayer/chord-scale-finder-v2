@@ -20,9 +20,7 @@ function SoundController({ loadingSoundProgress }) {
   const [volumeSliderTimeout, setVolumeSliderTimeout] = useState(null);
   const [volume, setVolume] = useState(10);
 
-  const soundFile = useSelector(
-    (store) => store.user.settings.instrument.soundFile
-  );
+  const soundFile = useSelector((store) => store.user.soundFile);
 
   useEffect(() => {
     const checkSoundIsReady = setInterval(() => {

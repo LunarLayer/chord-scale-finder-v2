@@ -9,21 +9,32 @@ const uiSlice = createSlice({
   name: "ui",
   initialState: {
     windowWidth: getWindowWidth(),
-    currentViewSection1: "fretboard", // - instrumentSettings - keyChange
+    currentViewSection1: "fretboard", // - instrumentSettings
     currentViewSection2: "chordAndScaleIdentifier", // - chordProgressionBuilder
-    quickMenus: {
-      instrumentQuickMenu: { showing: true },
-      soundPlayerQuickMenu: { showing: true },
-    },
+    instrumentQuickMenu: undefined,
+    soundPlayerQuickMenu: undefined,
+    keyChangeMenu: undefined,
   },
   reducers: {
     setActiveTabForQuickMenu(state, action) {
       const { quickMenu, tab } = action.payload;
       state.quickMenus[quickMenu].activeTab = tab;
     },
-    toggleQuickMenu(state, action) {
+    toggleMenu(state, action) {
       let menu = action.payload;
-      state.quickMenus[menu].showing = !state.quickMenus[menu].showing;
+      switch (menu) {
+        case "instrumentQuickMenu":
+          state.instrumentQuickMenu.showing =
+            !state.instrumentQuickMenu.showing;
+          break;
+        case "keyChange":
+          state.keyChangeMenu.showing = !state.keyChangeMenu.showing;
+          break;
+        default:
+          break;
+      }
+
+      // state.menu.showing = !state.menu.showing;
     },
     setCurrentViewSection1(state, action) {
       state.currentViewSection1 = action.payload;
@@ -38,7 +49,9 @@ const uiSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(loginUser, (state, action) => {
       const user = action.payload;
-      state.quickMenus = user.settings.quickMenus;
+      state.instrumentQuickMenu = user.instrumentQuickMenu;
+      state.soundPlayerQuickMenu = user.soundPlayerQuickMenu;
+      state.keyChangeMenu = user.keyChangeMenu;
     });
   },
 });
@@ -46,7 +59,7 @@ const uiSlice = createSlice({
 export const selectWindowWidth = (state) => state.ui.windowWidth;
 
 export const {
-  toggleQuickMenu,
+  toggleMenu,
   setActiveTabForQuickMenu,
   setCurrentViewSection1,
   setCurrentViewSection2,
