@@ -2,7 +2,10 @@ import { useDispatch, useSelector } from "react-redux";
 import "./KeyChange.scss";
 import { Key, Note } from "tonal";
 import { useState } from "react";
-import { setKey } from "../../Features/MusicTheory/MusicTheorySlice";
+import {
+  selectNotesInKey,
+  setKey,
+} from "../../Features/MusicTheory/MusicTheorySlice";
 
 // TODO:
 // Modal -> Add collapse all, show all, and let all be expanded when it opens at first.
@@ -15,12 +18,12 @@ function KeyChange() {
   let keyNote = Note.get(key.tonic).letter;
 
   function handleSetKey(note, accidental) {
-    console.log("handleSetKey");
     if (key.type === "major") {
       dispatch(setKey(Key.majorKey(note + accidental)));
     } else {
       dispatch(setKey(Key.minorKey(note + accidental)));
     }
+    dispatch(selectNotesInKey());
   }
 
   function handleSelectScale(scale) {
@@ -30,6 +33,7 @@ function KeyChange() {
     } else {
       dispatch(setKey(Key.minorKey(key.tonic)));
     }
+    dispatch(selectNotesInKey());
   }
 
   function handleToggleDropdown(id) {

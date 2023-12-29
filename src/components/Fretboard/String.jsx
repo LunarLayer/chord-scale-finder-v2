@@ -12,6 +12,7 @@ const String = memo(function String({ notes, stringNumber }) {
   return (
     <div className="string" data-stringnumber={stringNumber}>
       {notes.map((note, i) => {
+        // console.log(note);
         let selected = note.selectedOnStrings.includes(stringNumber);
         let noteWidth = nutIsFixed ? fretWidths[i + 1] : fretWidths[i];
         return (

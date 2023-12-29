@@ -14,15 +14,12 @@ import Navbar from "../components/Navbar/Navbar";
 import Toolbar from "../components/Toolbar/Toolbar";
 import InstrumentSettings from "../components/InstrumentSettings/InstrumentSettings";
 import Fretboard from "../components/Fretboard/Fretboard";
-import Piano from "../components/Piano/Piano";
-import ChordAndScaleIdentifier from "../components/ChordAndScaleIdentifier/ChordAndScaleIdentifier";
-import ChordProgressionBuilder from "../components/ChordProgressionBuilder/ChordProgressionBuilder";
+// import Piano from "../components/Piano/Piano";
+// import ChordAndScaleIdentifier from "../components/ChordAndScaleIdentifier/ChordAndScaleIdentifier";
+// import ChordProgressionBuilder from "../components/ChordProgressionBuilder/ChordProgressionBuilder";
 import { loginUser } from "../Features/User/UserSlice";
-import { useState } from "react";
 import FretboardQuickSettings from "../components/QuickSettings/Instrument/FretboardQuickMenu";
 import PianoQuickSettings from "../components/QuickSettings/Instrument/PianoQuickMenu";
-import { Key, Note } from "tonal";
-import NewKeyChange from "../components/KeyChange/KeyChange";
 import { getGuestUser } from "../Helpers/LoginHelper";
 import KeyChange from "../components/KeyChange/KeyChange";
 
@@ -32,18 +29,16 @@ function AppLayout() {
   const currentViewSection1 = useSelector(
     (store) => store.ui.currentViewSection1
   );
-  const currentViewSection2 = useSelector(
-    (store) => store.ui.currentViewSection2
-  );
+  // const currentViewSection2 = useSelector(
+  //   (store) => store.ui.currentViewSection2
+  // );
   const fretboardIsReady = useSelector(
     (store) => store.fretboard.fretboardIsReady
-  );
-  const fretboardVariant = useSelector(
-    (store) => store.fretboard.fretboardVariant
   );
   const keyChangeMenu = useSelector((store) => store.ui.keyChangeMenu);
   const loginSuccess = useSelector((store) => store.user.loginSuccess);
 
+  // Login
   useEffect(() => {
     if (loginSuccess) {
       let user = {};
@@ -54,6 +49,7 @@ function AppLayout() {
     }
   }, [dispatch, loginSuccess]);
 
+  // Window resize
   useEffect(() => {
     function handleResize() {
       dispatch(setWindowWidth(getWindowWidth()));
@@ -68,12 +64,12 @@ function AppLayout() {
     if (view === "fretboard") return <Fretboard />;
     if (view === "piano") return <Piano />;
     if (view === "instrumentSettings") return <InstrumentSettings />;
-    if (view === "keyChange") return <NewKeyChange />;
+    if (view === "keyChange") return <KeyChange />;
   }
-  function Section2({ view }) {
-    if (view === "ChordAndScaleIdentifier") return <ChordAndScaleIdentifier />;
-    if (view === "ChordProgressionBuilder") return <ChordProgressionBuilder />;
-  }
+  // function Section2({ view }) {
+  //   if (view === "ChordAndScaleIdentifier") return <ChordAndScaleIdentifier />;
+  //   if (view === "ChordProgressionBuilder") return <ChordProgressionBuilder />;
+  // }
 
   if (fretboardIsReady) {
     return (

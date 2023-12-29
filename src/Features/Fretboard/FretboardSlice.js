@@ -37,6 +37,8 @@ const FretboardSlice = createSlice({
       snapScrollToNearestFret(state);
     },
     scrollFretboard(state) {
+      // if (state.fretCount === 25) return;
+
       state.preferredFretCount = state.fretCount;
       state.visibleFretsRange = getVisibleFretsRange(state, "scrollFretboard");
       state.fretboardWidth = getFretboardWidth(state);
@@ -49,6 +51,7 @@ const FretboardSlice = createSlice({
         state,
         "setPreferredFretCount"
       );
+      console.log(state.visibleFretsRange);
       state.fretboardWidth = getFretboardWidth(state);
       snapScrollToNearestFret(state);
     },
@@ -202,6 +205,8 @@ function getVisibleFretsRange(state, trigger) {
       start -= 1;
       end -= 1;
     }
+    // if fretCount is 24, the nut should show as well
+    if (end === 24 && start === 1) start = 0;
   }
 
   if (trigger === "setNutIsFixed") {
@@ -654,7 +659,7 @@ function getFretboardWidth(state) {
     fretboardWidth += state.fretWidths[0];
   }
 
-  return fretboardWidth + 1; // +1 to account for subpixel rendering
+  return fretboardWidth; // +1 to account for subpixel rendering
 }
 
 function getFretboardWidth_MinimalFretboard(

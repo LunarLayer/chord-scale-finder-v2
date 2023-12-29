@@ -13,16 +13,12 @@ import {
   getStringVisualsWidth,
   initFretboardScroll,
 } from "../../Helpers/FretboardHelper";
-import {
-  selectNotesInKey,
-  toggleNoteSelected,
-} from "../../Features/MusicTheory/MusicTheorySlice";
+import { toggleNoteSelected } from "../../Features/MusicTheory/MusicTheorySlice";
 import { scrollFretboard } from "../../Features/Fretboard/FretboardSlice";
 
 function Fretboard() {
   const [isScrolling, setIsScrolling] = useState(false);
   const dispatch = useDispatch();
-  const key = useSelector((store) => store.musicTheory.key);
   const allNotes = useSelector((store) => store.musicTheory.allNotes);
   const markNotes = useSelector((store) => store.musicTheory.markNotes);
 
@@ -36,12 +32,6 @@ function Fretboard() {
   useEffect(() => {
     initFretboardScroll(dispatch, scrollFretboard, setIsScrolling);
   }, [dispatch]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      console.log(allNotes);
-    }, 1000);
-  }, [allNotes]);
 
   function handleFretboardClicked(e) {
     if (isScrolling) {

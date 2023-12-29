@@ -129,7 +129,7 @@ export function getGuestUser() {
     highlightNotes: "none",
     instrumentQuickMenu: { showing: true },
     soundPlayerQuickMenu: { showing: false },
-    keyChangeMenu: { showing: false },
+    keyChangeMenu: { showing: true },
     projects: [
       {
         title: "dance with the devil in Am",

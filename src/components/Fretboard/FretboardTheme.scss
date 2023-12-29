@@ -177,11 +177,13 @@
     .fretMarker {
       height: 15px;
       width: 15px;
-      background-image: url("/intrumentGraphics/fretMarker.png");
-      background-size: 100%;
-      background-repeat: no-repeat;
-      background-position: center;
+      background-color: black;
       border-radius: 50%;
+      // background-image: url("/intrumentGraphics/fretMarker.png");
+      // background-size: 100%;
+      // background-repeat: no-repeat;
+      // background-position: center;
+      // border-radius: 50%;
     }
   }
 }

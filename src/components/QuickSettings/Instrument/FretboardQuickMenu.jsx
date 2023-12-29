@@ -27,7 +27,7 @@ import {
 function FretboardQuickMenu() {
   const dispatch = useDispatch();
   const fretboardWidth = useSelector((store) => store.fretboard.fretboardWidth);
-  const accidental = useSelector((store) => store.user.accidental);
+  const accidental = useSelector((store) => store.musicTheory.accidental);
   const markNotes = useSelector((store) => store.musicTheory.markNotes);
   const labelNotes = useSelector((store) => store.musicTheory.labelNotes);
   const fretPosition = useSelector((store) => store.musicTheory.fretPosition);

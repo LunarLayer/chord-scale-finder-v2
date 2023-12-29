@@ -5,7 +5,7 @@
   resize: both;
   overflow: hidden;
   transition: all 0.1s ease;
-  border: 1px solid silver;
+  outline: 1px solid silver;
 
   // display: flex;
   // overflow: hidden;
@@ -15,10 +15,10 @@
   // bottom: 0;
   // left: 0;
   // pointer-events: none;
-  background-image: url("/intrumentGraphics/QuiltedMaple2.jpg");
-  background-size: auto;
-  background-repeat: no-repeat;
-  background-position: center;
+  // background-image: url("/intrumentGraphics/QuiltedMaple2.jpg");
+  // background-size: auto;
+  // background-repeat: no-repeat;
+  // background-position: center;
 
   .nut {
     z-index: 25;

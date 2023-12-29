@@ -1,3 +1,5 @@
+import { Note } from "tonal";
+
 export function getFretsWithNotes(tuning, allNotes) {
   let noteIndex;
   let noteIndexes = [];
@@ -20,9 +22,27 @@ export function getFretsWithNotes(tuning, allNotes) {
   return fretsWithNotes;
 }
 
-export function getNoteLabel(pitchClass, labelNotes, scale, intervals) {
+export function getNoteLabel(
+  pitchClass,
+  labelNotes,
+  scale,
+  intervals,
+  accidental
+) {
   // console.log(pitchClass + labelNotes + scale + intervals);
-  if (labelNotes === "note") return pitchClass;
+  if (labelNotes === "note") {
+    for (let scaleNote of scale) {
+      if (Note.enharmonic(scaleNote) === pitchClass) {
+        return scaleNote;
+      }
+    }
+
+    if (accidental === "b") {
+      return Note.enharmonic(pitchClass);
+    } else {
+      return pitchClass;
+    }
+  }
   if (labelNotes === "degree") {
     for (let i = 0; i < scale.length; i++) {
       if (pitchClass === scale[i]) {

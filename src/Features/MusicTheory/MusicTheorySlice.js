@@ -1,6 +1,6 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 import { loginUser } from "../User/UserSlice";
-import { Note, Scale } from "tonal";
+import { Chord, Note, Scale } from "tonal";
 import {
   clearAllNotes,
   selectNoteOnString,
@@ -12,6 +12,7 @@ const MusicTheorySlice = createSlice({
   initialState: {
     key: undefined,
     allNotes: [],
+    accidental: undefined,
     markNotes: undefined,
     labelNotes: undefined,
     fretPosition: undefined,
@@ -19,9 +20,79 @@ const MusicTheorySlice = createSlice({
   },
   reducers: {
     selectNotesInKey(state, action) {
-      const key = action.payload;
-      console.log(key);
-      state.allNotes[0].selected = true;
+      console.log("selectNotesInKey");
+      // get notes in the scale of the key
+      let notesInScale =
+        state.key.type === "minor" ? state.key.natural.scale : state.key.scale;
+      console.log("notesInScale: " + current(notesInScale));
+
+      // set the accidental
+      state.accidental = getAccidental(state, notesInScale);
+      console.log("accidental: " + state.accidental);
+
+      // Go through all notes. If a note is in the scale,
+      // select it. If the note appears on a string on the fretboard,
+      // select it on "selectedOnStrings";
+
+      for (let i = 0; i < state.allNotes.length; i++) {
+        // console.log(state.allNotes[i].pc);
+        for (let note of notesInScale) {
+          if (
+            note === state.allNotes[i].pc ||
+            note === Note.enharmonic(state.allNotes[i].pc) ||
+            Note.enharmonic(note) === state.allNotes[i].pc
+          ) {
+            state.allNotes[i].selected = true;
+            if (state.allNotes[i].appearsOnStrings.length > 0) {
+              state.allNotes[i].selectedOnStrings =
+                state.allNotes[i].appearsOnStrings;
+            }
+            break;
+          } else {
+            state.allNotes[i].selected = false;
+            state.allNotes[i].selectedOnStrings = [];
+          }
+        }
+      }
+      // if (
+      //   notesInScale.includes(state.allNotes[i].pc) ||
+      //   notesInScale.includes(Note.enharmonic(state.allNotes[i].pc))
+      // ) {
+      //   state.allNotes[i].selected = true;
+      //   if (state.allNotes[i].appearsOnStrings.length > 0) {
+      //     // reset to avoid duplicates
+      //     // state.allNotes[i].selectedOnStrings = [];
+      //     state.allNotes[i].selectedOnStrings =
+      //       state.allNotes[i].appearsOnStrings;
+      //   }
+      // } else {
+      //   state.allNotes[i].selected = false;
+      //   state.allNotes[i].selectedOnStrings = [];
+      // }
+
+      // for (let i = 0; i < state.allNotes.length; i++) {
+      //   // if the note is in the current key
+      //   if (
+      //     notesInKey.includes(state.allNotes[i].pc) ||
+      //     notesInKey.includes(Note.enharmonic(state.allNotes[i].pc)) ||
+      //     notesInKey.includes(Note.simplify(state.allNotes[i].pc))
+      //   ) {
+      //     // select it on the piano (change "selected" to "selectedOnPiano" later(?))
+      //     state.allNotes[i].selected = true;
+      //     // if the current note that's in the key, is also appearing on a string on the fretboard
+      //     if (state.allNotes[i].appearsOnStrings.length > 0) {
+      //       // select it on the string(s)
+      //       state.allNotes[i].selectedOnStrings =
+      //         state.allNotes[i].appearsOnStrings;
+      //     }
+      //   } else {
+      //     // otherwise, deselect the note. The note may still "appearsOnString",
+      //     // but it wont be selected if it's not in the key
+      //     state.allNotes[i].selected = false;
+      //     state.allNotes[i].selectedOnStrings = [];
+      //   }
+      // }
+      // state.allNotes[0].selected = true;
       // state.allNotes[0].selectedOnStrings.push(5);
       // let notesInKey = Scale.get(key.tonic + " " + key.type).notes;
       // console.log(notesInKey);
@@ -40,14 +111,12 @@ const MusicTheorySlice = createSlice({
       //   // let noteIndex = state.allNotes.findIndex(
       //   //   (note) => note.name === allNote.name
       //   // );
-
       //   // select the note on the strings it appears on
       //   for (let stringNumber of state.allNotes[noteIndex].appearsOnStrings) {
       //     state.allNotes[noteIndex].selectedOnStrings.push(stringNumber);
       //     console.log(current(state.allNotes[noteIndex]));
       //   }
       // }
-
       // if (notesInKey.includes(allNote.pc)) {
       //   console.log("yes includes");
       //   let noteIndex = state.allNotes.findIndex(
@@ -66,30 +135,53 @@ const MusicTheorySlice = createSlice({
       // double sharps and double flats are possible (fx. key of B#).
       const key = action.payload;
       state.key = key;
-      console.log("setKey: " + action.payload.tonic);
+      console.log(key);
 
-      let notesInKey = Scale.get(key.tonic + " " + key.type).notes;
-      console.log("notesInKeyz: " + notesInKey);
+      // let notesInKey = Scale.get(key.tonic + " " + key.type).notes;
 
-      // go through all the notes
-      for (let i = 0; i < state.allNotes.length; i++) {
-        // if the note is in the current key
-        if (notesInKey.includes(state.allNotes[i].pc)) {
-          // select it on the piano (change "selected" to "selectedOnPiano" later(?))
-          state.allNotes[i].selected = true;
-          // if the current note that's in the key, is also appearing on a string on the fretboard
-          if (state.allNotes[i].appearsOnStrings.length > 0) {
-            // select it on the string(s)
-            state.allNotes[i].selectedOnStrings =
-              state.allNotes[i].appearsOnStrings;
-          }
-        } else {
-          // otherwise, deselect the note. The note may still "appearsOnString",
-          // though it won't be selected if it's not in the key
-          state.allNotes[i].selected = false;
-          state.allNotes[i].selectedOnStrings = [];
-        }
-      }
+      // let found = "";
+      // for (let note of notesInKey) {
+      //   if (note.includes("b")) {
+      //     found = "b";
+      //     break;
+      //   }
+      // }
+      // if (found === "b") {
+      //   state.accidental = "b";
+      // } else {
+      //   state.accidental = "#";
+      // }
+
+      // console.log(Note.get("D3"));
+      // console.log("notesInKeyz: " + notesInKey);
+      // console.log("simplifying E#: " + Note.simplify("Ebb"));
+      // console.log("simplifying F: " + Note.simplify("F"));
+      // console.log("enharmonic F: " + Note.enharmonic("F"));
+      // console.log("enharmonic E#: " + Note.enharmonic("E#"));
+
+      // // go through all the notes
+      // for (let i = 0; i < state.allNotes.length; i++) {
+      //   // if the note is in the current key
+      //   if (
+      //     notesInKey.includes(state.allNotes[i].pc) ||
+      //     notesInKey.includes(Note.enharmonic(state.allNotes[i].pc)) ||
+      //     notesInKey.includes(Note.simplify(state.allNotes[i].pc))
+      //   ) {
+      //     // select it on the piano (change "selected" to "selectedOnPiano" later(?))
+      //     state.allNotes[i].selected = true;
+      //     // if the current note that's in the key, is also appearing on a string on the fretboard
+      //     if (state.allNotes[i].appearsOnStrings.length > 0) {
+      //       // select it on the string(s)
+      //       state.allNotes[i].selectedOnStrings =
+      //         state.allNotes[i].appearsOnStrings;
+      //     }
+      //   } else {
+      //     // otherwise, deselect the note. The note may still "appearsOnString",
+      //     // but it wont be selected if it's not in the key
+      //     state.allNotes[i].selected = false;
+      //     state.allNotes[i].selectedOnStrings = [];
+      //   }
+      // }
     },
     setMarkNotes(state, action) {
       state.markNotes = action.payload;
@@ -104,6 +196,7 @@ const MusicTheorySlice = createSlice({
       state.highlightNotes = action.payload;
     },
     toggleNoteSelected(state, action) {
+      console.log("toggleNoteSelected");
       const { note, stringNumber, wasSelected } = action.payload;
       let noteIndex = state.allNotes.findIndex(
         (allNote) => allNote.name === note.name
@@ -178,11 +271,9 @@ const MusicTheorySlice = createSlice({
         const user = action.payload;
         state.key = user.key;
         state.allNotes = user.allNotes;
+        state.accidental = user.accidental;
         if (user.instrument === "Fretboard") {
           let tuning = user.tuning;
-          let notesInKey = Scale.get(
-            state.key.tonic + " " + state.key.type
-          ).notes;
 
           for (let i = 0; i < tuning.length; i++) {
             let rootNote = tuning[i].name;
@@ -193,13 +284,6 @@ const MusicTheorySlice = createSlice({
               state.allNotes[rootIndex + j].appearsOnStrings.push(
                 tuning.length - i
               );
-
-              if (notesInKey.includes(state.allNotes[rootIndex + j].pc)) {
-                state.allNotes[rootIndex + j].selectedOnStrings.push(
-                  tuning.length - i
-                );
-                state.allNotes[rootIndex + j].selected = true;
-              }
             }
           }
         }
@@ -230,6 +314,15 @@ const MusicTheorySlice = createSlice({
       });
   },
 });
+
+function getAccidental(state, notesInScale) {
+  for (let note of notesInScale) {
+    if (note.includes("b")) return "b";
+    if (note.includes("#")) return "#";
+  }
+  // If no flats or sharps are found, default to using sharps
+  return "#";
+}
 
 export const {
   selectNotesInKey,
