@@ -22,14 +22,9 @@ export function getFretsWithNotes(tuning, allNotes) {
   return fretsWithNotes;
 }
 
-export function getNoteLabel(
-  pitchClass,
-  labelNotes,
-  scale,
-  intervals,
-  accidental
-) {
-  // console.log(pitchClass + labelNotes + scale + intervals);
+export function getNoteLabel(pitchClass, labelNotes, key, accidental) {
+  let scale = key.type === "minor" ? key.natural.scale : key.scale;
+
   if (labelNotes === "note") {
     for (let scaleNote of scale) {
       if (Note.enharmonic(scaleNote) === pitchClass) {
@@ -52,12 +47,12 @@ export function getNoteLabel(
   } else if (labelNotes === "interval") {
     for (let i = 0; i < scale.length; i++) {
       if (pitchClass === scale[i]) {
-        return intervals[i];
+        return key.intervals[i];
       }
     }
   } else if (labelNotes === "doReMi") {
     for (let i = 0; i < scale.length; i++) {
-      if (pitchClass === scale[i]) {
+      if (pitchClass === key.scale[i]) {
         if (i === 0) return "Do";
         if (i === 1) return "Re";
         if (i === 2) return "Mi";

@@ -1,8 +1,6 @@
 import "./SharpsFlatsDisplay.scss";
 
 function SharpsFlatsDisplay({ selected }) {
-  console.log("SharpsFlatsDisplay");
-  console.log(selected);
   return (
     <div id="SharpsAndFlatsDisplay">
       <button

@@ -17,7 +17,6 @@ function KeyChange() {
     keyAccidental === "" ? "#" : keyAccidental
   );
 
-  console.log("key: " + key);
   let noteSize = getNoteSizeForKeyChange();
 
   function handleToggleAccidental() {

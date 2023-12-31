@@ -16,7 +16,6 @@ function Strings({ tuning, nutIsFixed, allNotes, fretWidths, width }) {
     >
       {tuning.map((rootNote, index) => {
         let stringNumber = tuning.length - index;
-        // Consider memoizing "notesForString";
         let notesForString = getNotesForString(allNotes, stringNumber);
         if (nutIsFixed) notesForString = notesForString.slice(1);
 

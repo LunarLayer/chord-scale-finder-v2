@@ -15,13 +15,7 @@ const Note = memo(function Note({
   const labelNotes = useSelector((store) => store.musicTheory.labelNotes);
   const key = useSelector((store) => store.musicTheory.key);
   const accidental = useSelector((store) => store.musicTheory.accidental);
-  let label = getNoteLabel(
-    pitchClass,
-    labelNotes,
-    key.type === "minor" ? key.natural.scale : key.scale,
-    key.intervals,
-    accidental
-  );
+  let label = getNoteLabel(pitchClass, labelNotes, key, accidental);
 
   return (
     <button

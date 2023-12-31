@@ -37,8 +37,6 @@ const FretboardSlice = createSlice({
       snapScrollToNearestFret(state);
     },
     scrollFretboard(state) {
-      // if (state.fretCount === 25) return;
-
       state.preferredFretCount = state.fretCount;
       state.visibleFretsRange = getVisibleFretsRange(state, "scrollFretboard");
       state.fretboardWidth = getFretboardWidth(state);
@@ -51,17 +49,8 @@ const FretboardSlice = createSlice({
         state,
         "setPreferredFretCount"
       );
-      console.log(state.visibleFretsRange);
       state.fretboardWidth = getFretboardWidth(state);
       snapScrollToNearestFret(state);
-    },
-    clearAllNotes(state) {
-      for (let string of state.strings) {
-        for (let fret of string.frets) {
-          fret.note.selected = false;
-          fret.note.highlighted = false;
-        }
-      }
     },
     toggleHighlightNote(state, action) {
       const note = action.payload;
@@ -142,7 +131,6 @@ const FretboardSlice = createSlice({
         }
       });
     // .addCase(setInstrumentDetails, (state, action) => {
-    //   console.log("setInstrumentDetails");
     //   let windowWidth = getWindowWidth();
     //   const { instrument, instrumentVariant, theme } = action.payload;
     //   if (instrument === "fretboard") {
@@ -746,7 +734,6 @@ export const {
   scrollFretboard,
   setFretboardSoundIsReady,
   setFretboardWidth,
-  clearAllNotes,
   toggleHighlightNote,
   highlightAllNotes,
   removeHighlightAllNotes,

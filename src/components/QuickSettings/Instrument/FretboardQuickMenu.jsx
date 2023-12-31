@@ -2,32 +2,20 @@ import { useDispatch, useSelector } from "react-redux";
 import "./FretboardQuickMenu.scss";
 import "../../KeyChangeOld/Keys.scss";
 import { useEffect } from "react";
-import { useState } from "react";
-import Button from "../../Button/Button";
 import {
   setMarkNotes,
   setLabelNotes,
-  setFretPosition,
-  setHighlightNotes,
+  deselectNotes,
 } from "../../../Features/MusicTheory/MusicTheorySlice";
-import {
-  setActiveTabForQuickMenu,
-  toggleMenu,
-} from "../../../Features/UI/UISlice";
+import { toggleMenu } from "../../../Features/UI/UISlice";
 import Keys from "../../KeyChangeOld/Keys";
-import { note } from "tonal";
 import {
-  clearAllNotes,
   toggleHighlightNote,
-  highlightAllNotes,
-  removeHighlightAllNotes,
   setNutIsFixed,
 } from "../../../Features/Fretboard/FretboardSlice";
 
 function FretboardQuickMenu() {
   const dispatch = useDispatch();
-  const fretboardWidth = useSelector((store) => store.fretboard.fretboardWidth);
-  const accidental = useSelector((store) => store.musicTheory.accidental);
   const markNotes = useSelector((store) => store.musicTheory.markNotes);
   const labelNotes = useSelector((store) => store.musicTheory.labelNotes);
   const fretPosition = useSelector((store) => store.musicTheory.fretPosition);
@@ -49,15 +37,6 @@ function FretboardQuickMenu() {
     }
   }, [instrumentQuickMenu]);
 
-  function handleSetActiveTab(tabName) {
-    dispatch(
-      setActiveTabForQuickMenu({
-        quickMenu: "instrumentQuickMenu",
-        tab: tabName,
-      })
-    );
-  }
-
   function handleToggleNutIsFixed() {
     dispatch(setNutIsFixed(!nutIsFixed));
   }
@@ -67,8 +46,6 @@ function FretboardQuickMenu() {
   }
 
   function handleHighlightNoteClicked(note, accidental) {
-    console.log("handleHighlightNoteClicked");
-
     dispatch(toggleHighlightNote(note + accidental));
   }
 
@@ -130,20 +107,21 @@ function FretboardQuickMenu() {
             <Keys
               noteSize={25}
               handleNoteClicked={handleHighlightNoteClicked}
-              accidental={accidental}
             />
             <button>All</button>
             <button>None</button>
-            <button>Scale</button>
+            <button onClick={() => dispatch}>Scale</button>
           </div>
         </div>
         <div className="setting dropdown clear">
           <p>Clear</p>
           <button>All</button>
           <div className="dropdown-content clear">
-            <button onClick={() => dispatch(clearAllNotes())}>All</button>
-            <button onClick={() => dispatch(clearAllNotes())}>Marked</button>
-            <button onClick={() => dispatch(clearAllNotes())}>
+            <button onClick={() => dispatch(deselectNotes("all"))}>All</button>
+            <button onClick={() => dispatch(deselectNotes("marked"))}>
+              Marked
+            </button>
+            <button onClick={() => dispatch(deselectNotes("highlighted"))}>
               Highlighted
             </button>
           </div>
@@ -190,7 +168,7 @@ function FretboardQuickMenu() {
 
       <button
         className="toggleQuickMenuButton"
-        onClick={() => handleToggleQuickMenu("instrumentQuickMenu")}
+        onClick={() => handleToggleMenu("instrumentQuickMenu")}
       >
         🎹
       </button>

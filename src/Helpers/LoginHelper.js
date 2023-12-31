@@ -127,9 +127,9 @@ export function getGuestUser() {
     labelNotes: "note",
     fretPosition: "all",
     highlightNotes: "none",
-    instrumentQuickMenu: { showing: true },
+    instrumentQuickMenu: { showing: false },
     soundPlayerQuickMenu: { showing: false },
-    keyChangeMenu: { showing: true },
+    keyChangeMenu: { showing: false },
     projects: [
       {
         title: "dance with the devil in Am",
@@ -142,7 +142,7 @@ export function getGuestUser() {
         theme: undefined,
         coloredNotes: undefined,
         tuning: undefined,
-        instrumentQuickMenu: { showing: true, activeTab: "markNotes" },
+        instrumentQuickMenu: { showing: false, activeTab: "markNotes" },
         soundPlayerQuickMenu: { showing: false, activeTab: "strum" },
       },
     ],

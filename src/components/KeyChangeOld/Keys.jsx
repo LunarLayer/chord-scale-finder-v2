@@ -6,101 +6,92 @@ import { memo } from "react";
 import KeysNote from "./KeysNote";
 import { useState } from "react";
 import { Note } from "tonal";
+import { getNoteLabel } from "../../Helpers/InstrumentHelper";
+import { useEffect } from "react";
 
-const Keys = memo(function Keys({ noteSize, handleNoteClicked, accidental }) {
+const Keys = memo(function Keys({ noteSize, handleNoteClicked }) {
+  const key = useSelector((store) => store.musicTheory.key);
+  const accidental = useSelector((store) => store.musicTheory.accidental);
+  const allNotes = useSelector((store) => store.musicTheory.allNotes);
+  const labelNotes = useSelector((store) => store.musicTheory.labelNotes);
+
+  let noteLabels = [];
+  for (let i = 0; i < 12; i++) {
+    let noteLabel = getNoteLabel(allNotes[i].pc, labelNotes, key, accidental);
+    noteLabels.push(noteLabel);
+  }
+
   return (
     <div id="Keys">
       <div className="notesWrapper">
         <div className="sharpsOrFlats">
           <KeysNote
-            note={accidental === "#" ? "C#" : "Db"}
-            hasAccidental={true}
+            noteLabel={noteLabels[1]}
             size={noteSize}
-            handleClick={() =>
-              handleNoteClicked(accidental === "#" ? "c" : "d", accidental)
-            }
+            handleClick={() => handleNoteClicked()}
           />
           <KeysNote
-            note={accidental === "#" ? "D#" : "Eb"}
-            hasAccidental={true}
+            noteLabel={noteLabels[3]}
             size={noteSize}
-            handleClick={() =>
-              handleNoteClicked(accidental === "#" ? "d" : "e", accidental)
-            }
+            handleClick={() => handleNoteClicked()}
           />
         </div>
         <div className="naturals">
           <KeysNote
-            note="C"
-            hasAccidental={false}
+            noteLabel={noteLabels[0]}
             size={noteSize}
-            handleClick={() => handleNoteClicked("c", "")}
+            handleClick={() => handleNoteClicked()}
           />
           <KeysNote
-            note="D"
-            hasAccidental={false}
+            noteLabel={noteLabels[2]}
             size={noteSize}
-            handleClick={() => handleNoteClicked("d", "")}
+            handleClick={() => handleNoteClicked()}
           />
           <KeysNote
-            note="E"
-            hasAccidental={false}
+            noteLabel={noteLabels[4]}
             size={noteSize}
-            handleClick={() => handleNoteClicked("e", "")}
+            handleClick={() => handleNoteClicked()}
           />
         </div>
       </div>
       <div className="notesWrapper">
         <div className="sharpsOrFlats">
           <KeysNote
-            note={accidental === "#" ? "F#" : "Gb"}
-            hasAccidental={true}
+            noteLabel={noteLabels[6]}
             size={noteSize}
-            handleClick={() =>
-              handleNoteClicked(accidental === "#" ? "f" : "g", accidental)
-            }
+            handleClick={() => handleNoteClicked()}
           />
           <KeysNote
-            note={accidental === "#" ? "G#" : "Ab"}
-            hasAccidental={true}
+            noteLabel={noteLabels[8]}
             size={noteSize}
-            handleClick={() =>
-              handleNoteClicked(accidental === "#" ? "g" : "a", accidental)
-            }
+            handleClick={() => handleNoteClicked()}
           />
           <KeysNote
-            note={accidental === "#" ? "A#" : "Bb"}
-            hasAccidental={true}
+            noteLabel={noteLabels[10]}
             size={noteSize}
-            handleClick={() =>
-              handleNoteClicked(accidental === "#" ? "a" : "b", accidental)
-            }
+            handleClick={() => handleNoteClicked()}
           />
         </div>
         <div className="naturals">
           <KeysNote
-            note="F"
-            hasAccidental={false}
+            noteLabel={noteLabels[5]}
             size={noteSize}
-            handleClick={() => handleNoteClicked("f", "")}
+            handleClick={() => handleNoteClicked()}
           />
           <KeysNote
-            note="G"
-            hasAccidental={false}
+            noteLabel={noteLabels[7]}
             size={noteSize}
-            handleClick={() => handleNoteClicked("g", "")}
+            handleClick={() => handleNoteClicked()}
           />
           <KeysNote
-            note="A"
-            hasAccidental={false}
+            noteLabel={noteLabels[9]}
             size={noteSize}
-            handleClick={() => handleNoteClicked("a", "")}
+            handleClick={() => handleNoteClicked()}
           />
           <KeysNote
-            note="B"
-            hasAccidental={false}
+            noteLabel={noteLabels[11]}
             size={noteSize}
-            handleClick={() => handleNoteClicked("b", "")}
+            handleClick={() => handleNoteClicked()}
           />
         </div>
       </div>

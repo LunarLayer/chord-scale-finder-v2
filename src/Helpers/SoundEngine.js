@@ -32,7 +32,7 @@ export const soundEngine = {
       instrumentSound: "jazzbass",
       onload() {
         soundEngine.initSprites();
-        console.log("loaded soundEngine");
+        console.log("soundEngine loaded");
       },
       onloaderror(e, msg) {
         console.log("Error", e, msg);
@@ -40,7 +40,6 @@ export const soundEngine = {
     });
   },
   initSprites() {
-    console.log("initSprites");
     let timeIndex = 0;
     for (let i = 23; i < 73; i++) {
       sound["_sprite"][i] = [timeIndex, noteLength];

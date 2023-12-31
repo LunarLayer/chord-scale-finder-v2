@@ -1,5 +1,3 @@
-// console.log("uiSlice");
-
 import { createSlice } from "@reduxjs/toolkit";
 
 import { getWindowWidth } from "../../Helpers/WindowHelper";

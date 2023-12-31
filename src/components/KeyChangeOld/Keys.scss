@@ -16,8 +16,13 @@
   }
 
   .keysNote {
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid black;
+    }
     &.active {
-      background-color: red;
+      // border: 1px solid cyan;
     }
   }
 }

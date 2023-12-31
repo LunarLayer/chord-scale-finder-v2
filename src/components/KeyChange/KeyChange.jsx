@@ -27,7 +27,6 @@ function KeyChange() {
   }
 
   function handleSelectScale(scale) {
-    console.log("handleSelectScale");
     if (scale === "major") {
       dispatch(setKey(Key.majorKey(key.tonic)));
     } else {
@@ -37,7 +36,6 @@ function KeyChange() {
   }
 
   function handleToggleDropdown(id) {
-    console.log("handleToggleDropdown");
     let collapsible = document.getElementById(id);
     if (collapsible.style.maxHeight) {
       collapsible.style.maxHeight = null;
@@ -47,7 +45,6 @@ function KeyChange() {
   }
 
   function handleToggleScalesModal() {
-    console.log("handleToggleScalesModal");
     setScalesModalShowing(!scalesModalShowing);
   }
 

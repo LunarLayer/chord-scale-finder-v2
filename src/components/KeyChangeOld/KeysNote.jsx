@@ -2,16 +2,10 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 
 import { memo } from "react";
+import { getNoteLabel } from "../../Helpers/InstrumentHelper";
 
-const KeysNote = memo(function KeysNote({
-  note,
-  hasAccidental,
-  size,
-  isSelected,
-  handleClick,
-}) {
-  const accidental = useSelector((store) => store.musicTheory.accidental);
-
+const KeysNote = memo(function KeysNote({ noteLabel, size, handleClick }) {
+  let isSelected = true;
   return (
     <button
       style={{
@@ -21,11 +15,10 @@ const KeysNote = memo(function KeysNote({
         maxHeight: size,
       }}
       className={`keysNote ${isSelected ? "active" : ""}`}
-      data-note={`${note}${hasAccidental ? accidental : ""}`}
+      data-note={`${noteLabel}`}
       onClick={handleClick}
     >
-      {note}
-      {hasAccidental ? accidental : null}
+      {noteLabel}
     </button>
   );
 });

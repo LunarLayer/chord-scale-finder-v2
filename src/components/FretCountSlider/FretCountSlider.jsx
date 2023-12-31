@@ -11,7 +11,6 @@ function FretCountSlider() {
   const fretCap = useSelector((store) => store.fretboard.fretCap);
   function handleSliderChanged() {
     dispatch(setPreferredFretCount(parseInt(slider.current.value)));
-    // dispatch(setCurrentViewSection1("fretboard"));
   }
 
   return (

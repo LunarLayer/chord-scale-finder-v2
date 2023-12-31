@@ -22,6 +22,7 @@ import FretboardQuickSettings from "../components/QuickSettings/Instrument/Fretb
 import PianoQuickSettings from "../components/QuickSettings/Instrument/PianoQuickMenu";
 import { getGuestUser } from "../Helpers/LoginHelper";
 import KeyChange from "../components/KeyChange/KeyChange";
+import ChordScaleIdentifier from "../components/ChordScaleIdentifier/ChordScaleIdentifier";
 
 function AppLayout() {
   const dispatch = useDispatch();
@@ -29,9 +30,9 @@ function AppLayout() {
   const currentViewSection1 = useSelector(
     (store) => store.ui.currentViewSection1
   );
-  // const currentViewSection2 = useSelector(
-  //   (store) => store.ui.currentViewSection2
-  // );
+  const currentViewSection2 = useSelector(
+    (store) => store.ui.currentViewSection2
+  );
   const fretboardIsReady = useSelector(
     (store) => store.fretboard.fretboardIsReady
   );
@@ -66,10 +67,10 @@ function AppLayout() {
     if (view === "instrumentSettings") return <InstrumentSettings />;
     if (view === "keyChange") return <KeyChange />;
   }
-  // function Section2({ view }) {
-  //   if (view === "ChordAndScaleIdentifier") return <ChordAndScaleIdentifier />;
-  //   if (view === "ChordProgressionBuilder") return <ChordProgressionBuilder />;
-  // }
+  function Section2({ view }) {
+    if (view === "chordAndScaleIdentifier") return <ChordAndScaleIdentifier />;
+    // if (view === "ChordProgressionBuilder") return <ChordProgressionBuilder />;
+  }
 
   if (fretboardIsReady) {
     return (
@@ -83,11 +84,9 @@ function AppLayout() {
           <PianoQuickSettings />
         ) : null}
         <Section1 view={currentViewSection1} />
-        <p>
-          TODO: if you scroll almost to the end of the fretboard at 15 frets and
-          increase to 24 frets, the nut does not reappear when the nut is not
-          fixed.
-        </p>
+        {/* <Section2 view={currentViewSection2} />
+         */}
+        <ChordScaleIdentifier />
       </div>
     );
   } else {
