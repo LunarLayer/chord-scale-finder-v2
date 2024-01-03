@@ -6,6 +6,7 @@ import Button from "../Button/Button";
 import FretCountSlider from "../fretCountSlider/fretCountSlider";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentViewSection1, toggleMenu } from "../../Features/UI/UISlice";
+import { useState } from "react";
 
 function Toolbar() {
   const dispatch = useDispatch();
@@ -24,8 +25,14 @@ function Toolbar() {
     }
   }
 
+  const [keyChangeActive, setKeyChangeActive] = useState(false);
+
   function handleToggleMenu(name) {
-    dispatch(toggleMenu(name));
+    if (name === "keyChange") {
+      setKeyChangeActive(!keyChangeActive);
+    } else {
+      dispatch(toggleMenu(name));
+    }
   }
 
   function handleClearNotes() {}
@@ -36,7 +43,7 @@ function Toolbar() {
         <h4>Key</h4>
         <div className="content">
           <Button
-            className={`${currentViewSection1 === "keyChange" ? "active" : ""}`}
+            className={`${keyChangeActive ? "active" : ""}`}
             onClick={() => handleToggleMenu("keyChange")}
           >
             {key.tonic} {key.type}
