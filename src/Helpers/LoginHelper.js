@@ -1,5 +1,9 @@
 import { Key, Note, Scale } from "tonal";
 
+/* A guest user will be logged in, in case no user has logged in. 
+This guest user will keep track of preferences, projects etc. 
+and in case the guest user want's to keep all its settings/work, 
+he can create a user that will then be saved in the database as a user. */
 export function getGuestUser() {
   let guestUser = {
     username: "Guest",
@@ -127,9 +131,10 @@ export function getGuestUser() {
     labelNotes: "note",
     fretPosition: "all",
     highlightNotes: "none",
-    instrumentQuickMenu: { showing: false },
-    soundPlayerQuickMenu: { showing: false },
     keyChangeMenu: { showing: false },
+    fretboardMenu: { showing: false },
+    settingsMenu: { showing: false },
+    soundPlayerMenu: { showing: false },
     projects: [
       {
         title: "dance with the devil in Am",
@@ -142,8 +147,10 @@ export function getGuestUser() {
         theme: undefined,
         coloredNotes: undefined,
         tuning: undefined,
-        instrumentQuickMenu: { showing: false, activeTab: "markNotes" },
-        soundPlayerQuickMenu: { showing: false, activeTab: "strum" },
+        keyChangeMenu: { showing: false },
+        fretboardMenu: { showing: false },
+        settingsMenu: { showing: false },
+        soundPlayerMenu: { showing: false },
       },
     ],
   };

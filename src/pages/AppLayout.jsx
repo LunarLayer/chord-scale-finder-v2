@@ -12,17 +12,19 @@ import "./AppLayout.scss";
 import Loader from "../components/Loader/Loader";
 import Navbar from "../components/Navbar/Navbar";
 import Toolbar from "../components/Toolbar/Toolbar";
-import InstrumentSettings from "../components/InstrumentSettings/InstrumentSettings";
+// import InstrumentSettings from "../components/InstrumentSettings/InstrumentSettings";
 import Fretboard from "../components/Fretboard/Fretboard";
 // import Piano from "../components/Piano/Piano";
 // import ChordAndScaleIdentifier from "../components/ChordAndScaleIdentifier/ChordAndScaleIdentifier";
 // import ChordProgressionBuilder from "../components/ChordProgressionBuilder/ChordProgressionBuilder";
 import { loginUser } from "../Features/User/UserSlice";
-import FretboardQuickSettings from "../components/QuickSettings/Instrument/FretboardQuickMenu";
-import PianoQuickSettings from "../components/QuickSettings/Instrument/PianoQuickMenu";
+// import PianoQuickSettings from "../components/QuickSettings/Instrument/PianoQuickMenu";
 import { getGuestUser } from "../Helpers/LoginHelper";
-import KeyChange from "../components/KeyChange/KeyChange";
+import KeyChangeMenu from "../components/Menus/KeyChangeMenu/KeyChangeMenu";
+
 import ChordScaleIdentifier from "../components/ChordScaleIdentifier/ChordScaleIdentifier";
+import FretboardMenu from "../components/Menus/FretboardMenu/FretboardMenu";
+import SettingsMenu from "../components/Menus/SettingsMenu/SettingsMenu";
 
 function AppLayout() {
   const dispatch = useDispatch();
@@ -30,13 +32,16 @@ function AppLayout() {
   const currentViewSection1 = useSelector(
     (store) => store.ui.currentViewSection1
   );
-  const currentViewSection2 = useSelector(
-    (store) => store.ui.currentViewSection2
-  );
+  // const currentViewSection2 = useSelector(
+  //   (store) => store.ui.currentViewSection2
+  // );
   const fretboardIsReady = useSelector(
     (store) => store.fretboard.fretboardIsReady
   );
   const keyChangeMenu = useSelector((store) => store.ui.keyChangeMenu);
+  const settingsMenu = useSelector((store) => store.ui.settingsMenu);
+  const fretboardMenu = useSelector((store) => store.ui.fretboardMenu);
+
   const loginSuccess = useSelector((store) => store.user.loginSuccess);
 
   // Login
@@ -77,12 +82,11 @@ function AppLayout() {
       <div className="appLayout">
         <Navbar />
         <Toolbar />
-        {keyChangeMenu.showing ? <KeyChange /> : null}
-        {currentViewSection1 === "fretboard" ? (
-          <FretboardQuickSettings />
-        ) : currentViewSection1 === "piano" ? (
-          <PianoQuickSettings />
-        ) : null}
+        <div className="menusWrapper">
+          <KeyChangeMenu />
+          <SettingsMenu />
+          <FretboardMenu />
+        </div>
         <Section1 view={currentViewSection1} />
         {/* <Section2 view={currentViewSection2} />
          */}

@@ -1,0 +1,93 @@
+#FretboardMenu {
+  z-index: 50;
+  position: relative;
+  display: flex;
+  max-height: 0;
+  width: 100%;
+  max-width: var(--large);
+  margin: 0 auto;
+  padding: 0 20px;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: lightblue;
+
+  &.active {
+    display: flex;
+    overflow: visible;
+  }
+
+  .settings {
+    font-size: 14px;
+    display: flex;
+    gap: 8px 15px;
+    flex-wrap: wrap;
+    width: 100%;
+
+    button {
+      text-align: start;
+      height: 25px;
+      line-height: 1;
+    }
+
+    .setting {
+      position: relative;
+      max-width: max-content;
+      display: flex;
+      flex-direction: column;
+
+      p {
+        height: 16px;
+        line-height: 1;
+      }
+
+      &.dropdown:hover .dropdown-content {
+        display: flex;
+      }
+      .dropdown-content {
+        z-index: 50;
+        background-color: black;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        display: none;
+        flex-direction: column;
+        min-width: min-content;
+      }
+
+      &.markNotes {
+        .dropdown {
+        }
+        .dropdown-content {
+        }
+      }
+
+      &.highlight {
+        .dropdown-content {
+          transform: translateX(-50%);
+          border: 1px solid black;
+          background-color: white;
+          padding: 10px;
+
+          #Keys {
+            .notesWrapper {
+              flex-direction: column;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .closeButton {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: min-content;
+    padding: 0;
+    background-color: white;
+    margin: auto 0;
+    border: none;
+  }
+}

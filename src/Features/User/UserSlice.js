@@ -16,9 +16,10 @@ const UserSlice = createSlice({
     instrumentTheme: undefined,
     coloredNotes: undefined,
     tuning: undefined,
-    instrumentQuickMenu: undefined,
-    soundPlayerQuickMenu: undefined,
     keyChangeMenu: undefined,
+    settingsMenu: undefined,
+    fretboardMenu: undefined,
+    soundPlayerMenu: undefined,
     projects: undefined,
     markNotes: undefined,
     labelNotes: undefined,
@@ -40,9 +41,10 @@ const UserSlice = createSlice({
       state.instrumentTheme = user.instrumentTheme;
       state.coloredNotes = user.coloredNotes;
       state.tuning = user.tuning;
-      state.instrumentQuickMenu = user.instrumentQuickMenu;
-      state.soundPlayerQuickMenu = user.soundPlayerQuickMenu;
       state.keyChangeMenu = user.keyChangeMenu;
+      state.settingsMenu = user.settingsMenu;
+      state.fretboardMenu = user.fretboardMenu;
+      state.soundPlayerMenu = user.soundPlayerMenu;
       state.projects = user.projects;
       state.markNotes = user.markNotes;
       state.labelNotes = user.labelNotes;

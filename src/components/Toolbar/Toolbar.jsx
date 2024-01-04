@@ -5,8 +5,9 @@ import "./Toolbar.scss";
 import Button from "../Button/Button";
 import FretCountSlider from "../fretCountSlider/fretCountSlider";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentViewSection1, toggleMenu } from "../../Features/UI/UISlice";
+import { setCurrentViewSection1 } from "../../Features/UI/UISlice";
 import { useState } from "react";
+import { toggleMenuShowing } from "../../Helpers/AnimationHelper";
 
 function Toolbar() {
   const dispatch = useDispatch();
@@ -14,9 +15,7 @@ function Toolbar() {
     (store) => store.ui.currentViewSection1
   );
   const key = useSelector((store) => store.musicTheory.key);
-  const instrumentQuickMenu = useSelector(
-    (store) => store.ui.instrumentQuickMenu
-  );
+
   function handleChangeView(view) {
     if (currentViewSection1 === view) {
       dispatch(setCurrentViewSection1("fretboard"));
@@ -25,17 +24,13 @@ function Toolbar() {
     }
   }
 
-  const [keyChangeActive, setKeyChangeActive] = useState(false);
+  function handleToggleMenu(menuId, buttonClassName) {
+    let buttonElem = document.querySelector(buttonClassName);
+    buttonElem.classList.toggle("active");
 
-  function handleToggleMenu(name) {
-    if (name === "keyChange") {
-      setKeyChangeActive(!keyChangeActive);
-    } else {
-      dispatch(toggleMenu(name));
-    }
+    let menuElem = document.getElementById(menuId);
+    toggleMenuShowing(menuElem);
   }
-
-  function handleClearNotes() {}
 
   return (
     <div id="toolbar">
@@ -43,8 +38,10 @@ function Toolbar() {
         <h4>Key</h4>
         <div className="content">
           <Button
-            className={`${keyChangeActive ? "active" : ""}`}
-            onClick={() => handleToggleMenu("keyChange")}
+            className="keyChangeButton"
+            onClick={() =>
+              handleToggleMenu("KeyChangeMenu", ".keyChangeButton")
+            }
           >
             {key.tonic} {key.type}
           </Button>
@@ -52,13 +49,13 @@ function Toolbar() {
       </div>
 
       <div className="instrument wrapper">
-        <h4>Instrument</h4>
+        <h4>Settings</h4>
         <div className="content">
           <Button
-            className={`${
-              currentViewSection1 === "instrumentSettings" ? "active" : ""
-            }`}
-            onClick={() => handleChangeView("instrumentSettings")}
+            className="settingsMenuButton"
+            onClick={() =>
+              handleToggleMenu("SettingsMenu", ".settingsMenuButton")
+            }
           >
             🛠️
           </Button>
@@ -69,25 +66,13 @@ function Toolbar() {
         <h4>Quick menus</h4>
         <div className="content">
           <Button
-            className={`${
-              instrumentQuickMenu.showing === true ? "active" : ""
-            }`}
-            onClick={() => handleToggleMenu("instrumentQuickMenu")}
+            className="fretboardMenuButton"
+            onClick={() =>
+              handleToggleMenu("FretboardMenu", ".fretboardMenuButton")
+            }
           >
             🎹
           </Button>
-          {/* <Button
-            className={`${soundPlayerQuickSettings.showing ? "active" : ""}`}
-            onClick={() => handleToggleQuickSetting("soundPlayerQuickSettings")}
-          >
-            🎵
-          </Button>
-          <Button
-            className={`${theoryQuickSettings.showing ? "active" : ""}`}
-            onClick={() => handleToggleQuickSetting("theoryQuickSettings")}
-          >
-            🔊
-          </Button> */}
         </div>
       </div>
 

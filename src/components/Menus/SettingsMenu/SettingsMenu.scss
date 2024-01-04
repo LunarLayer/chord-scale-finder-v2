@@ -1,0 +1,15 @@
+#SettingsMenu {
+  overflow: hidden;
+  max-width: var(--large);
+  margin: 0 auto;
+  max-height: 0;
+  transition: max-height 0.3s ease-out;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    width: 100%;
+    padding: 10px;
+  }
+}

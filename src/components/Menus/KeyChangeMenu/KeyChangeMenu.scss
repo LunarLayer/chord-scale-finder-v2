@@ -1,0 +1,41 @@
+#KeyChangeMenu {
+  overflow: hidden;
+  max-width: var(--large);
+  max-height: 0;
+  transition: max-height 0.3s ease-out;
+  margin: 0 auto;
+
+  &.showing {
+    .content {
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    width: 100%;
+    padding: 10px;
+
+    &,
+    .note-selection,
+    .notes,
+    .accidentals,
+    .scaleSelection {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .note-selection {
+      flex-direction: column;
+
+      .notes {
+        justify-content: center;
+      }
+      .accidentals {
+        justify-content: center;
+      }
+    }
+  }
+}
