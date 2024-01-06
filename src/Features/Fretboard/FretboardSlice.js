@@ -88,6 +88,7 @@ const FretboardSlice = createSlice({
           state.notesLabelWidth = getNotesLabelWidth(state);
           state.fretCount = getFretCount(state);
           state.visibleFretsRange = getVisibleFretsRange(state, "loginUser");
+          console.log(state.visibleFretsRange);
           state.fretboardWidth = getFretboardWidth(state);
           state.fretboardIsReady = true;
         }
@@ -106,8 +107,8 @@ const FretboardSlice = createSlice({
 
 function getVisibleFrets(state) {
   let visibleFretsArr = [];
-  if (!state.visibleFrets || state.fretCount === 25) {
-    for (let i = 1; i <= 25; i++) {
+  if (!state.visibleFrets || state.fretCount === 24) {
+    for (let i = 1; i <= 24; i++) {
       visibleFretsArr.push(i);
     }
     if (state.nutIsFixed) visibleFretsArr.push(0);
@@ -123,17 +124,18 @@ function getVisibleFretsRange(state, trigger) {
     : document.getElementById("Fretboard");
 
   if (trigger === "scrollFretboard") {
+    console.log("trigger === scrollFretboard");
     let cantScrollFurther =
       container.scrollLeft + container.clientWidth === container.scrollWidth;
     if (cantScrollFurther) {
-      return { start: 24 - state.fretCount + 2, end: 24 };
+      return { start: 24 - state.fretCount + 1, end: 24 };
     }
     if (state.nutIsFixed) {
       start = getClosestFretnumber(state, container.scrollLeft);
-      end = start + state.fretCount - 2;
+      end = start + state.fretCount - 1;
     } else {
       start = getClosestFretnumber(state, container.scrollLeft);
-      end = start + state.fretCount - 1;
+      end = start + state.fretCount;
       if (start > 0) end -= 1;
     }
     while (end > 24) {
@@ -143,12 +145,13 @@ function getVisibleFretsRange(state, trigger) {
   }
 
   if (trigger === "setPreferredFretCount") {
+    console.log("trigger === setPreferredFretCount");
     if (state.nutIsFixed) {
       start = getClosestFretnumber(state, container.scrollLeft);
-      end = start + state.fretCount - 2;
+      end = start + state.fretCount - 1;
     } else {
       start = getClosestFretnumber(state, container.scrollLeft);
-      end = start + state.fretCount - 1;
+      end = start + state.fretCount;
       if (start > 0) end -= 1;
     }
     while (end > 24) {
@@ -160,6 +163,7 @@ function getVisibleFretsRange(state, trigger) {
   }
 
   if (trigger === "setNutIsFixed") {
+    console.log("trigger === setNutIsFixed");
     if (state.nutIsFixed) {
       start = getClosestFretnumber(state, container.scrollLeft);
       end = start + state.fretCount - 2;
@@ -171,30 +175,33 @@ function getVisibleFretsRange(state, trigger) {
   }
 
   if (trigger === "setWindowWidth") {
+    console.log("trigger === setWindowWidth");
     if (state.preferredFretCount) {
       start = state.visibleFretsRange.start;
       if (start === 0) {
-        end = start + state.fretCount - 1;
+        end = start + state.fretCount;
       } else {
-        end = start + state.fretCount - 2;
+        end = start + state.fretCount - 1;
       }
     } else {
       if (state.nutIsFixed) {
-        return { start: 1, end: state.fretCount - 1 };
+        return { start: 1, end: state.fretCount };
       } else {
-        return { start: 0, end: state.fretCount - 1 };
+        return { start: 0, end: state.fretCount };
       }
     }
   }
 
   if (trigger === "loginUser") {
+    console.log("trigger === loginUser");
     if (state.nutIsFixed) {
-      return { start: 1, end: state.fretCount - 1 };
+      return { start: 1, end: state.fretCount };
     } else {
-      return { start: 0, end: state.fretCount - 1 };
+      return { start: 0, end: state.fretCount };
     }
   }
 
+  console.log("start: " + start + " | end: " + end);
   return { start, end };
 }
 
@@ -522,17 +529,20 @@ function getFretCap(state, windowWidth) {
   if (state.fretboardStyle === "default") {
     let fretboardWidth = windowWidth - state.fretboardPadding * 2;
     let fretCap = 0;
-    let fretWidthsSum = 0;
+    let sum = 0;
     for (let fretWidth of state.fretWidths) {
-      fretWidthsSum += fretWidth;
-      if (fretWidthsSum < fretboardWidth + 0.001) {
+      sum += fretWidth;
+      if (sum < fretboardWidth + 0.001) {
         fretCap++;
       } else {
         break;
       }
     }
-    if (fretCap > 25) fretCap = 25;
-    return fretCap;
+
+    // since the nut is not considered a fret and is part of "fretWidths",
+    // it needs to be subtracted from the result
+    // Todo: for code clarity; the nut should not be part of the fretWidths,
+    return fretCap - 1;
   }
 }
 
@@ -629,6 +639,7 @@ function getFretWidths(state, windowWidth) {
   let spaceForFrets = fretboardWidth - spaceForIncrements;
   let notesLabelWidth = (spaceForFrets - 100) / 25;
 
+  // Ensure the notesLabelWidth adheres to min and max noteWidths
   if (
     notesLabelWidth < state.notesMinWidth ||
     notesLabelWidth > state.notesMaxWidth
@@ -644,13 +655,17 @@ function getFretWidths(state, windowWidth) {
 
   let fretWidths = [];
   let incPart = spaceForIncrements / 276;
-  notesLabelWidth += 4;
+  notesLabelWidth += 4; // add 4 so the label has 2px of space on each side
 
+  // the nut (same size as last fret)
   fretWidths.push(notesLabelWidth);
 
+  // Spread out the spaceForIncrements between the frets (linear growth)
   for (let i = 23; i > 0; i--) {
     fretWidths.push(notesLabelWidth + i * incPart);
   }
+
+  // the last fret (same size as nut)
   fretWidths.push(notesLabelWidth);
 
   return fretWidths;

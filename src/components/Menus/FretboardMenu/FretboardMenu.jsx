@@ -100,7 +100,7 @@ function FretboardMenu(showing) {
             </button>
           </div>
         </div>
-        {/* <div className="setting dropdown fixNut">
+        <div className="setting dropdown fixNut">
           <p>Fixed nut</p>
           <button
             className={nutIsFixed ? "nutFixedButton active" : "nutFixedButton"}
@@ -108,7 +108,7 @@ function FretboardMenu(showing) {
           >
             {nutIsFixed ? "Fixed" : "Normal"}
           </button>
-        </div> */}
+        </div>
       </div>
 
       <button
