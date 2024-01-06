@@ -1,10 +1,6 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 import { loginUser } from "../User/UserSlice";
 import { Chord, Note, Scale } from "tonal";
-import {
-  selectNoteOnString,
-  deselectNoteOnString,
-} from "../Fretboard/FretboardSlice";
 
 const MusicTheorySlice = createSlice({
   name: "musicTheory",
@@ -141,49 +137,31 @@ const MusicTheorySlice = createSlice({
     deselectNote(state, action) {},
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(loginUser, (state, action) => {
-        const user = action.payload;
-        state.key = user.key;
-        state.allNotes = user.allNotes;
-        state.accidental = user.accidental;
-        if (user.instrument === "Fretboard") {
-          let tuning = user.tuning;
+    builder.addCase(loginUser, (state, action) => {
+      const user = action.payload;
+      state.key = user.key;
+      state.allNotes = user.allNotes;
+      state.accidental = user.accidental;
+      if (user.instrument === "Fretboard") {
+        let tuning = user.tuning;
 
-          for (let i = 0; i < tuning.length; i++) {
-            let rootNote = tuning[i].name;
-            let rootIndex = state.allNotes.findIndex(
-              (note) => note.name === rootNote
+        for (let i = 0; i < tuning.length; i++) {
+          let rootNote = tuning[i].name;
+          let rootIndex = state.allNotes.findIndex(
+            (note) => note.name === rootNote
+          );
+          for (let j = 0; j <= 24; j++) {
+            state.allNotes[rootIndex + j].appearsOnStrings.push(
+              tuning.length - i
             );
-            for (let j = 0; j <= 24; j++) {
-              state.allNotes[rootIndex + j].appearsOnStrings.push(
-                tuning.length - i
-              );
-            }
           }
         }
-        state.markNotes = user.markNotes;
-        state.labelNotes = user.labelNotes;
-        state.fretPosition = user.fretPosition;
-        state.highlightNotes = user.highlightNotes;
-      })
-      .addCase(selectNoteOnString, (state, action) => {
-        const { note } = action.payload;
-        for (let selectedNote of state.selectedNotes) {
-          if (note.name === selectedNote.name) return;
-        }
-        // Create a new Note obj to get rid of previous mutations
-        let newNote = Note.get(note.name);
-        state.selectedNotes.push(newNote);
-      })
-      .addCase(deselectNoteOnString, (state, action) => {
-        const { note } = action.payload;
-
-        let noteIndex = state.selectedNotes.findIndex(
-          (selectedNote) => selectedNote.name === note.name
-        );
-        state.selectedNotes.splice(noteIndex, 1);
-      });
+      }
+      state.markNotes = user.markNotes;
+      state.labelNotes = user.labelNotes;
+      state.fretPosition = user.fretPosition;
+      state.highlightNotes = user.highlightNotes;
+    });
   },
 });
 

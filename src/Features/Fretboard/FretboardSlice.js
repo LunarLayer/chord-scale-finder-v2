@@ -52,44 +52,6 @@ const FretboardSlice = createSlice({
       state.fretboardWidth = getFretboardWidth(state);
       snapScrollToNearestFret(state);
     },
-    toggleHighlightNote(state, action) {
-      const note = action.payload;
-      for (let string of state.strings) {
-        for (let fret of string.frets) {
-          if (fret.note.pc.toLowerCase() === note) {
-            fret.note.highlighted = !fret.note.highlighted;
-          }
-        }
-      }
-    },
-    highlightAllNotes(state) {
-      for (let string of state.strings) {
-        for (let fret of string.frets) {
-          fret.note.highlighted = true;
-        }
-      }
-    },
-    removeHighlightAllNotes(state) {
-      for (let string of state.strings) {
-        for (let fret of string.frets) {
-          fret.note.highlighted = false;
-        }
-      }
-    },
-    selectNoteOnString(state, action) {
-      const { note, stringIndex, markNotes } = action.payload;
-      let fretIndex = state.strings[stringIndex].frets.findIndex(
-        (fret) => fret.note.pc === note.pc && fret.note.oct === note.oct
-      );
-      state.strings[stringIndex].frets[fretIndex].note.selected = true;
-    },
-    deselectNoteOnString(state, action) {
-      const { note, stringIndex, markNotes } = action.payload;
-      let fretIndex = state.strings[stringIndex].frets.findIndex(
-        (fret) => fret.note.pc === note.pc && fret.note.oct === note.oct
-      );
-      state.strings[stringIndex].frets[fretIndex].note.selected = false;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -734,11 +696,6 @@ export const {
   scrollFretboard,
   setFretboardSoundIsReady,
   setFretboardWidth,
-  toggleHighlightNote,
-  highlightAllNotes,
-  removeHighlightAllNotes,
-  selectNoteOnString,
-  deselectNoteOnString,
   setPreferredFretCount,
 } = FretboardSlice.actions;
 

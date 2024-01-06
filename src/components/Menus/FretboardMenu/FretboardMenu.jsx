@@ -4,14 +4,9 @@ import { useEffect } from "react";
 import {
   setMarkNotes,
   setLabelNotes,
-  deselectNotes,
 } from "../../../Features/MusicTheory/MusicTheorySlice";
 import { toggleMenu } from "../../../Features/UI/UISlice";
-// import Keys from "../KeyChangeOld/Keys";
-import {
-  toggleHighlightNote,
-  setNutIsFixed,
-} from "../../../Features/Fretboard/FretboardSlice";
+import { setNutIsFixed } from "../../../Features/Fretboard/FretboardSlice";
 
 function FretboardMenu(showing) {
   const dispatch = useDispatch();
@@ -105,7 +100,7 @@ function FretboardMenu(showing) {
             </button>
           </div>
         </div>
-        <div className="setting dropdown fixNut">
+        {/* <div className="setting dropdown fixNut">
           <p>Fixed nut</p>
           <button
             className={nutIsFixed ? "nutFixedButton active" : "nutFixedButton"}
@@ -113,7 +108,7 @@ function FretboardMenu(showing) {
           >
             {nutIsFixed ? "Fixed" : "Normal"}
           </button>
-        </div>
+        </div> */}
       </div>
 
       <button
