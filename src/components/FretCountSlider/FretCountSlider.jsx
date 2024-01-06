@@ -11,14 +11,8 @@ function FretCountSlider() {
   const fretCount = useSelector((store) => store.fretboard.fretCount);
   const fretCap = useSelector((store) => store.fretboard.fretCap);
   function handleSliderChanged() {
-    console.log("slider.current.value: " + slider.current.value);
     dispatch(setPreferredFretCount(parseInt(slider.current.value)));
   }
-
-  useEffect(() => {
-    console.log("fretCount: " + fretCount);
-    console.log("fretCap: " + fretCap);
-  }, [fretCount, fretCap]);
 
   return (
     <div id="fretCount-slider">

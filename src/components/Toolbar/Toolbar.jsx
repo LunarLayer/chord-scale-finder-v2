@@ -71,7 +71,7 @@ function Toolbar() {
               handleToggleMenu("FretboardMenu", ".fretboardMenuButton")
             }
           >
-            🎹
+            🎵
           </Button>
         </div>
       </div>

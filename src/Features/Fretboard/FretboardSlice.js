@@ -88,7 +88,6 @@ const FretboardSlice = createSlice({
           state.notesLabelWidth = getNotesLabelWidth(state);
           state.fretCount = getFretCount(state);
           state.visibleFretsRange = getVisibleFretsRange(state, "loginUser");
-          console.log(state.visibleFretsRange);
           state.fretboardWidth = getFretboardWidth(state);
           state.fretboardIsReady = true;
         }
@@ -124,7 +123,7 @@ function getVisibleFretsRange(state, trigger) {
     : document.getElementById("Fretboard");
 
   if (trigger === "scrollFretboard") {
-    console.log("trigger === scrollFretboard");
+    // console.log("trigger === scrollFretboard");
     let cantScrollFurther =
       container.scrollLeft + container.clientWidth === container.scrollWidth;
     if (cantScrollFurther) {
@@ -145,7 +144,7 @@ function getVisibleFretsRange(state, trigger) {
   }
 
   if (trigger === "setPreferredFretCount") {
-    console.log("trigger === setPreferredFretCount");
+    // console.log("trigger === setPreferredFretCount");
     if (state.nutIsFixed) {
       start = getClosestFretnumber(state, container.scrollLeft);
       end = start + state.fretCount - 1;
@@ -163,7 +162,7 @@ function getVisibleFretsRange(state, trigger) {
   }
 
   if (trigger === "setNutIsFixed") {
-    console.log("trigger === setNutIsFixed");
+    // console.log("trigger === setNutIsFixed");
     if (state.nutIsFixed) {
       start = getClosestFretnumber(state, container.scrollLeft);
       end = start + state.fretCount - 2;
@@ -175,7 +174,7 @@ function getVisibleFretsRange(state, trigger) {
   }
 
   if (trigger === "setWindowWidth") {
-    console.log("trigger === setWindowWidth");
+    // console.log("trigger === setWindowWidth");
     if (state.preferredFretCount) {
       start = state.visibleFretsRange.start;
       if (start === 0) {
@@ -193,7 +192,7 @@ function getVisibleFretsRange(state, trigger) {
   }
 
   if (trigger === "loginUser") {
-    console.log("trigger === loginUser");
+    // console.log("trigger === loginUser");
     if (state.nutIsFixed) {
       return { start: 1, end: state.fretCount };
     } else {

@@ -115,7 +115,7 @@ function FretboardMenu(showing) {
         className="closeButton"
         onClick={() => handleToggleMenu("fretboardMenu")}
       >
-        🎹
+        🎵
       </button>
     </div>
   );
