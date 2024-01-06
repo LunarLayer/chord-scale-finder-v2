@@ -1,9 +1,9 @@
 {
   "name": "chord-scale-finder-v2",
-  "private": true,
+  "private": false,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://LunarLayer.github.io/chord-scale-finder-v2",
+  "homepage": "http://lunarlayer.github.io/chord-scale-finder-v2",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
