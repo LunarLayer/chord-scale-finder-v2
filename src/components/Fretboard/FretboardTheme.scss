@@ -158,12 +158,12 @@
     justify-content: space-around;
     align-items: center;
 
-    &:last-child() {
-      .fretband:nth-child(1) {
-        left: auto;
-        right: 0;
-      }
-    }
+    // &:last-child() {
+    //   .fretband:nth-child(1) {
+    //     left: auto;
+    //     right: 0;
+    //   }
+    // }
 
     .fretband {
       position: absolute;
