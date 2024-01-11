@@ -1,6 +1,8 @@
 import { Howl, Howler } from "howler";
 import { note } from "tonal";
 
+Howler.html5 = true;
+
 let strings = [
   { sound: null, timeout: null },
   { sound: null, timeout: null },
@@ -27,8 +29,9 @@ export const soundEngine = {
     return loadingProgress;
   },
   loadSoundFile(soundFile) {
+    console.log(soundFile);
     sound = new Howl({
-      src: [`instrumentSounds/${soundFile}`],
+      src: [`/chord-scale-finder-v2/soundfiles/${soundFile}`],
       instrumentSound: "jazzbass",
       onload() {
         soundEngine.initSprites();

@@ -10,11 +10,11 @@ import "./animations/keyframes";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/chord-scale-finder-v2">
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route index element={<AppLayout />} />
-          <Route path="login" element={<Login />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
