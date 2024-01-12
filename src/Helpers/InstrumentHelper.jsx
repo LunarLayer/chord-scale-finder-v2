@@ -24,19 +24,27 @@ export function getFretsWithNotes(tuning, allNotes) {
 
 export function getNoteLabel(pitchClass, labelNotes, key, accidental) {
   let scale = key.type === "minor" ? key.natural.scale : key.scale;
+  console.log("scale: " + scale);
 
   if (labelNotes === "note") {
     for (let scaleNote of scale) {
       if (Note.enharmonic(scaleNote) === pitchClass) {
+        console.log("scaleNote: " + scaleNote);
+        if (scaleNote.includes("b")) return scaleNote.replace(/b/g, "♭");
+        if (scaleNote.includes("#")) return scaleNote.replace(/#/g, "♯");
         return scaleNote;
       }
     }
 
     if (accidental === "b") {
-      return Note.enharmonic(pitchClass);
+      return Note.enharmonic(pitchClass).replace(/b/g, "♭");
     } else {
-      return pitchClass;
+      return pitchClass.replace(/#/g, "♯");
     }
+
+    // if (note.includes("b")) return note.replace("b", "♭");
+    // if (note.includes("#")) return note.replace("#", "♯");
+    // return note;
   }
   if (labelNotes === "degree") {
     for (let i = 0; i < scale.length; i++) {
