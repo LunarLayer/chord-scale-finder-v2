@@ -131,10 +131,11 @@ export function getGuestUser() {
     labelNotes: "note",
     fretPosition: "all",
     highlightNotes: "none",
-    keyChangeMenu: { showing: false },
-    fretboardMenu: { showing: false },
-    settingsMenu: { showing: false },
-    soundPlayerMenu: { showing: false },
+    menus: {
+      keyChange: { id: "KeyChangeMenu", showing: false },
+      instrument: { id: "InstrumentMenu", showing: false },
+      settings: { id: "SettingsMenu", showing: false },
+    },
     projects: [
       {
         title: "dance with the devil in Am",
@@ -160,8 +161,9 @@ export function getGuestUser() {
   // and which strings they belong to on the fretboard in case the fretboard is being used.
   for (let note of guestUser.allNotes) {
     note.selected = false;
-    note.highlighted = false;
     note.selectedOnStrings = [];
+    note.highlighted = false;
+    note.highlightedOnStrings = [];
     note.appearsOnStrings = [];
   }
 

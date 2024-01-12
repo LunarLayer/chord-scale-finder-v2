@@ -5,9 +5,7 @@ import "./Toolbar.scss";
 import Button from "../Button/Button";
 import FretCountSlider from "../fretCountSlider/fretCountSlider";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentViewSection1 } from "../../Features/UI/UISlice";
-import { useState } from "react";
-import { toggleMenuShowing } from "../../Helpers/AnimationHelper";
+import { setCurrentViewSection1, toggleMenu } from "../../Features/UI/UISlice";
 
 function Toolbar() {
   const dispatch = useDispatch();
@@ -15,6 +13,7 @@ function Toolbar() {
     (store) => store.ui.currentViewSection1
   );
   const key = useSelector((store) => store.musicTheory.key);
+  const menus = useSelector((store) => store.ui.menus);
 
   function handleChangeView(view) {
     if (currentViewSection1 === view) {
@@ -24,24 +23,14 @@ function Toolbar() {
     }
   }
 
-  function handleToggleMenu(menuId, buttonClassName) {
-    let buttonElem = document.querySelector(buttonClassName);
-    buttonElem.classList.toggle("active");
-
-    let menuElem = document.getElementById(menuId);
-    toggleMenuShowing(menuElem);
-  }
-
   return (
     <div id="toolbar">
       <div className="Tonality wrapper">
         <h4>Key</h4>
         <div className="content">
           <Button
-            className="keyChangeButton"
-            onClick={() =>
-              handleToggleMenu("KeyChangeMenu", ".keyChangeButton")
-            }
+            active={menus.keyChange.showing}
+            onClick={() => dispatch(toggleMenu("keyChange"))}
           >
             {key.tonic} {key.type}
           </Button>
@@ -52,10 +41,8 @@ function Toolbar() {
         <h4>Settings</h4>
         <div className="content">
           <Button
-            className="settingsMenuButton"
-            onClick={() =>
-              handleToggleMenu("SettingsMenu", ".settingsMenuButton")
-            }
+            active={menus.settings.showing}
+            onClick={() => dispatch(toggleMenu("settings"))}
           >
             🛠️
           </Button>
@@ -66,10 +53,8 @@ function Toolbar() {
         <h4>Quick menus</h4>
         <div className="content">
           <Button
-            className="fretboardMenuButton"
-            onClick={() =>
-              handleToggleMenu("FretboardMenu", ".fretboardMenuButton")
-            }
+            active={menus.instrument.showing}
+            onClick={() => dispatch(toggleMenu("instrument"))}
           >
             🎵
           </Button>

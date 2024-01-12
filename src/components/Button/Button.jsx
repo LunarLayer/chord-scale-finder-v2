@@ -1,8 +1,11 @@
 import "./Button.scss";
 
-function Button({ onClick, children, className }) {
+function Button({ onClick, children, className, active }) {
   return (
-    <button className={`button ${className}`} onClick={onClick}>
+    <button
+      className={`button ${className} ${active ? "active" : ""}`}
+      onClick={onClick}
+    >
       {children}
     </button>
   );

@@ -1,14 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
-import "./FretboardMenu.scss";
+import "./InstrumentMenu.scss";
 import { useEffect } from "react";
 import {
   setMarkNotes,
   setLabelNotes,
-} from "../../../Features/MusicTheory/MusicTheorySlice";
-import { toggleMenu } from "../../../Features/UI/UISlice";
-import { setNutIsFixed } from "../../../Features/Fretboard/FretboardSlice";
+} from "../../Features/MusicTheory/MusicTheorySlice";
+// import { toggleMenu } from "../../../Features/UI/UISlice";
+import { setNutIsFixed } from "../../Features/Fretboard/FretboardSlice";
+import {
+  animateCollapseMenu,
+  animateExpandMenu,
+} from "../../Helpers/AnimationHelper";
 
-function FretboardMenu(showing) {
+function InstrumentMenu({ showing }) {
   const dispatch = useDispatch();
   const markNotes = useSelector((store) => store.musicTheory.markNotes);
   const labelNotes = useSelector((store) => store.musicTheory.labelNotes);
@@ -17,6 +21,15 @@ function FretboardMenu(showing) {
     (store) => store.musicTheory.highlightNotes
   );
   const nutIsFixed = useSelector((store) => store.fretboard.nutIsFixed);
+
+  useEffect(() => {
+    let instrumentMenu = document.getElementById("InstrumentMenu");
+    if (showing) {
+      animateExpandMenu(instrumentMenu);
+    } else {
+      animateCollapseMenu(instrumentMenu);
+    }
+  }, [showing]);
 
   function handleToggleNutIsFixed() {
     dispatch(setNutIsFixed(!nutIsFixed));
@@ -27,7 +40,7 @@ function FretboardMenu(showing) {
   }
 
   return (
-    <div id="FretboardMenu">
+    <div id="InstrumentMenu">
       <div className="settings">
         <div className="setting dropdown markNotes">
           <p>Mark notes</p>
@@ -113,7 +126,7 @@ function FretboardMenu(showing) {
 
       <button
         className="closeButton"
-        onClick={() => handleToggleMenu("fretboardMenu")}
+        // onClick={() => handleToggleMenu("instrumentMenu")}
       >
         🎵
       </button>
@@ -121,4 +134,4 @@ function FretboardMenu(showing) {
   );
 }
 
-export default FretboardMenu;
+export default InstrumentMenu;

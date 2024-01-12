@@ -2,17 +2,30 @@ import { useDispatch, useSelector } from "react-redux";
 import "./KeyChangeMenu.scss";
 import { Key, Note } from "tonal";
 import {
+  highlightNotesInKey,
   selectNotesInKey,
   setKey,
-} from "../../../Features/MusicTheory/MusicTheorySlice";
-// import SharpsFlatsDisplay from "./SharpsFlatsDisplay";
+} from "../../Features/MusicTheory/MusicTheorySlice";
 import { useEffect } from "react";
-import { toggleMenuShowing } from "../../../Helpers/AnimationHelper";
+import {
+  animateCollapseMenu,
+  animateExpandMenu,
+} from "../../Helpers/AnimationHelper";
+// import SharpsFlatsDisplay from "./SharpsFlatsDisplay";
 
 function KeyChangeMenu({ showing }) {
   const dispatch = useDispatch();
   const key = useSelector((store) => store.musicTheory.key);
   let keyNote = Note.get(key.tonic).letter;
+
+  useEffect(() => {
+    let keyChangeMenu = document.getElementById("KeyChangeMenu");
+    if (showing) {
+      animateExpandMenu(keyChangeMenu);
+    } else {
+      animateCollapseMenu(keyChangeMenu);
+    }
+  }, [showing]);
 
   function handleSetKey(note, accidental) {
     if (key.type === "major") {
@@ -20,7 +33,7 @@ function KeyChangeMenu({ showing }) {
     } else {
       dispatch(setKey(Key.minorKey(note + accidental)));
     }
-    dispatch(selectNotesInKey());
+    dispatch(highlightNotesInKey());
   }
 
   function handleSelectScale(scale) {
@@ -29,7 +42,7 @@ function KeyChangeMenu({ showing }) {
     } else {
       dispatch(setKey(Key.minorKey(key.tonic)));
     }
-    dispatch(selectNotesInKey());
+    dispatch(highlightNotesInKey());
   }
 
   return (

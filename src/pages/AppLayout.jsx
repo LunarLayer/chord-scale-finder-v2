@@ -18,13 +18,12 @@ import Fretboard from "../components/Fretboard/Fretboard";
 // import ChordAndScaleIdentifier from "../components/ChordAndScaleIdentifier/ChordAndScaleIdentifier";
 // import ChordProgressionBuilder from "../components/ChordProgressionBuilder/ChordProgressionBuilder";
 import { loginUser } from "../Features/User/UserSlice";
-// import PianoQuickSettings from "../components/QuickSettings/Instrument/PianoQuickMenu";
 import { getGuestUser } from "../Helpers/LoginHelper";
-import KeyChangeMenu from "../components/Menus/KeyChangeMenu/KeyChangeMenu";
 
 import ChordScaleIdentifier from "../components/ChordScaleIdentifier/ChordScaleIdentifier";
-import FretboardMenu from "../components/Menus/FretboardMenu/FretboardMenu";
-import SettingsMenu from "../components/Menus/SettingsMenu/SettingsMenu";
+import KeyChangeMenu from "../components/KeyChangeMenu/KeyChangeMenu";
+import SettingsMenu from "../components/SettingsMenu/SettingsMenu";
+import InstrumentMenu from "../components/InstrumentMenu/InstrumentMenu";
 
 function AppLayout() {
   const dispatch = useDispatch();
@@ -38,11 +37,9 @@ function AppLayout() {
   const fretboardIsReady = useSelector(
     (store) => store.fretboard.fretboardIsReady
   );
-  const keyChangeMenu = useSelector((store) => store.ui.keyChangeMenu);
-  const settingsMenu = useSelector((store) => store.ui.settingsMenu);
-  const fretboardMenu = useSelector((store) => store.ui.fretboardMenu);
 
   const loginSuccess = useSelector((store) => store.user.loginSuccess);
+  const menus = useSelector((store) => store.ui.menus);
 
   // Login
   useEffect(() => {
@@ -82,11 +79,9 @@ function AppLayout() {
       <div className="appLayout">
         <Navbar />
         <Toolbar />
-        <div className="menusWrapper">
-          <KeyChangeMenu />
-          <SettingsMenu />
-          <FretboardMenu />
-        </div>
+        <KeyChangeMenu showing={menus.keyChange.showing} />
+        <SettingsMenu showing={menus.settings.showing} />
+        <InstrumentMenu showing={menus.instrument.showing} />
         <Section1 view={currentViewSection1} />
         {/* <Section2 view={currentViewSection2} />
          */}
