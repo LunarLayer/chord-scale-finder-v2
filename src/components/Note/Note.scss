@@ -23,29 +23,15 @@
 
   &:hover {
     span {
-      opacity: 0.8;
-    }
-  }
-
-  &.selected {
-    span {
       opacity: 1;
-      border: 2px solid blue;
-      // display: none; // make transparent
-      // display: flex;
-      // justify-content: center;
-      // align-items: center;
-      // border: 1px solid black;
-      // font-size: 12px;
-      // background-color: white;
-      // // background: rgba(0, 0, 0, 0); // make transparent
+      border: 1px solid grey;
     }
   }
 
   &.highlighted {
     span {
       opacity: 1;
-
+      border: 1px solid black;
       // display: none; // make transparent
       // display: flex;
       // justify-content: center;
@@ -54,6 +40,21 @@
       // font-size: 12px;
       // background-color: white;
       // // background: rgba(0, 0, 0, 0); // make transparent
+
+      &:hover {
+        opacity: 1;
+        border: 2px solid var(--selected);
+      }
+    }
+  }
+  &.selected {
+    span {
+      opacity: 1;
+      border: 1px solid var(--selected);
+
+      &:hover {
+        border: 2px solid var(--selected);
+      }
     }
   }
 }
