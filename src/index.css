@@ -1,7 +1,7 @@
 :root {
   --large: 900px;
 
-  --selected: yellow;
+  --selected: red;
   --option: rgb(0, 74, 138);
 
   --switch-height: 34px;

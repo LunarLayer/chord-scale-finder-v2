@@ -29,7 +29,6 @@ export const soundEngine = {
     return loadingProgress;
   },
   loadSoundFile(soundFile) {
-    console.log(soundFile);
     sound = new Howl({
       src: [`/chord-scale-finder-v2/soundfiles/${soundFile}`],
       instrumentSound: "jazzbass",
