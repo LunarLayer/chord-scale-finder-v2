@@ -168,8 +168,8 @@ export function initFretboardScroll(dispatch, scrollFretboard, setIsScrolling) {
       }
       isScrolling = false;
     }
-    document.removeEventListener("mouseup", mouseUp);
-    document.removeEventListener("mousemove", mouseMove);
+    document.removeEventListener("touchEnd", mouseUp);
+    document.removeEventListener("touchMove", mouseMove);
   }
 }
 
@@ -207,6 +207,7 @@ export function getNotesForString(allNotes, stringNumber) {
   );
   return notesForString;
 }
+
 export function getNotesForNut(allNotes) {
   // let notesForString = allNotes.filter((note) =>
   //   note.appearsOnStrings.includes(stringNumber)
