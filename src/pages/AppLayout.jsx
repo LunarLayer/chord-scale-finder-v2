@@ -24,6 +24,7 @@ import ChordScaleIdentifier from "../components/ChordScaleIdentifier/ChordScaleI
 import KeyChangeMenu from "../components/KeyChangeMenu/KeyChangeMenu";
 import SettingsMenu from "../components/SettingsMenu/SettingsMenu";
 import InstrumentMenu from "../components/InstrumentMenu/InstrumentMenu";
+import { Chord, ChordType, Key } from "tonal";
 
 function AppLayout() {
   const dispatch = useDispatch();
@@ -37,6 +38,17 @@ function AppLayout() {
   const fretboardIsReady = useSelector(
     (store) => store.fretboard.fretboardIsReady
   );
+
+  // let allChords = ChordType.all();
+  // console.log(allChords);
+
+  // let scale = Scale.get("c5 pentatonic");
+  // console.log(scale);
+
+  // Define a scale
+  // const scale = Scale.get("C major");
+  // let scaleChords = Scale.chords("pentatonic");
+  // console.log("scaleChords: " + scaleChords);
 
   const loginSuccess = useSelector((store) => store.user.loginSuccess);
   const menus = useSelector((store) => store.ui.menus);

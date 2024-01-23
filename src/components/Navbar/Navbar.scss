@@ -1,31 +1,24 @@
 #Navbar {
   border-bottom: 1px solid black;
-  padding: 2px 0;
   background-color: #4f7aa9;
 
   .flex-wrapper {
-    max-height: 26px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     max-width: var(--large);
     margin: 0 auto;
-    padding: 0 20px;
-
-    .nutFixedButton {
-      background-color: red;
-
-      &.active {
-        background-color: green;
-      }
-    }
+    padding: 0 10px;
 
     .userSettings {
+      display: flex;
+      gap: 15px;
       button {
-        background-color: white;
+        background-color: #4f7aa9;
         padding: 0;
         border: none;
-        outline: 1px solid;
+        font-weight: 700;
+        // outline: 1px solid;
       }
     }
   }

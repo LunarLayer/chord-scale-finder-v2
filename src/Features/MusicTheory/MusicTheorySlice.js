@@ -6,14 +6,19 @@ const MusicTheorySlice = createSlice({
   name: "musicTheory",
   initialState: {
     key: undefined,
-    allNotes: [],
+    scale: undefined,
     accidental: undefined,
+    allNotes: [],
     markNotes: undefined,
     labelNotes: undefined,
     fretPosition: undefined,
     highlightNotes: undefined,
+    assumePerfectFifth: undefined,
   },
   reducers: {
+    toggleAssumePerfectFifth(state) {
+      state.assumePerfectFifth = !state.assumePerfectFifth;
+    },
     deselectNotes(state, action) {
       if (action.payload === "all") {
         for (let i = 0; i < state.allNotes.length; i++) {
@@ -28,7 +33,7 @@ const MusicTheorySlice = createSlice({
         state.key.type === "minor" ? state.key.natural.scale : state.key.scale;
 
       // set accidental based/derived from current scale
-      state.accidental = getAccidental(state, notesInScale);
+      // state.accidental = getAccidental(state, notesInScale);
 
       // Go through all notes. If a note is in the scale,
       // select it. If the note appears on a string on the fretboard,
@@ -81,6 +86,9 @@ const MusicTheorySlice = createSlice({
     },
     setKey(state, action) {
       state.key = action.payload;
+    },
+    setAccidental(state, action) {
+      state.accidental = action.payload;
     },
     setMarkNotes(state, action) {
       state.markNotes = action.payload;
@@ -166,8 +174,10 @@ const MusicTheorySlice = createSlice({
     builder.addCase(loginUser, (state, action) => {
       const user = action.payload;
       state.key = user.key;
+      state.scale = user.scale;
       state.allNotes = user.allNotes;
       state.accidental = user.accidental;
+      state.assumePerfectFifth = user.assumePerfectFifth;
       if (user.instrument === "Fretboard") {
         let tuning = user.tuning;
 
@@ -205,10 +215,12 @@ export const {
   highlightNotesInKey,
   selectNotesInKey,
   setKey,
+  setAccidental,
   setMarkNotes,
   setLabelNotes,
   setFretPosition,
   setHighlightNotes,
+  toggleAssumePerfectFifth,
   toggleNoteSelected,
 } = MusicTheorySlice.actions;
 

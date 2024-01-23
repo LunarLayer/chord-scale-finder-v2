@@ -29,10 +29,11 @@ function Toolbar() {
         <h4>Key</h4>
         <div className="content">
           <Button
+            className="keyChangeButton"
             active={menus.keyChange.showing}
             onClick={() => dispatch(toggleMenu("keyChange"))}
           >
-            {key.tonic} {key.type}
+            {key.tonic} {key.type === "major" ? "Major" : "Minor"}
           </Button>
         </div>
       </div>

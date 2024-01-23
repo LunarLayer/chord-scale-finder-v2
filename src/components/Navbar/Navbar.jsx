@@ -1,8 +1,6 @@
 import "./Navbar.scss";
 
-import SoundController from "../SoundController/SoundController";
-import { useDispatch, useSelector } from "react-redux";
-import { setNutIsFixed } from "../../Features/Fretboard/FretboardSlice";
+import VolumeMixer from "../VolumeMixer/VolumeMixer";
 
 function Navbar() {
   return (
@@ -12,7 +10,7 @@ function Navbar() {
           <button>Login</button>
           <button>Projects</button>
         </div>
-        <SoundController />
+        <VolumeMixer />
       </div>
     </nav>
   );

@@ -54,6 +54,9 @@ function InstrumentMenu({ showing }) {
             <button onClick={() => dispatch(setMarkNotes("identical"))}>
               Identical
             </button>
+            <button onClick={() => dispatch(setMarkNotes("onePerString"))}>
+              One per string
+            </button>
           </div>
         </div>
         <div className="setting dropdown labelNotes">

@@ -24,12 +24,10 @@ export function getFretsWithNotes(tuning, allNotes) {
 
 export function getNoteLabel(pitchClass, labelNotes, key, accidental) {
   let scale = key.type === "minor" ? key.natural.scale : key.scale;
-  console.log("scale: " + scale);
 
   if (labelNotes === "note") {
     for (let scaleNote of scale) {
       if (Note.enharmonic(scaleNote) === pitchClass) {
-        console.log("scaleNote: " + scaleNote);
         if (scaleNote.includes("b")) return scaleNote.replace(/b/g, "♭");
         if (scaleNote.includes("#")) return scaleNote.replace(/#/g, "♯");
         return scaleNote;

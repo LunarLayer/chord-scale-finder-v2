@@ -8,8 +8,9 @@ export function getGuestUser() {
   let guestUser = {
     username: "Guest",
     key: Key.majorKey("C"),
+    scale: "major",
     tonality: "todo",
-    accidental: "#",
+    accidental: "",
     allNotes: [
       { ...Note.get("C0") },
       { ...Note.get("C#0") },
@@ -131,6 +132,7 @@ export function getGuestUser() {
     labelNotes: "note",
     fretPosition: "all",
     highlightNotes: "none",
+    assumePerfectFifth: false,
     menus: {
       keyChange: { id: "KeyChangeMenu", showing: false },
       instrument: { id: "InstrumentMenu", showing: false },

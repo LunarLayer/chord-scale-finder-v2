@@ -168,8 +168,8 @@ export function initFretboardScroll(dispatch, scrollFretboard, setIsScrolling) {
       }
       isScrolling = false;
     }
-    document.removeEventListener("touchEnd", mouseUp);
-    document.removeEventListener("touchMove", mouseMove);
+    document.removeEventListener("touchEnd", touchEnd);
+    document.removeEventListener("touchMove", touchMove);
   }
 }
 

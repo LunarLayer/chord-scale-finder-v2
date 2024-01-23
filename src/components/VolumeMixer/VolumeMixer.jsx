@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { soundEngine } from "../../Helpers/SoundEngine";
 import { Howler } from "howler";
 
-import "./SoundController.scss";
+import "./VolumeMixer.scss";
 
 import {
   SpeakerLow,
@@ -13,11 +13,10 @@ import {
   SpeakerMuted,
   SpeakerWarning,
 } from "../../../public/icons/SpeakerIcons";
-
 import Spinner from "../Loader/Spinner";
 
-function SoundController({ loadingSoundProgress }) {
-  const volumeSlider = useRef(null);
+function VolumeMixer() {
+  const slider = useRef(null);
   const [soundIsLoading, setSoundIsLoading] = useState(true);
   const [speakerIcon, setSpeakerIcon] = useState(SpeakerWarning);
   const [expanded, setExpanded] = useState(false);
@@ -43,12 +42,11 @@ function SoundController({ loadingSoundProgress }) {
     if (!soundIsLoading) {
       if (volumeSliderTimeout) clearTimeout(volumeSliderTimeout);
 
-      setExpanded(!expanded);
-
       const autoCloseVolumeControl = setTimeout(() => {
         setExpanded(false);
-      }, 2000);
+      }, 3000);
       setVolumeSliderTimeout(autoCloseVolumeControl);
+      setExpanded(!expanded);
     }
   }
 
@@ -56,45 +54,50 @@ function SoundController({ loadingSoundProgress }) {
     if (!soundIsLoading) {
       if (volumeSliderTimeout) clearTimeout(volumeSliderTimeout);
 
-      let newVolume = parseInt(volumeSlider.current.value);
+      let newVolume = parseInt(slider.current.value);
       setVolume(newVolume);
       if (newVolume === 0) setSpeakerIcon(SpeakerMuted);
       if (newVolume > 0 && newVolume <= 3) setSpeakerIcon(SpeakerLow);
       if (newVolume > 3 && newVolume <= 7) setSpeakerIcon(SpeakerMedium);
       if (newVolume > 7 && newVolume <= 10) setSpeakerIcon(SpeakerFull);
-      let newVolumeAsDecimal = newVolume / 10;
-      Howler.volume(newVolumeAsDecimal);
+      let decimalVolume = newVolume / 10;
+      Howler.volume(decimalVolume);
 
       const autoCloseVolumeControl = setTimeout(() => {
         setExpanded(false);
-      }, 2000);
+      }, 3000);
       setVolumeSliderTimeout(autoCloseVolumeControl);
     }
   }
 
   return (
     <div
-      id="SoundController"
+      id="VolumeMixer"
       className={`${expanded ? "expanded" : ""} ${
         soundIsLoading ? "loadingSound" : ""
       }`}
     >
-      <button onClick={() => handleToggleVolumeSlider()}>
+      <button
+        className="volumeButton"
+        onClick={() => handleToggleVolumeSlider()}
+      >
         {soundIsLoading ? <Spinner /> : null}
         {speakerIcon}
       </button>
-      <input
-        className="volumeSlider"
-        ref={volumeSlider}
-        type="range"
-        orient="vertical"
-        value={volume}
-        min="0"
-        max="10"
-        onChange={handleVolumeChanged}
-      />
+      <div className="volumeSlider">
+        <input
+          className="slider"
+          ref={slider}
+          type="range"
+          orient="vertical"
+          value={volume}
+          min="0"
+          max="10"
+          onChange={handleVolumeChanged}
+        />
+      </div>
     </div>
   );
 }
 
-export default SoundController;
+export default VolumeMixer;
