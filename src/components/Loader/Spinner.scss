@@ -1,0 +1,20 @@
+#Spinner {
+  // z-index: 1000;
+  position: absolute;
+  width: 26px;
+  padding: 3px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: purple;
+  --_m: conic-gradient(#0000 10%, #000), linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+  mask: var(--_m);
+  -webkit-mask-composite: source-out;
+  mask-composite: subtract;
+  animation: rotateSpinner 1s infinite linear;
+}
+@keyframes rotateSpinner {
+  to {
+    transform: rotate(1turn);
+  }
+}
