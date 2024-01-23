@@ -22,10 +22,10 @@ import {
 function SoundController({ loadingSoundProgress }) {
   const volumeSlider = useRef(null);
   const [soundIsLoading, setSoundIsLoading] = useState(true);
-  const [speakerIcon, setSpeakerIcon] = useState(SpeakerFull);
+  const [speakerIcon, setSpeakerIcon] = useState(SpeakerWarning);
   const [expanded, setExpanded] = useState(false);
   const [volumeSliderTimeout, setVolumeSliderTimeout] = useState(null);
-  const [volume, setVolume] = useState(10);
+  const [volume, setVolume] = useState(8);
 
   const soundFile = useSelector((store) => store.user.soundFile);
 
@@ -34,6 +34,7 @@ function SoundController({ loadingSoundProgress }) {
       if (soundEngine.state() === "loaded") {
         setSoundIsLoading(false);
         clearInterval(checkSoundIsReady);
+        setSpeakerIcon(SpeakerMedium);
       }
     }, 50);
     return () => {
