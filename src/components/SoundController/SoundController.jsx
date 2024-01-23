@@ -12,6 +12,13 @@ import SpeakerWarning from "/icons/speaker-warning.svg";
 
 import "./SoundController.scss";
 
+import {
+  SpeakerLow,
+  SpeakerMedium,
+  SpeakerFull,
+  SpeakerMuted,
+  SpeakerWarning,
+} from "../../../public/icons/SpeakerIcons";
 function SoundController({ loadingSoundProgress }) {
   const volumeSlider = useRef(null);
   const [soundIsLoading, setSoundIsLoading] = useState(true);
