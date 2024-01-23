@@ -1,15 +1,43 @@
 #ChordScaleIdentifier {
+  display: flex;
+  flex-wrap: wrap;
   margin: 0 auto;
   max-width: var(--large);
+  width: 100%;
   border: 1px solid black;
 
-  .chordsSection {
+  .toolbar {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .chords,
+  .scales {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    gap: 10px;
 
+    .possibleChords,
+    .possibleScales {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      * {
+        text-align: start;
+      }
+    }
+  }
+
+  .chords {
     .chordNotes {
       display: flex;
       gap: 15px;
     }
+  }
+
+  .scales {
   }
 }
