@@ -29,6 +29,10 @@ Howler.js (library for playing sounds)
 - Saving/Searching public projects without logging in
 - Login functionality
 
+<Bugs>
+- Fretboard scroll on mobile is weird, starts from the last place it was scrolled to 
+and will scroll on every touch, while it should only scroll when the fretboard is touched
+
 
 
 
