@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import "./Toolbar.scss";
 
 import Button from "../Button/Button";
-import FretCountSlider from "../fretCountSlider/fretCountSlider";
+import FretCountSlider from "../FretCountSlider/FretCountSlider";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentViewSection1, toggleMenu } from "../../Features/UI/UISlice";
 

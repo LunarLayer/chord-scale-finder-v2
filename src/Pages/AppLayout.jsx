@@ -9,21 +9,21 @@ import { getWindowWidth } from "../Helpers/WindowHelper";
 
 import "./AppLayout.scss";
 
-import Loader from "../components/Loader/Loader";
-import Navbar from "../components/Navbar/Navbar";
-import Toolbar from "../components/Toolbar/Toolbar";
+import Loader from "../Components/Loader/Loader";
+import Navbar from "../Components/Navbar/Navbar";
+import Toolbar from "../Components/Toolbar/Toolbar";
 // import InstrumentSettings from "../components/InstrumentSettings/InstrumentSettings";
-import Fretboard from "../components/Fretboard/Fretboard";
+import Fretboard from "../Components/Fretboard/Fretboard";
 // import Piano from "../components/Piano/Piano";
 // import ChordAndScaleIdentifier from "../components/ChordAndScaleIdentifier/ChordAndScaleIdentifier";
 // import ChordProgressionBuilder from "../components/ChordProgressionBuilder/ChordProgressionBuilder";
 import { loginUser } from "../Features/User/UserSlice";
 import { getGuestUser } from "../Helpers/LoginHelper";
 
-import ChordScaleIdentifier from "../components/ChordScaleIdentifier/ChordScaleIdentifier";
-import KeyChangeMenu from "../components/KeyChangeMenu/KeyChangeMenu";
-import SettingsMenu from "../components/SettingsMenu/SettingsMenu";
-import InstrumentMenu from "../components/InstrumentMenu/InstrumentMenu";
+import ChordScaleIdentifier from "../Components/ChordScaleIdentifier/ChordScaleIdentifier";
+import KeyChangeMenu from "../Components/KeyChangeMenu/KeyChangeMenu";
+import SettingsMenu from "../Components/SettingsMenu/SettingsMenu";
+import InstrumentMenu from "../Components/InstrumentMenu/InstrumentMenu";
 import { Chord, ChordType, Key } from "tonal";
 
 function AppLayout() {

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { getWindowWidth } from "../../Helpers/WindowHelper";
+
 import { loginUser } from "../User/UserSlice";
 
 const uiSlice = createSlice({
