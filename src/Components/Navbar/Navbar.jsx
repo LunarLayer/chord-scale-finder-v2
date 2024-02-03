@@ -11,6 +11,7 @@ function Navbar() {
           <button>Projects</button>
         </div>
         <VolumeMixer />
+        <button>⚙️</button>
       </div>
     </nav>
   );

@@ -12,7 +12,7 @@ import {
   SpeakerFull,
   SpeakerMuted,
   SpeakerWarning,
-} from "../../../public/icons/SpeakerIcons";
+} from "../../../public/svgs/SvgIcons";
 import Spinner from "../Loader/Spinner";
 
 function VolumeMixer() {

@@ -1,4 +1,4 @@
-import { addKeyframeStringVibration } from "../animations/keyframes";
+import { addKeyframeStringVibration } from "../Animations/Keyframes";
 
 let stringAnimations = [
   { isAnimating: null, timeout: null },

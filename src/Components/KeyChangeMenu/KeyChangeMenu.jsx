@@ -52,6 +52,7 @@ function KeyChangeMenu({ showing }) {
     <div id="KeyChangeMenu" className={showing ? "showing" : ""}>
       <div className="content">
         <div className="note-selection">
+          <p>Choose a key</p>
           <div className="naturals">
             <button
               className={keyNote === "C" ? "active" : ""}
@@ -96,6 +97,7 @@ function KeyChangeMenu({ showing }) {
               B
             </button>
           </div>
+          <p>Sharp or flat?</p>
           <div className="accidentals">
             <button
               className={accidental === "b" ? "active" : ""}
@@ -116,6 +118,7 @@ function KeyChangeMenu({ showing }) {
               {keyNote + "♯"}
             </button>
           </div>
+          <p>Major or Minor?</p>
           <div className="majorMinor">
             <button
               className={key.type === "major" ? "active" : ""}

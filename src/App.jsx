@@ -6,7 +6,7 @@ import "./App.css";
 const Loader = lazy(() => import("./Components/Loader/Loader"));
 const AppLayout = lazy(() => import("./Pages/AppLayout"));
 const Login = lazy(() => import("./Pages/Login"));
-import "./animations/keyframes";
+import "./Animations/Keyframes";
 
 function App() {
   return (

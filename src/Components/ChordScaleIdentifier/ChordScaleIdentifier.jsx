@@ -41,6 +41,7 @@ function ChordScaleIdentifier() {
 
   return (
     <div id="ChordScaleIdentifier">
+      there should be 3 tabs: Identify - Chords & Scales - Chord progression
       <div className="toolbar">
         <label htmlFor="AssumePerfectFifth">Assume perfect fifth</label>
         <input
@@ -68,7 +69,6 @@ function ChordScaleIdentifier() {
           })}
         </div>
       </div>
-
       <div className="scales">
         <div className="scale">
           <p>Scale:</p>

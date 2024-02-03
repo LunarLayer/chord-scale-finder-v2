@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 
 import "./Toolbar.scss";
 
-import Button from "../Button/Button";
 import FretCountSlider from "../FretCountSlider/FretCountSlider";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentViewSection1, toggleMenu } from "../../Features/UI/UISlice";
@@ -28,37 +27,26 @@ function Toolbar() {
       <div className="Tonality wrapper">
         <h4>Key</h4>
         <div className="content">
-          <Button
+          <button
             className="keyChangeButton"
-            active={menus.keyChange.showing}
             onClick={() => dispatch(toggleMenu("keyChange"))}
           >
             {key.tonic} {key.type === "major" ? "Major" : "Minor"}
-          </Button>
+          </button>
         </div>
       </div>
 
       <div className="instrument wrapper">
-        <h4>Settings</h4>
+        <h4>Instrument</h4>
         <div className="content">
-          <Button
-            active={menus.settings.showing}
-            onClick={() => dispatch(toggleMenu("settings"))}
-          >
-            🛠️
-          </Button>
+          <button onClick={() => dispatch(toggleMenu("settings"))}>🛠️</button>
         </div>
       </div>
 
       <div className="menus wrapper">
-        <h4>Quick menus</h4>
+        <h4>Menus</h4>
         <div className="content">
-          <Button
-            active={menus.instrument.showing}
-            onClick={() => dispatch(toggleMenu("instrument"))}
-          >
-            🎵
-          </Button>
+          <button onClick={() => dispatch(toggleMenu("instrument"))}>🎸</button>
         </div>
       </div>
 

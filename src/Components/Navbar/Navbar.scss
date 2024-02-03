@@ -13,13 +13,22 @@
     .userSettings {
       display: flex;
       gap: 15px;
-      button {
-        background-color: #4f7aa9;
-        padding: 0;
-        border: none;
-        font-weight: 700;
-        // outline: 1px solid;
+    }
+
+    #VolumeMixer {
+      svg {
+        fill: white;
       }
     }
+  }
+
+  button {
+    cursor: pointer;
+    background-color: #4f7aa9;
+    padding: 0;
+    border: none;
+    font-weight: 700;
+    color: white;
+    // outline: 1px solid;
   }
 }
