@@ -1,33 +1,34 @@
 import { useDispatch, useSelector } from "react-redux";
-import "./KeyChangeMenu.scss";
+import "./KeyChangeModal.scss";
 import { Key, Note } from "tonal";
 import {
-  highlightNotesInKey,
-  selectNotesInKey,
+  highlightNotes,
   setAccidental,
   setKey,
 } from "../../Features/MusicTheory/MusicTheorySlice";
-import { useEffect } from "react";
-import {
-  animateCollapseMenu,
-  animateExpandMenu,
-} from "../../Helpers/AnimationHelper";
+import { useEffect, useState } from "react";
+import Modal from "../Modal/Modal";
+import { toggleMenu } from "../../Features/UI/UISlice";
 // import SharpsFlatsDisplay from "./SharpsFlatsDisplay";
 
-function KeyChangeMenu({ showing }) {
+function KeyChangeModal({ showing }) {
   const dispatch = useDispatch();
   const key = useSelector((store) => store.musicTheory.key);
   const accidental = useSelector((store) => store.musicTheory.accidental);
+  const [highlightNotesInKey, setHighlightNotesInKey] = useState(false);
   let keyNote = Note.get(key.tonic).letter;
 
   useEffect(() => {
-    let keyChangeMenu = document.getElementById("KeyChangeMenu");
-    if (showing) {
-      animateExpandMenu(keyChangeMenu);
+    if (highlightNotesInKey) {
+      if (key.type === "major") {
+        dispatch(highlightNotes(Key.majorKey(key.tonic).scale));
+      } else {
+        dispatch(highlightNotes(Key.minorKey(key.tonic).natural.scale));
+      }
     } else {
-      animateCollapseMenu(keyChangeMenu);
+      dispatch(highlightNotes());
     }
-  }, [showing]);
+  }, [highlightNotesInKey, dispatch, key]);
 
   function handleSetKey(note, accidental) {
     if (key.type === "major") {
@@ -36,21 +37,35 @@ function KeyChangeMenu({ showing }) {
       dispatch(setKey(Key.minorKey(note + accidental)));
     }
     dispatch(setAccidental(accidental));
-    dispatch(highlightNotesInKey());
+    if (highlightNotesInKey && key.type === "major") {
+      dispatch(highlightNotes(Key.majorKey(note + accidental).scale));
+    } else if (highlightNotesInKey && key.type === "minor") {
+      dispatch(highlightNotes(Key.minorKey(note + accidental).natural.scale));
+    }
   }
 
   function handleSelectScale(scale) {
     if (scale === "major") {
       dispatch(setKey(Key.majorKey(key.tonic)));
+      if (highlightNotesInKey) {
+        dispatch(highlightNotes(Key.majorKey(key.tonic).scale));
+      }
     } else {
       dispatch(setKey(Key.minorKey(key.tonic)));
+      if (highlightNotesInKey) {
+        dispatch(highlightNotes(Key.minorKey(key.tonic).natural.scale));
+      }
     }
-    dispatch(highlightNotesInKey());
   }
 
   return (
-    <div id="KeyChangeMenu" className={showing ? "showing" : ""}>
-      <div className="content">
+    <Modal
+      id="KeyChangeModal"
+      title="Key change"
+      showing={showing}
+      onClose={() => dispatch(toggleMenu("keyChange"))}
+    >
+      <div className="keyChangeSettings">
         <div className="note-selection">
           <p>Choose a key</p>
           <div className="naturals">
@@ -124,20 +139,25 @@ function KeyChangeMenu({ showing }) {
               className={key.type === "major" ? "active" : ""}
               onClick={() => handleSelectScale("major")}
             >
-              Major
+              {key.tonic} Major
             </button>
             <button
               className={key.type === "minor" ? "active" : ""}
               onClick={() => handleSelectScale("minor")}
             >
-              Minor
+              {key.tonic} Minor
             </button>
           </div>
         </div>
+        <div className="highlightScaleOption">
+          <button onClick={() => setHighlightNotesInKey(!highlightNotesInKey)}>
+            {highlightNotesInKey ? "☑" : "☐"} Highlight notes in key
+          </button>
+        </div>
+        {/* <SharpsFlatsDisplay selected={key.tonic + key.type} /> */}
       </div>
-      {/* <SharpsFlatsDisplay selected={key.tonic + key.type} /> */}
-    </div>
+    </Modal>
   );
 }
 
-export default KeyChangeMenu;
+export default KeyChangeModal;

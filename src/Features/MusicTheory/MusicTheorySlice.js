@@ -27,10 +27,8 @@ const MusicTheorySlice = createSlice({
         }
       }
     },
-    highlightNotesInKey(state, action) {
-      // get notes in the scale of the key
-      let notesInScale =
-        state.key.type === "minor" ? state.key.natural.scale : state.key.scale;
+    highlightNotes(state, action) {
+      let notesToHighlight = action.payload;
 
       // set accidental based/derived from current scale
       // state.accidental = getAccidental(state, notesInScale);
@@ -38,18 +36,25 @@ const MusicTheorySlice = createSlice({
       // Go through all notes. If a note is in the scale,
       // select it. If the note appears on a string on the fretboard,
       // select it on "selectedOnStrings";
-      for (let i = 0; i < state.allNotes.length; i++) {
-        for (let note of notesInScale) {
-          if (
-            note === state.allNotes[i].pc ||
-            note === Note.enharmonic(state.allNotes[i].pc) ||
-            Note.enharmonic(note) === state.allNotes[i].pc
-          ) {
-            state.allNotes[i].highlighted = true;
-            break;
-          } else {
-            state.allNotes[i].highlighted = false;
+
+      if (notesToHighlight) {
+        for (let i = 0; i < state.allNotes.length; i++) {
+          for (let note of notesToHighlight) {
+            if (
+              note === state.allNotes[i].pc ||
+              note === Note.enharmonic(state.allNotes[i].pc) ||
+              Note.enharmonic(note) === state.allNotes[i].pc
+            ) {
+              state.allNotes[i].highlighted = true;
+              break;
+            } else {
+              state.allNotes[i].highlighted = false;
+            }
           }
+        }
+      } else {
+        for (let i = 0; i < state.allNotes.length; i++) {
+          state.allNotes[i].highlighted = false;
         }
       }
     },
@@ -212,7 +217,7 @@ function getAccidental(state, notesInScale) {
 
 export const {
   deselectNotes,
-  highlightNotesInKey,
+  highlightNotes,
   selectNotesInKey,
   setKey,
   setAccidental,

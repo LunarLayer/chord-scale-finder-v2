@@ -15,9 +15,13 @@
       gap: 15px;
     }
 
-    #VolumeMixer {
-      svg {
-        fill: white;
+    .wrapper {
+      display: flex;
+
+      #VolumeMixer {
+        svg {
+          fill: white;
+        }
       }
     }
   }

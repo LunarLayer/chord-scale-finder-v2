@@ -21,10 +21,11 @@ import { loginUser } from "../Features/User/UserSlice";
 import { getGuestUser } from "../Helpers/LoginHelper";
 
 import ChordScaleIdentifier from "../Components/ChordScaleIdentifier/ChordScaleIdentifier";
-import KeyChangeMenu from "../Components/KeyChangeMenu/KeyChangeMenu";
+import KeyChangeModal from "../Components/KeyChangeModal/KeyChangeModal";
 import SettingsMenu from "../Components/SettingsMenu/SettingsMenu";
 import InstrumentMenu from "../Components/InstrumentMenu/InstrumentMenu";
 import { Chord, ChordType, Key } from "tonal";
+import Modal from "../Components/Modal/Modal";
 
 function AppLayout() {
   const dispatch = useDispatch();
@@ -91,9 +92,11 @@ function AppLayout() {
       <div className="appLayout">
         <Navbar />
         <Toolbar />
-        <KeyChangeMenu showing={menus.keyChange.showing} />
-        <SettingsMenu showing={menus.settings.showing} />
-        <InstrumentMenu showing={menus.instrument.showing} />
+
+        {menus.keyChange.showing ? <KeyChangeModal /> : null}
+        {/* <SettingsMenu showing={menus.settings.showing} />
+        <InstrumentMenu showing={menus.instrument.showing} /> */}
+
         <Section1 view={currentViewSection1} />
         {/* <Section2 view={currentViewSection2} />
          */}

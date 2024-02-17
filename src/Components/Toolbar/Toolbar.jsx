@@ -13,6 +13,7 @@ function Toolbar() {
   );
   const key = useSelector((store) => store.musicTheory.key);
   const menus = useSelector((store) => store.ui.menus);
+  const fretCount = useSelector((store) => store.fretboard.fretCount);
 
   function handleChangeView(view) {
     if (currentViewSection1 === view) {
@@ -24,33 +25,30 @@ function Toolbar() {
 
   return (
     <div id="toolbar">
-      <div className="Tonality wrapper">
+      <div className="toolbar-item">
         <h4>Key</h4>
-        <div className="content">
-          <button
-            className="keyChangeButton"
-            onClick={() => dispatch(toggleMenu("keyChange"))}
-          >
-            {key.tonic} {key.type === "major" ? "Major" : "Minor"}
-          </button>
-        </div>
+        <button
+          className="keyChangeButton"
+          onClick={() => dispatch(toggleMenu("keyChange"))}
+        >
+          {key.tonic} {key.type === "major" ? "Major" : "Minor"}
+        </button>
       </div>
 
-      <div className="instrument wrapper">
+      <div className="toolbar-item">
         <h4>Instrument</h4>
-        <div className="content">
-          <button onClick={() => dispatch(toggleMenu("settings"))}>🛠️</button>
-        </div>
+        <button onClick={() => dispatch(toggleMenu("settings"))}>🛠️</button>
       </div>
 
-      <div className="menus wrapper">
+      <div className="toolbar-item">
         <h4>Menus</h4>
-        <div className="content">
-          <button onClick={() => dispatch(toggleMenu("instrument"))}>🎸</button>
-        </div>
+        <button onClick={() => dispatch(toggleMenu("instrument"))}>🎸</button>
       </div>
 
-      <FretCountSlider />
+      <div className="toolbar-item">
+        <h4>Frets: {fretCount == 0 ? "None" : fretCount}</h4>
+        <FretCountSlider />
+      </div>
     </div>
   );
 }

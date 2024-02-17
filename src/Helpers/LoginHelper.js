@@ -131,7 +131,7 @@ export function getGuestUser() {
     markNotes: "single",
     labelNotes: "note",
     fretPosition: "all",
-    highlightNotes: "none",
+    highlightNotes: undefined,
     assumePerfectFifth: false,
     menus: {
       keyChange: { id: "KeyChangeMenu", showing: false },

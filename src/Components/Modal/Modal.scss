@@ -1,0 +1,53 @@
+.modal {
+  z-index: 1000;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  // background-color: unset;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-in forwards;
+
+  &.fadeOut {
+    animation: fadeOut 0.2s ease-in forwards;
+  }
+
+  .contentWindow {
+    border: 1px solid black;
+    background-color: white;
+    border-radius: 3px;
+
+    .windowControls {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px;
+      border-bottom: 1px solid black;
+    }
+
+    .content {
+      padding: 0 10px 10px 10px;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    background-color: unset;
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.65);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    background-color: rgba(0, 0, 0, 0.65);
+  }
+  to {
+    background-color: unset;
+  }
+}

@@ -10,8 +10,10 @@ function Navbar() {
           <button>Login</button>
           <button>Projects</button>
         </div>
-        <VolumeMixer />
-        <button>⚙️</button>
+        <div className="wrapper">
+          <VolumeMixer />
+          <button>⚙️</button>
+        </div>
       </div>
     </nav>
   );

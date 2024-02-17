@@ -16,8 +16,6 @@ const uiSlice = createSlice({
     toggleMenu(state, action) {
       const menu = action.payload;
       state.menus[menu].showing = !state.menus[menu].showing;
-      if (menu === "keyChange") state.menus.settings.showing = false;
-      if (menu === "settings") state.menus.keyChange.showing = false;
     },
     setActiveTabForQuickMenu(state, action) {
       const { quickMenu, tab } = action.payload;
