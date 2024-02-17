@@ -15,17 +15,15 @@ function FretCountSlider() {
   }
 
   return (
-    <div id="fretCount-slider">
-      <h4>Frets: {fretCount == 0 ? "None" : fretCount}</h4>
-      <input
-        ref={slider}
-        type="range"
-        value={fretCount}
-        min="0"
-        max={fretCap}
-        onChange={handleSliderChanged}
-      />
-    </div>
+    <input
+      id="fretCount-slider"
+      ref={slider}
+      type="range"
+      value={fretCount}
+      min="0"
+      max={fretCap}
+      onChange={handleSliderChanged}
+    />
   );
 }
 
