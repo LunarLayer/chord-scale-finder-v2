@@ -1,9 +1,12 @@
 :root {
   --large: 900px;
 
-  --selected: red;
+  --selected: #4f7aa9;
   --option: rgb(0, 74, 138);
-  --theme: #4f7aa9;
+  --theme: purple;
+  --grey: #96939b;
+  --gold: #fdd163;
+  --purple: #302d49;
 
   --switch-height: 34px;
   --switch-padding: 8px;

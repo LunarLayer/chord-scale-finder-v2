@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import store from "./Store";
 
 import App from "./App.jsx";
-import "./index.css";
+import "./constants.css";
 import "./reset.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
