@@ -27,10 +27,10 @@ function Modal({ id, title, onClose, children }) {
   return (
     <div id={id} className={`modal`}>
       <div className="contentWindow">
-        <div className="windowControls">
+        <div className="windowHeader">
           {/* <button>↩</button> */}
           <button onClick={() => closeModal()}>✓</button>
-          <h3>{title}</h3>
+          <h4>{title}</h4>
           <button onClick={() => closeModal()}>✖</button>
         </div>
         <div className="content">{children}</div>
