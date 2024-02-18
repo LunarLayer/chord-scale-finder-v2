@@ -7,8 +7,8 @@ function Navbar() {
     <nav id="Navbar">
       <div className="flex-wrapper">
         <div className="userSettings">
-          <button>Login</button>
-          <button>Projects</button>
+          <button className="loginBtn">Login</button>
+          <button className="projectsBtn">Projects</button>
         </div>
         <div className="wrapper">
           <VolumeMixer />

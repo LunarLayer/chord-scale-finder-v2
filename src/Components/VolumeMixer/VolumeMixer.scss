@@ -1,8 +1,8 @@
 #VolumeMixer {
   position: relative;
-
+  display: flex;
+  align-items: center;
   max-height: 100%;
-  background-color: white;
 
   .volumeButton {
     cursor: pointer;
@@ -10,7 +10,48 @@
     align-items: center;
     padding: 0;
     border: none;
-    background-color: rgba(#4f7aa9, 1);
+    background-color: var(--purple);
+    // background-color: rgba(var(--purple), 1);
+
+    svg {
+      path {
+        padding-left: 5px;
+        margin-left: 5px;
+        margin-block-start: 5px;
+      }
+      path.speaker {
+        fill: var(--purple);
+        stroke: white;
+      }
+      path {
+        &.soundwave-1,
+        &.soundwave-2,
+        &.soundwave-3,
+        &.soundwave-warning {
+          fill: white;
+        }
+        &.soundwave-muted {
+          stroke: white;
+        }
+      }
+
+      &:hover {
+        path.speaker {
+          stroke: var(--gold);
+        }
+        path {
+          &.soundwave-1,
+          &.soundwave-2,
+          &.soundwave-3,
+          &.soundwave-warning {
+            fill: var(--gold);
+          }
+          &.soundwave-muted {
+            stroke: var(--gold);
+          }
+        }
+      }
+    }
   }
 
   .volumeSlider {
@@ -24,22 +65,61 @@
 
   &.expanded {
     .volumeButton {
-      background-color: rgba(white, 1);
+      background-color: var(--purple);
+    }
+
+    .volumeButton {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      border: none;
+      background-color: var(--purple);
+      // background-color: rgba(var(--purple), 1);
+
+      svg {
+        path.speaker {
+          stroke: var(--gold);
+        }
+        path {
+          &.soundwave-1,
+          &.soundwave-2,
+          &.soundwave-3,
+          &.soundwave-warning {
+            fill: var(--gold);
+          }
+          &.soundwave-muted {
+            stroke: var(--gold);
+          }
+        }
+      }
     }
 
     .volumeSlider {
       display: flex;
       align-items: center;
-      background-color: white;
-      border: 1px solid black;
+      background-color: var(--purple);
       border-top: none;
       margin-left: -1px;
       margin-right: -1px;
 
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+
       input {
-        margin: 0 auto;
-        margin-bottom: 5px;
+        margin: 10px auto;
+
         writing-mode: vertical-lr;
+
+        &::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 18px;
+          height: 18px;
+          border-radius: 10px;
+          background-color: var(--SliderColor);
+          overflow: visible;
+          cursor: pointer;
+        }
       }
     }
   }

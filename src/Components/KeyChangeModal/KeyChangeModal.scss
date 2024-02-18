@@ -42,7 +42,8 @@
       button {
         cursor: pointer;
         border: 1px solid black;
-        // border-radius: 0;
+        border-radius: 5px;
+        min-width: 9ch;
 
         &:hover {
           border: 1px solid var(--selected);
@@ -68,7 +69,7 @@
       background-color: white;
 
       &:hover {
-        border: 1px solid black;
+        border: 1px solid var(--selected);
       }
     }
     &:hover {

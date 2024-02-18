@@ -1,6 +1,7 @@
 #Navbar {
   border-bottom: 1px solid black;
-  background-color: #4f7aa9;
+  background-color: var(--purple);
+  padding: 3px 0;
 
   .flex-wrapper {
     display: flex;
@@ -13,6 +14,18 @@
     .userSettings {
       display: flex;
       gap: 15px;
+
+      .loginBtn,
+      .projectsBtn {
+        cursor: pointer;
+        color: white;
+        border: none;
+        background-color: var(--purple);
+
+        &:hover {
+          color: var(--gold);
+        }
+      }
     }
 
     .wrapper {
@@ -24,15 +37,5 @@
         }
       }
     }
-  }
-
-  button {
-    cursor: pointer;
-    background-color: #4f7aa9;
-    padding: 0;
-    border: none;
-    font-weight: 700;
-    color: white;
-    // outline: 1px solid;
   }
 }
