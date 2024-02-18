@@ -12,7 +12,7 @@ function Navbar() {
         </div>
         <div className="wrapper">
           <VolumeMixer />
-          <button>⚙️</button>
+          {/* <button>⚙️</button> */}
         </div>
       </div>
     </nav>

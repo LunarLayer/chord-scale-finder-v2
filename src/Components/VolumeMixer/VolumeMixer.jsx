@@ -22,7 +22,6 @@ function VolumeMixer() {
   const [expanded, setExpanded] = useState(false);
   const [volumeSliderTimeout, setVolumeSliderTimeout] = useState(null);
   const [volume, setVolume] = useState(8);
-
   const soundFile = useSelector((store) => store.user.soundFile);
 
   useEffect(() => {
@@ -37,6 +36,20 @@ function VolumeMixer() {
       clearInterval(checkSoundIsReady);
     };
   }, [soundFile]);
+
+  // Close the volumeMixer when clicking outside it
+  useEffect(() => {
+    function handleClickOutsideVolumeSlider(e) {
+      if (!e.target.closest("#VolumeMixer")) {
+        setExpanded(false);
+      }
+    }
+
+    document.addEventListener("click", handleClickOutsideVolumeSlider);
+    return () => {
+      document.removeEventListener("click", handleClickOutsideVolumeSlider);
+    };
+  }, []);
 
   function handleToggleVolumeSlider() {
     if (!soundIsLoading) {
