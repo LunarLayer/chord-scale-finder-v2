@@ -1,8 +1,8 @@
 export const SpeakerFull = () => {
   return (
     <svg
-      width="26px"
-      height="26px"
+      width="30px"
+      height="30px"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -32,8 +32,8 @@ export const SpeakerFull = () => {
 export const SpeakerMedium = () => {
   return (
     <svg
-      width="26px"
-      height="26px"
+      width="30px"
+      height="30px"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -59,8 +59,8 @@ export const SpeakerMedium = () => {
 export const SpeakerLow = () => {
   return (
     <svg
-      width="26px"
-      height="26px"
+      width="30px"
+      height="30px"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -82,8 +82,8 @@ export const SpeakerLow = () => {
 export const SpeakerMuted = () => {
   return (
     <svg
-      width="26px"
-      height="26px"
+      width="30px"
+      height="30px"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -113,8 +113,8 @@ export const SpeakerMuted = () => {
 export const SpeakerWarning = () => {
   return (
     <svg
-      width="26px"
-      height="26px"
+      width="30px"
+      height="30px"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
