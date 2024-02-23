@@ -18,7 +18,6 @@
     border-radius: 50%;
     color: black;
     background-color: white;
-    border: 1px solid black;
   }
 
   &:hover {
@@ -31,7 +30,8 @@
   &.highlighted {
     span {
       opacity: 1;
-      border: 1px solid black;
+      border: 1px solid var(--highlighted);
+
       // display: none; // make transparent
       // display: flex;
       // justify-content: center;
@@ -50,7 +50,10 @@
   &.selected {
     span {
       opacity: 1;
-      border: 1px solid var(--selected);
+      // border: 1px solid var(--purple);
+
+      background-color: var(--selected);
+      color: var(--purple);
 
       &:hover {
         border: 2px solid var(--selected);

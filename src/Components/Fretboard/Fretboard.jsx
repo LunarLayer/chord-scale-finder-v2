@@ -21,7 +21,6 @@ function Fretboard() {
   const dispatch = useDispatch();
   const allNotes = useSelector((store) => store.musicTheory.allNotes);
   const markNotes = useSelector((store) => store.musicTheory.markNotes);
-
   const tuning = useSelector((store) => store.fretboard.tuning);
   const fretWidths = useSelector((store) => store.fretboard.fretWidths);
   const nutIsFixed = useSelector((store) => store.fretboard.nutIsFixed);

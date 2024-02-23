@@ -7,6 +7,9 @@
   --grey: #96939b;
   --gold: #fdd163;
   --purple: #302d49;
+  --turqoise: #16e0bd;
+  --selected: #fdd163;
+  --highlighted: #302d49;
 
   --switch-height: 34px;
   --switch-padding: 8px;
@@ -20,5 +23,6 @@
 }
 
 body {
-  background-color: #ebebeb;
+  /* background-color: rgb(197, 197, 197); */
+  overflow-y: hidden;
 }

@@ -8,24 +8,14 @@ const uiSlice = createSlice({
   name: "ui",
   initialState: {
     windowWidth: getWindowWidth(),
-    currentViewSection1: "fretboard", // - instrumentSettings
-    currentViewSection2: "chordAndScaleIdentifier", // - chordProgressionBuilder
+    instrumentView: undefined,
+    tabMenuSettings: undefined,
     menus: undefined,
   },
   reducers: {
     toggleMenu(state, action) {
       const menu = action.payload;
       state.menus[menu].showing = !state.menus[menu].showing;
-    },
-    setActiveTabForQuickMenu(state, action) {
-      const { quickMenu, tab } = action.payload;
-      state.quickMenus[quickMenu].activeTab = tab;
-    },
-    setCurrentViewSection1(state, action) {
-      state.currentViewSection1 = action.payload;
-    },
-    setCurrentViewSection2(state, action) {
-      state.currentViewSection2 = action.payload;
     },
     setWindowWidth(state, action) {
       state.windowWidth = action.payload;
@@ -34,9 +24,10 @@ const uiSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(loginUser, (state, action) => {
       const user = action.payload;
-      // set viewSections (after probably renaming them)
+      console.log(user);
+      state.instrumentView = user.instrumentView;
       state.menus = user.menus;
-      console.log(user.menus);
+      state.tabMenuSettings = user.tabMenuSettings;
     });
   },
 });

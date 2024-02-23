@@ -28,10 +28,17 @@ Howler.js (library for playing sounds)
 - Simplified Fretboard variant
 - Saving/Searching public projects without logging in
 - Login functionality
+- Create design of notes in Figma
+- Consider how to handle code and design for notes out of key
+
+> Ideas
+- Show chord as arpeggio
 
 <Bugs>
-- Fretboard scroll on mobile is weird, starts from the last place it was scrolled to 
-and will scroll on every touch, while it should only scroll when the fretboard is touched
+- Fretboard scroll on mobile:
+  - touchmove event triggers outside the fretboard
+  - Scrolling to the end of fretboard doesn't always work, will snap to second last fret
+
 
 
 

@@ -183,7 +183,11 @@ const MusicTheorySlice = createSlice({
       state.allNotes = user.allNotes;
       state.accidental = user.accidental;
       state.assumePerfectFifth = user.assumePerfectFifth;
-      if (user.instrument === "Fretboard") {
+      state.markNotes = user.markNotes;
+      state.labelNotes = user.labelNotes;
+      state.fretPosition = user.fretPosition;
+      state.highlightNotes = user.highlightNotes;
+      if (user.instrumentView.activeInstrument === "fretboard") {
         let tuning = user.tuning;
 
         for (let i = 0; i < tuning.length; i++) {
@@ -198,10 +202,6 @@ const MusicTheorySlice = createSlice({
           }
         }
       }
-      state.markNotes = user.markNotes;
-      state.labelNotes = user.labelNotes;
-      state.fretPosition = user.fretPosition;
-      state.highlightNotes = user.highlightNotes;
     });
   },
 });

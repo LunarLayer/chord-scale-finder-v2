@@ -1,7 +1,7 @@
 import { Howl, Howler } from "howler";
 import { note } from "tonal";
 
-Howler.html5 = true;
+Howler.html5 = true; // ensure compatibility with iPhones
 
 let strings = [
   { sound: null, timeout: null },

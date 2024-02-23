@@ -9,7 +9,7 @@ const UserSlice = createSlice({
     tonality: undefined,
     accidental: undefined,
     allNotes: undefined,
-    instrument: undefined,
+    instrumentView: undefined,
     nutIsFixed: undefined,
     soundFile: undefined,
     instrumentStyle: undefined,
@@ -28,13 +28,14 @@ const UserSlice = createSlice({
   },
   reducers: {
     loginUser(state, action) {
+      console.log("loginUser()");
       const user = action.payload;
       state.username = user.username;
       state.key = user.key;
       state.tonality = user.tonality;
       state.accidental = user.accidental;
       state.allNotes = user.allNotes;
-      state.instrument = user.instrument;
+      state.instrumentView = user.instrumentView;
       state.nutIsFixed = user.nutIsFixed;
       state.soundFile = user.soundFile;
       state.instrumentStyle = user.instrumentStyle;
@@ -69,51 +70,3 @@ const UserSlice = createSlice({
 export const { loginUser } = UserSlice.actions;
 
 export default UserSlice.reducer;
-
-// function updateState(state, newWindowWidth) {
-//   state.isLoading = true;
-//   // if (state.fretboardVariant === "standardFretboard") {
-//   //   state.fretsWidth = getFretsWidth();
-//   // }
-//   const windowWidth = newWindowWidth || getWindowWidth();
-
-//   if (newWindowWidth) {
-//     state.notesGap = getnotesGap(windowWidth);
-//     state.notesMinWidth = getnotesMinWidth(windowWidth);
-//     state.notesMaxWidth = getnotesMaxWidth(windowWidth);
-//     state.fretboardPadding = getFretboardPadding(windowWidth);
-//     state.fretsAndNotesCap = getfretsAndNotesCap(
-//       windowWidth,
-//       state.fretboardPadding,
-//       state.notesGap,
-//       state.notesMinWidth,
-//       state.fretboardVariant
-//     );
-//   }
-
-//   state.visibleFrets = getvisibleFrets(
-//     windowWidth,
-//     state.fretboardPadding,
-//     state.notesGap,
-//     state.notesMaxWidth,
-//     state.fretsAndNotesCap,
-//     state.preferredvisibleFrets
-//   );
-//   // Not necessary when preferredvisibleFrets & visibleFrets < optimalvisibleFrets.
-//   // however, getnotesWidth is a quick calculation so we let it slideeeee
-//   state.notesWidth = getnotesWidth(
-//     windowWidth,
-//     state.fretboardVariant,
-//     state.fretboardPadding,
-//     state.notesGap,
-//     state.visibleFrets,
-//     state.notesMaxWidth
-//   );
-//   state.fretboardWidth = getFretboardWidth(
-//     state.visibleFrets,
-//     state.notesWidth,
-//     state.notesGap
-//   );
-
-//   state.isLoading = false;
-// }

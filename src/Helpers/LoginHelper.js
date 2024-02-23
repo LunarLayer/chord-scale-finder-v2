@@ -121,7 +121,6 @@ export function getGuestUser() {
       { ...Note.get("A#8") },
       { ...Note.get("B8") },
     ],
-    instrument: "Fretboard",
     nutIsFixed: false,
     soundFile: "jazzBass.mp3",
     instrumentStyle: "default",
@@ -137,6 +136,40 @@ export function getGuestUser() {
       keyChange: { id: "KeyChangeMenu", showing: false },
       instrument: { id: "InstrumentMenu", showing: false },
       settings: { id: "SettingsMenu", showing: false },
+    },
+    instrumentView: {
+      activeInstrument: "fretboard",
+      fretboard: {
+        settings: {
+          enableFretNumbers: false,
+          enableFretMarkers: false,
+        },
+      },
+      piano: {
+        settings: {
+          test: false,
+        },
+      },
+    },
+    tabMenuSettings: {
+      activeTab: "Identify",
+      tabs: {
+        chordScaleIdentifier: {
+          settings: {
+            chord: false,
+            scale: false,
+            displayOnInstrument: false,
+            highlight: false,
+            select: false,
+          },
+        },
+        chordScaleDictionary: {
+          settings: { test: false },
+        },
+        progression: {
+          settings: { test: false },
+        },
+      },
     },
     projects: [
       {

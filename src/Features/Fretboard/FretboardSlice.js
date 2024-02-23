@@ -71,7 +71,7 @@ const FretboardSlice = createSlice({
       })
       .addCase(loginUser, (state, action) => {
         const user = action.payload;
-        if (user.instrument === "Fretboard") {
+        if (user.instrumentView.activeInstrument === "fretboard") {
           soundEngine.loadSoundFile(user.soundFile);
           state.fretboardStyle = user.instrumentStyle;
           state.fretboardTheme = user.instrumentTheme;
