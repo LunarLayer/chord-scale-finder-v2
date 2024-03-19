@@ -4,7 +4,11 @@ import "./Toolbar.scss";
 
 import FretCountSlider from "../FretCountSlider/FretCountSlider";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentViewSection1, toggleMenu } from "../../Features/UI/UISlice";
+import {
+  setCurrentViewSection1,
+  showModal,
+  toggleMenu,
+} from "../../Features/UI/UISlice";
 
 function Toolbar() {
   const dispatch = useDispatch();
@@ -29,7 +33,7 @@ function Toolbar() {
         <h4>Key</h4>
         <button
           className="keyChangeButton"
-          onClick={() => dispatch(toggleMenu("keyChange"))}
+          onClick={() => dispatch(showModal("keyChange"))}
         >
           {key.tonic} {key.type === "major" ? "Major" : "Minor"}
         </button>

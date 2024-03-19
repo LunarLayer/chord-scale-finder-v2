@@ -30,6 +30,10 @@ Howler.js (library for playing sounds)
 - Login functionality
 - Create design of notes in Figma
 - Consider how to handle code and design for notes out of key
+- Add "toggle" option to the "Mark notes" setting.
+<ChordScaleIdentifier>
+  - Depending on the key/tonality, the intervals of a chord will be named differently.
+  - 
 
 > Ideas
 - Show chord as arpeggio

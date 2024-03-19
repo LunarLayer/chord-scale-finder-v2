@@ -11,8 +11,16 @@ const uiSlice = createSlice({
     instrumentView: undefined,
     tabMenuSettings: undefined,
     menus: undefined,
+    activeModal: undefined,
   },
   reducers: {
+    showModal(state, action) {
+      let modal = action.payload;
+      state.activeModal = modal;
+    },
+    closeModal(state, action) {
+      state.activeModal = null;
+    },
     toggleMenu(state, action) {
       const menu = action.payload;
       state.menus[menu].showing = !state.menus[menu].showing;
@@ -24,7 +32,6 @@ const uiSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(loginUser, (state, action) => {
       const user = action.payload;
-      console.log(user);
       state.instrumentView = user.instrumentView;
       state.menus = user.menus;
       state.tabMenuSettings = user.tabMenuSettings;
@@ -35,6 +42,8 @@ const uiSlice = createSlice({
 export const selectWindowWidth = (state) => state.ui.windowWidth;
 
 export const {
+  showModal,
+  closeModal,
   toggleMenu,
   setActiveTabForQuickMenu,
   setCurrentViewSection1,

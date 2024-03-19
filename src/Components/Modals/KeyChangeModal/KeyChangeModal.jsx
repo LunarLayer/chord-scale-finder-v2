@@ -5,13 +5,13 @@ import {
   highlightNotes,
   setAccidental,
   setKey,
-} from "../../Features/MusicTheory/MusicTheorySlice";
+} from "../../../Features/MusicTheory/MusicTheorySlice";
 import { useEffect, useState } from "react";
-import Modal from "../Modal/Modal";
-import { toggleMenu } from "../../Features/UI/UISlice";
+import Modal from "../Modal";
+import { closeModal, toggleMenu } from "../../../Features/UI/UISlice";
 // import SharpsFlatsDisplay from "./SharpsFlatsDisplay";
 
-function KeyChangeModal({ showing }) {
+function KeyChangeModal() {
   const dispatch = useDispatch();
   const key = useSelector((store) => store.musicTheory.key);
   const accidental = useSelector((store) => store.musicTheory.accidental);
@@ -62,8 +62,7 @@ function KeyChangeModal({ showing }) {
     <Modal
       id="KeyChangeModal"
       title="Key change"
-      showing={showing}
-      onClose={() => dispatch(toggleMenu("keyChange"))}
+      onClose={() => dispatch(closeModal())}
     >
       <div className="note-selection">
         <p>Choose a key</p>

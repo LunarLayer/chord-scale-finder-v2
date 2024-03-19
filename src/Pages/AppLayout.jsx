@@ -17,11 +17,15 @@ import Fretboard from "../Components/Fretboard/Fretboard";
 import { loginUser } from "../Features/User/UserSlice";
 import { getGuestUser } from "../Helpers/LoginHelper";
 
-import KeyChangeModal from "../Components/KeyChangeModal/KeyChangeModal";
+import KeyChangeModal from "../Components/Modals/KeyChangeModal/KeyChangeModal";
 import TabMenu from "../Components/TabMenu/TabMenu";
 import ChordScaleIdentifier from "../Components/ChordScaleIdentifier/ChordScaleIdentifier";
 import ChordScaleDictionary from "../Components/Dictionary/ChordScaleDictionary";
 import ChordProgressionMaker from "../Components/ChordProgressionMaker/ChordProgressionMaker";
+import { Chord, ChordType, Tonal } from "tonal";
+import InstrumentMenu from "../Components/InstrumentMenu/InstrumentMenu";
+import Modals from "../Components/Modals/ModalsManager";
+import ModalsManager from "../Components/Modals/ModalsManager";
 
 function AppLayout() {
   const dispatch = useDispatch();
@@ -29,6 +33,16 @@ function AppLayout() {
   const fretboardIsReady = useSelector(
     (store) => store.fretboard.fretboardIsReady
   );
+
+  let chordo = Chord.detect(["G", "C#", "F", "A"]);
+  console.log(chordo[0]);
+  let chordObj = Chord.getChord("M#5add9");
+  console.log(chordObj);
+
+  let allChords = ChordType.all();
+  for (let chord of allChords) {
+    console.log(chord);
+  }
 
   const instrumentView = useSelector((store) => store.ui.instrumentView);
   const menus = useSelector((store) => store.ui.menus);
@@ -61,9 +75,9 @@ function AppLayout() {
       <div className="appLayout">
         <Navbar />
         <Toolbar />
+        <ModalsManager />
+        <InstrumentMenu showing={true} />
 
-        {/* Modals */}
-        {menus.keyChange.showing ? <KeyChangeModal /> : null}
         {/* {menus.keyChange.showing ? <KeyChangeModal /> : null} */}
         {/* {menus.keyChange.showing ? <KeyChangeModal /> : null} */}
 

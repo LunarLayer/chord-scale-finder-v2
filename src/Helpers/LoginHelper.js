@@ -133,7 +133,6 @@ export function getGuestUser() {
     highlightNotes: undefined,
     assumePerfectFifth: false,
     menus: {
-      keyChange: { id: "KeyChangeMenu", showing: false },
       instrument: { id: "InstrumentMenu", showing: false },
       settings: { id: "SettingsMenu", showing: false },
     },

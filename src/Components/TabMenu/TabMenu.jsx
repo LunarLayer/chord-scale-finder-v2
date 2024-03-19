@@ -22,7 +22,11 @@ function TabMenu({ tabs }) {
       <div className="tab-content">
         {tabs.map((tab) => {
           if (activeTab === tab.tabTitle) {
-            return tab.tabContent;
+            return (
+              <React.Fragment key={"tabContent_" + tab.tabTitle}>
+                {tab.tabContent}
+              </React.Fragment>
+            );
           } else {
             return null;
           }
