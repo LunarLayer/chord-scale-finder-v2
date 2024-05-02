@@ -1,2 +1,70 @@
-#Intervals {
+.intervals {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+
+  &.simplified {
+    flex-direction: row;
+  }
+
+  .row {
+    display: flex;
+    gap: 2px;
+  }
+
+  .intervalButton {
+    cursor: pointer;
+    border-radius: 100%;
+    height: 27px;
+    width: 27px;
+    padding: 0;
+    border: 1px solid black;
+    background-color: lightgrey;
+
+    &:hover {
+      border: 2px solid red;
+      outline: 1px solid black;
+    }
+
+    &.interval_0 {
+      background-color: blue;
+      color: white;
+    }
+    &.interval_1 {
+      background-color: red;
+      color: white;
+    }
+    &.interval_2 {
+      background-color: yellow;
+      color: black;
+    }
+    &.interval_3 {
+      background-color: green;
+      color: white;
+    }
+    &.interval_4 {
+      background-color: purple;
+      color: white;
+    }
+    &.interval_5 {
+      background-color: orange;
+      color: white;
+    }
+    &.interval_6 {
+      background-color: cyan;
+      color: black;
+    }
+    &.interval_7 {
+      background-color: hotpink;
+      color: white;
+    }
+    &.interval_8 {
+      background-color: blue;
+      color: white;
+    }
+    &.interval_9 {
+      background-color: red;
+      color: white;
+    }
+  }
 }

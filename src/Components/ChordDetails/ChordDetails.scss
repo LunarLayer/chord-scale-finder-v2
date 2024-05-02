@@ -1,0 +1,16 @@
+.chordDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+
+  .chordSymbol {
+    color: orange;
+    font-weight: bold;
+  }
+
+  .chordNotes {
+    display: flex;
+    font-weight: 600;
+  }
+}

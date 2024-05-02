@@ -1,7 +1,7 @@
 import "./ChordIntervals.scss";
 
 function ChordIntervals({ intervals }) {
-  console.log("recived intervals: " + intervals);
+  // console.log("recived intervals: " + intervals);
   return (
     <div id="ChordIntervals">
       <div className="flex-row-1">

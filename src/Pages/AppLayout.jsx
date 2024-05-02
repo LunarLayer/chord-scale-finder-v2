@@ -34,16 +34,6 @@ function AppLayout() {
     (store) => store.fretboard.fretboardIsReady
   );
 
-  let chordo = Chord.detect(["G", "C#", "F", "A"]);
-  console.log(chordo[0]);
-  let chordObj = Chord.getChord("M#5add9");
-  console.log(chordObj);
-
-  let allChords = ChordType.all();
-  for (let chord of allChords) {
-    console.log(chord);
-  }
-
   const instrumentView = useSelector((store) => store.ui.instrumentView);
   const menus = useSelector((store) => store.ui.menus);
 

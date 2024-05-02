@@ -17,12 +17,6 @@ export function getSelectedNotes(allNotes) {
   return selectedNotes;
 }
 
-export function getChord(notes) {
-  let chordName = Chord.detect(notes);
-  let chord = Chord.get(chordName[0]);
-  return chord;
-}
-
 export function getScale(notes) {
   let scaleName = Scale.detect(notes);
   let scale = Scale.get(scaleName[0]);
@@ -219,4 +213,18 @@ export function getPossibleChords(selectedNotes, assumePerfectFifth) {
   // let result = Array.from(new Set(possibleChords));
 
   return possibleChords;
+}
+
+export function identifyChordFrom(chordNotes, bassNote) {
+  // notes is an array that is already sorted, the first note in the array is the lowest note.
+  // derive the interval numbers from the notes array.
+  // determine the chord type/quality, using the derived intervals
+
+  let chord = {
+    symbol: getChordSymbol(notes),
+    notes,
+    intervals: getChordIntervals(notes),
+  };
+
+  return chord;
 }

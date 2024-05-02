@@ -2,11 +2,21 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 10px 20px;
 
   .toggleSettingsButton {
     position: absolute;
     top: 5px;
     right: 5px;
+  }
+
+  .settingsBar {
+    display: flex;
+    gap: 10px;
+    outline: 1px solid black;
+    padding: 5px 10px;
+  }
+
+  > .content {
+    padding: 10px 20px;
   }
 }

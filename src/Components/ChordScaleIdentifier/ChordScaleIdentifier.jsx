@@ -3,122 +3,110 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useState } from "react";
 import {
-  getChord,
   getIntervalsArray,
   getInvertedChords,
-  getPossibleChords,
-  getScale,
   getSelectedNotes,
 } from "../../Helpers/MusicTheoryHelper";
-import { Chord, Scale } from "tonal";
-import { toggleAssumePerfectFifth } from "../../Features/MusicTheory/MusicTheorySlice";
-import ChordDetails from "./ChordDetails";
-import CollapsibleText from "../Collapsibles/CollapsibleText";
+
 import Collapsible from "./Collapsible";
 import ChordIntervals from "./ChordIntervals";
 import ChordInversions from "./ChordInversions";
+import ChordDetails from "../ChordDetails/ChordDetails";
+import { getChord } from "../../Helpers/ChordHelper";
 
 function ChordScaleIdentifier() {
-  const dispatch = useDispatch();
+  const [activeSettings, setActiveSettings] = useState(["chord"]);
   const allNotes = useSelector((store) => store.musicTheory.allNotes);
-  const assumePerfectFifth = useSelector(
-    (store) => store.musicTheory.assumePerfectFifth
-  );
+  let chord,
+    chordInversions,
+    chordIntervals,
+    scalesContainingChord,
+    possibleChords;
 
-  let chord, invertedChords, selectedNotes, chordIntervals, scale;
+  let selectedNotes = getSelectedNotes(allNotes);
+  console.log(selectedNotes);
+
+  chord = getChord(selectedNotes);
+  console.log(chord);
+
+  if (activeSettings.includes("chord")) {
+    // chord = identifyChordFrom(selectedNotes);
+  }
 
   // let detectedChords = Chord.detect(["D", "A", "C", "F"]);
   // console.log(detectedChords);
   // let testChord = Chord.get(detectedChords[0]);
   // console.log(testChord);
 
-  selectedNotes = getSelectedNotes(allNotes);
-  chord = getChord(selectedNotes);
-  scale = getScale(selectedNotes);
+  // chord = getChord(selectedNotes);
+  // scale = getScale(selectedNotes);
 
-  function toggleSettingsMenu() {
-    console.log("toggline settings menu");
-  }
+  // function toggleSettingsMenu() {
+  //   console.log("toggline settings menu");
+  // }
 
   // console.log(scale);
 
-  if (chord.empty === false) {
-    invertedChords = getInvertedChords(chord);
-    chordIntervals = getIntervalsArray(chord.intervals);
+  // if (chord.empty === false) {
+  //   invertedChords = getInvertedChords(chord);
+  //   chordIntervals = getIntervalsArray(chord.intervals);
+  // }
+
+  function toggleSetting(setting) {
+    console.log(activeSettings);
+    if (activeSettings.includes(setting)) {
+      let newActiveSettings = activeSettings.filter((item) => item !== setting);
+      setActiveSettings(newActiveSettings);
+    } else {
+      setActiveSettings([...activeSettings, setting]);
+    }
   }
 
   return (
     <div id="ChordScaleIdentifier">
-      <Collapsible title="Chord" modal="identifyChordFilters">
-        <ChordDetails chord={chord} />
-      </Collapsible>
+      <div className="settingsBar">
+        <button onClick={() => toggleSetting("chord")}>
+          {activeSettings.includes("chord") ? "☑" : "☐"} Chord
+        </button>
+        <button onClick={() => toggleSetting("scale")}>
+          {activeSettings.includes("scale") ? "☑" : "☐"} Scale
+        </button>
+        {/* <button onClick={() => toggleSetting("sound")}>
+          {activeSettings.includes("sound") ? "☑" : "☐"} Sound
+        </button> */}
+      </div>
 
-      <Collapsible title="Inversions">
-        <ChordInversions invertedChords={invertedChords} />
-      </Collapsible>
+      <div className="content">
+        {activeSettings.includes("chord") && (
+          <>
+            <Collapsible title="Chord" modal="identifyChordFilters">
+              <ChordDetails chord={chord} />
+            </Collapsible>
 
-      <Collapsible title="Intervals">
-        <ChordIntervals intervals={chordIntervals} />
-      </Collapsible>
+            <Collapsible title="Inversions">
+              <ChordInversions invertedChords={chordInversions} />
+            </Collapsible>
 
-      <Collapsible title="Possible chords">
-        <ChordDetails chord={chord} />
-      </Collapsible>
+            <Collapsible title="Context">
+              <p>Select context (could be a bass note)</p>
+            </Collapsible>
 
-      <Collapsible title={`Scales containing ${chord?.symbol}`}>
-        <ChordDetails chord={chord} />
-      </Collapsible>
+            <Collapsible title="Intervals">
+              <ChordIntervals intervals={chordIntervals} />
+            </Collapsible>
+
+            <Collapsible title="Possible chords">
+              <ChordDetails chord={chord} />
+            </Collapsible>
+
+            <Collapsible title={`Scales containing ${chord?.symbol}`}>
+              <ChordDetails chord={chord} />
+            </Collapsible>
+          </>
+        )}
+      </div>
     </div>
   );
 }
 
 export default ChordScaleIdentifier;
-
-// return (
-//   <div id="ChordScaleIdentifier">
-//     there should be 3 tabs: Identify - Chords & Scales - Chord progression
-//     <div className="toolbar">
-//       <label htmlFor="AssumePerfectFifth">Assume perfect fifth</label>
-//       <input
-//         id="AssumePerfectFifth"
-//         type="checkbox"
-//         onChange={() => dispatch(toggleAssumePerfectFifth())}
-//       />
-//     </div>
-//     <div className="chords">
-//       <div className="chord">
-//         <p>Chord:</p>
-//         <button>{chords[0]}</button>
-//       </div>
-//       <div className="possibleChords">
-//         <p>Possible Chords:</p>
-//         {chords.map((chord, index) => {
-//           if (index === 0) return null;
-//           return <button key={chord + index}>{chord}</button>;
-//         })}
-//       </div>
-//       <div className="chordInversions">
-//         <p>Inversions:</p>
-//         {chords.map((chord, index) => {
-//           return <button key={"inversion" + index}>{index}</button>;
-//         })}
-//       </div>
-//     </div>
-//     <div className="scales">
-//       <div className="scale">
-//         <p>Scale:</p>
-//         <button>{scales[0]}</button>
-//       </div>
-//       <div className="possibleScales">
-//         <p>Possible Scale:</p>
-//         {scales.map((scale, index) => {
-//           if (index === 0) return null;
-//           return <button key={scale + index}>{scale}</button>;
-//         })}
-//       </div>
-//       <div className="scaleInversions">
-//         <p>Scale inversions:</p>
-//       </div>
-//     </div>
-//   </div>
-// );
