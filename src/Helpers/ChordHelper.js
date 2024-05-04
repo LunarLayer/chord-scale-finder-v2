@@ -1,4 +1,4 @@
-import { current } from "@reduxjs/toolkit";
+import { current, isImmutableDefault } from "@reduxjs/toolkit";
 
 const notesMap = [
   // might need support for enharmonically equivalent name
@@ -16,8 +16,42 @@ const notesMap = [
   "B", //  11 | 23
 ];
 
-// C  -  A  -  D  -  E
-// 0  -  9  -  14 -  16
+const chordQualitiesMap = [
+  { symbol: "min", intervals: [0, 3, 7] },
+  { symbol: "Maj", intervals: [0, 4, 7] },
+  { symbol: "dim", intervals: [0, 3, 6] },
+  { symbol: "aug", intervals: [0, 4, 8] },
+  { symbol: "sus2", intervals: [2] },
+  { symbol: "sus4", intervals: [0, 5] },
+  { symbol: "min7", intervals: [0, 7, 10] },
+  { symbol: "Maj7", intervals: [0, 7, 11] },
+  { symbol: "min6", intervals: [0, 3, 7, 9] },
+];
+const qualitieses = {
+  min: [0, 3, 7],
+  min7: [0, 7, 10],
+  Maj: [0, 4, 7],
+  Maj7: [0, 7, 11],
+  dim: [0, 3, 6],
+  aug: [0, 4, 8],
+  sus2: [2],
+  sus4: [0, 5],
+  min6: [0, 3, 7, 9],
+  7: [0, 4, 7, 10],
+  dim7: [0, 3, 6, 9],
+  mMaj7: [0, 3, 7, 11],
+  Maj9: [0, 4, 7, 11, 14],
+  m9: [0, 3, 7, 10, 14],
+  9: [0, 4, 7, 10, 14],
+  add9: [0, 4, 7, 14],
+  11: [17],
+  "#11": [18],
+  Maj11: [0, 4, 7, 11, 17],
+  m11: [0, 3, 7, 10, 14, 17],
+  13: [0, 4, 7, 10, 14, 17, 21],
+  Maj13: [0, 4, 7, 11, 17, 21],
+  m13: [0, 3, 7, 10, 14, 17, 21],
+};
 
 function getIntervalsFrom(notes) {
   let intervals = [];
@@ -26,44 +60,59 @@ function getIntervalsFrom(notes) {
 
   for (let i = 0; i < notes.length; i++) {
     current = notesMap.indexOf(notes[i]) - rootIndex;
-
     while (current < previous) {
       current += 12;
     }
-
     previous = current; // 16
     intervals.push(current);
   }
 
-  // for (let interval of intervals) {
-  //   interval -= rootIndex;
-  // }
-
-  console.log(intervals);
+  console.log("selected intervals: " + intervals);
   return intervals;
 }
 
-export function getChord(notes, context) {
-  if (notes.length === 0) return null;
+function getChordQualitiesFrom(intervals) {
+  let chordQualities = [];
+  for (let chordQuality of chordQualitiesMap) {
+    // Look for exact match
+    if (intervals.toString() === chordQuality.intervals.toString()) {
+      console.log("exact match");
+      return chordQuality.symbol;
+    }
 
-  let intervals = getIntervalsFrom(notes);
+    // look for partial matches
+    let isMatch = true;
+    for (let i = 0; i < chordQuality.intervals.length; i++) {
+      if (!intervals.includes(chordQuality.intervals[i])) isMatch = false;
+    }
+    if (isMatch) {
+      console.log("match found. Adding: " + chordQuality.symbol);
+      chordQualities.push(chordQuality.symbol);
+    }
+  }
+
+  return chordQualities;
+}
+
+function getChordQuality(chordQualities) {
+  // sorting logic
+  return chordQualities.toString();
+}
+
+export function getChord(notes, context) {
+  if (notes.length === 0) return { symbol: "", notes: [], intervals: [] };
 
   let rootNote = notes[0];
-
-  // determine the chord type/quality, using the derived intervals
-
-  // let chord = {
-  //   symbol: getChordSymbol(notes),
-  //   notes,
-  //   intervals: getChordIntervals(notes),
-  // };
-  let testChord = {
-    symbol: "E6sus7(#11)",
-    notes: ["C", "Eb", "G", "Bb"],
-    intervals: ["1", "b3", "4", "#5", "bb7", "#9", "13"],
+  let intervals = getIntervalsFrom(notes);
+  let chordQualities = getChordQualitiesFrom(intervals);
+  let chordQuality = getChordQuality(chordQualities);
+  let chord = {
+    symbol: rootNote + chordQuality,
+    notes,
+    intervals,
   };
 
-  return testChord;
+  return chord;
 }
 
 const intervalMap = {
@@ -201,35 +250,7 @@ const chordTypes = {
 // Check for no3: [0, 7] - hvis ja, smid den i chordQualities array.
 // Check for 6:
 
-// Find en quality matches
-
-const chordQualitiesMap = {
-  min: [0, 3, 7],
-  Maj: [0, 4, 7],
-  m: [0, 3, 7],
-  dim: [0, 3, 6],
-  aug: [0, 4, 8],
-  sus2: [0, 2, 7],
-  sus4: [0, 5, 7],
-  Maj7: [0, 4, 7, 11],
-  min6: [0, 3, 7, 9],
-  m7: [0, 3, 7, 10],
-  7: [0, 4, 7, 10],
-  dim7: [0, 3, 6, 9],
-  mMaj7: [0, 3, 7, 11],
-  Maj9: [0, 4, 7, 11, 14],
-  m9: [0, 3, 7, 10, 14],
-  9: [0, 4, 7, 10, 14],
-  add9: [0, 4, 7, 14],
-  11: [17],
-  "#11": [18],
-  Maj11: [0, 4, 7, 11, 17],
-  m11: [0, 3, 7, 10, 14, 17],
-  13: [0, 4, 7, 10, 14, 17, 21],
-  Maj13: [0, 4, 7, 11, 17, 21],
-  m13: [0, 3, 7, 10, 14, 17, 21],
-  // Add more chord types here...
-};
+// Find matching qualities
 
 // const basicIntervalMap = {
 //   "perfect unison": 0,

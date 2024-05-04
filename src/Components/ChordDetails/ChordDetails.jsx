@@ -2,24 +2,17 @@ import "./ChordDetails.scss";
 import ChordNotes from "./ChordNotes";
 import Intervals from "../Intervals/Intervals";
 
-function ChordDetails({
-  symbol,
-  notes,
-  intervals,
-  showNotes,
-  showIntervals,
-  intervalSettings,
-}) {
-  if (symbol && notes && intervals) {
+function ChordDetails({ chord, showNotes, showIntervals, intervalSettings }) {
+  if (chord.symbol && chord.notes && chord.intervals) {
     return (
       <div className="chordDetails">
-        <p className="chordSymbol">{symbol}</p>
+        <p className="chordSymbol">{chord.symbol}</p>
         <div className="chordNotes">
           (
-          {notes.map((note, index) => {
-            if (index !== notes.length - 1) {
+          {chord.notes.map((note, index) => {
+            if (index !== chord.notes.length - 1) {
               return (
-                <p key={note + index + symbol}>
+                <p key={note + index + chord.symbol}>
                   {note}
                   <span>,&nbsp;</span>
                 </p>
@@ -31,7 +24,7 @@ function ChordDetails({
           )
         </div>
 
-        <Intervals intervals={intervals} />
+        <Intervals intervals={chord.intervals} />
       </div>
     );
   } else {
