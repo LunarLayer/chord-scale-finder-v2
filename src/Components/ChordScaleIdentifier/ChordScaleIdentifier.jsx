@@ -22,7 +22,7 @@ Intervals will be matched against a collection of chords, based on their interva
 - - - Chord section
 - Chord(s?)
 If the user-selected intervals(notes) match all intervals of a chord 
-in a collection collection of chords 
+in a collection of chords 
 (both by interval numbers and total amount of notes/intervals)
 That chord is displayed.
 In case a complete match is not found, there are still chords in the collection 
@@ -101,7 +101,7 @@ function ChordScaleIdentifier() {
   // }
 
   function toggleSetting(setting) {
-    console.log(activeSettings);
+    // console.log(activeSettings);
     if (activeSettings.includes(setting)) {
       let newActiveSettings = activeSettings.filter((item) => item !== setting);
       setActiveSettings(newActiveSettings);

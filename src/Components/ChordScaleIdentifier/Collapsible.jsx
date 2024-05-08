@@ -12,22 +12,22 @@ import { showModal } from "../../Features/UI/UISlice";
 
 function Collapsible({ title, modal, children }) {
   const dispatch = useDispatch();
-  const [collapsibleIsOpen, setCollapsibleIsOpen] = useState(true);
+  const [collapsibleIsOpen, setCollapsibleIsOpen] = useState(false);
   const [collapsibleIcon, setCollapsibleIcon] = useState(HollowArrowRight);
   const contentRef = useRef(null);
 
-  useEffect(() => {
-    const contentElem = contentRef.current;
-    if (collapsibleIsOpen) {
-      // set max height back to 0
-      contentElem.style.maxHeight = contentElem.scrollHeight + "px";
-      setCollapsibleIcon(HollowArrowDown);
-    } else {
-      contentElem.style.maxHeight = 0;
-      setCollapsibleIcon(HollowArrowRight);
-      // set max height
-    }
-  }, [collapsibleIsOpen]);
+  // useEffect(() => {
+  //   const contentElem = contentRef.current;
+  //   if (collapsibleIsOpen) {
+  //     // set max height back to 0
+  //     contentElem.style.maxHeight = contentElem.scrollHeight + "px";
+  //     setCollapsibleIcon(HollowArrowDown);
+  //   } else {
+  //     contentElem.style.maxHeight = 0;
+  //     setCollapsibleIcon(HollowArrowRight);
+  //     // set max height
+  //   }
+  // }, [collapsibleIsOpen]);
 
   function handleClick(e) {
     console.log(e.target);
