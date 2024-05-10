@@ -3,7 +3,9 @@ import ChordNotes from "./ChordNotes";
 import Intervals from "../Intervals/Intervals";
 
 function ChordDetails({ chord, showNotes, showIntervals, intervalSettings }) {
+  console.log(chord);
   if (chord.symbol && chord.notes && chord.intervals) {
+    console.log("yes");
     return (
       <div className="chordDetails">
         <p className="chordSymbol">{chord.symbol}</p>
@@ -28,6 +30,7 @@ function ChordDetails({ chord, showNotes, showIntervals, intervalSettings }) {
       </div>
     );
   } else {
+    console.log("no");
     return null;
   }
 }

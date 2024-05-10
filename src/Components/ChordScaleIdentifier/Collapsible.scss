@@ -45,6 +45,10 @@
   }
 
   .content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
     margin: 5px 32px;
     // max-height: 0;
     overflow: hidden;

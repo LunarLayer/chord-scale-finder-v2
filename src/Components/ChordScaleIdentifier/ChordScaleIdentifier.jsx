@@ -12,7 +12,7 @@ import Collapsible from "./Collapsible";
 import ChordIntervals from "./ChordIntervals";
 import ChordInversions from "./ChordInversions";
 import ChordDetails from "../ChordDetails/ChordDetails";
-import { getChord } from "../../Helpers/ChordHelper";
+import { getChords } from "../../Helpers/ChordHelper";
 
 /* Chord identification: 
 The root note is determined to be the lowest note picked♥
@@ -65,17 +65,12 @@ Tests MIGHT be written.
 function ChordScaleIdentifier() {
   const [activeSettings, setActiveSettings] = useState(["chord"]);
   const allNotes = useSelector((store) => store.musicTheory.allNotes);
-  let chord,
-    chordInversions,
-    chordIntervals,
-    scalesContainingChord,
-    possibleChords;
 
   let selectedNotes = getSelectedNotes(allNotes);
-
-  chord = getChord(selectedNotes); // should provide more than one in case there are several chords it could be.
+  let chords = getChords(selectedNotes); // should provide more than one in case there are several chords it could be.
   // use testing to ensure accuracy
-  console.log(chord);
+  console.log("chords:");
+  console.log(chords);
 
   if (activeSettings.includes("chord")) {
     // chord = identifyChordFrom(selectedNotes);
@@ -127,29 +122,36 @@ function ChordScaleIdentifier() {
       <div className="content">
         {activeSettings.includes("chord") && (
           <>
-            <Collapsible title="Chord" modal="identifyChordFilters">
-              <ChordDetails chord={chord} />
+            <Collapsible title="Chord" settingsModal="identifyChordFilters">
+              <>
+                {chords.map((chord, index) => {
+                  return (
+                    <ChordDetails key={chord.symbol + index} chord={chord} />
+                  );
+                })}
+              </>
             </Collapsible>
 
-            <Collapsible title="Inversions">
+            {/* <Collapsible title="Inversions">
               <ChordInversions invertedChords={chordInversions} />
-            </Collapsible>
-
+            </Collapsible> */}
+            {/* 
             <Collapsible title="Context">
               <p>Select context (could be a bass note)</p>
-            </Collapsible>
+            </Collapsible> */}
 
-            <Collapsible title="Intervals">
+            {/* <Collapsible title="Intervals">
               <ChordIntervals intervals={chordIntervals} />
-            </Collapsible>
+            </Collapsible> */}
 
-            <Collapsible title="Possible chords">
-              <ChordDetails chord={chord} />
-            </Collapsible>
-
-            <Collapsible title={`Scales containing ${chord?.symbol}`}>
-              <ChordDetails chord={chord} />
-            </Collapsible>
+            {/* <Collapsible title={`Scales containing ${chords?.symbol}`}>
+              <ChordDetails chord={chords} />
+            </Collapsible> */}
+          </>
+        )}
+        {activeSettings.includes("scale") && (
+          <>
+            <p>Scales</p>
           </>
         )}
       </div>

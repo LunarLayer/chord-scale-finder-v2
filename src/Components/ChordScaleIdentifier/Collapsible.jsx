@@ -10,7 +10,7 @@ import {
 import { useDispatch } from "react-redux";
 import { showModal } from "../../Features/UI/UISlice";
 
-function Collapsible({ title, modal, children }) {
+function Collapsible({ title, settingsModal, children }) {
   const dispatch = useDispatch();
   const [collapsibleIsOpen, setCollapsibleIsOpen] = useState(false);
   const [collapsibleIcon, setCollapsibleIcon] = useState(HollowArrowRight);
@@ -33,7 +33,7 @@ function Collapsible({ title, modal, children }) {
     console.log(e.target);
 
     if (e.target.closest(".settingsButton")) {
-      dispatch(showModal(modal));
+      dispatch(showModal(settingsModal));
     } else {
       setCollapsibleIsOpen(!collapsibleIsOpen);
     }
@@ -44,7 +44,7 @@ function Collapsible({ title, modal, children }) {
       <div className="collapsibleHeader" onClick={(e) => handleClick(e)}>
         {collapsibleIcon}
         <p className="title">{title}</p>
-        {modal && (
+        {settingsModal && (
           <button className="settingsButton">
             <FilterIcon />
           </button>

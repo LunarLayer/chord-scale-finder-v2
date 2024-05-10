@@ -15,60 +15,67 @@ const notesMap = [
   "A#", // 10 | 22
   "B", //  11 | 23
 ];
-
+// Do all the qualities that match intervals (but not amount), make a correct chord?
+// if intervals and amount match - exact chord found
+// otherwise, find all matching qualities, somehow separate them (might there be a matching major AND minor?)
 // chord symbol alternatives might be added in later.
+
+// User decides to show exact
 const chordsMap = {
   default: [
     { symbol: "7", intervals: [0, 4, 7, 10] },
-    { symbol: "9", intervals: [0, 4, 7, 10, 14] },
-    { symbol: "11", intervals: [0, 4, 7, 10, 14, 17] },
-    { symbol: "13", intervals: [0, 4, 7, 10, 14, 17, 21] },
+    { symbol: "9", intervals: [0, 2, 4, 7, 10] },
+    { symbol: "11", intervals: [0, 2, 4, 7, 10] },
+    { symbol: "13", intervals: [0, 2, 4, 7, 9, 10] },
   ],
   major: [
-    { symbol: "maj", intervals: [0, 4, 7] },
-    { symbol: "maj6", intervals: [0, 4, 7, 9] },
+    { symbol: "", intervals: [0, 4, 7] },
     { symbol: "maj7", intervals: [0, 4, 7, 11] },
-    { symbol: "maj9", intervals: [0, 4, 7, 11, 14] },
-    { symbol: "maj11", intervals: [0, 4, 7, 11, 14, 17] },
-    { symbol: "maj13", intervals: [0, 4, 7, 11, 14, 17, 21] },
+    { symbol: "maj9", intervals: [0, 2, 4, 7, 11] },
+    { symbol: "maj11", intervals: [0, 2, 4, 5, 7, 11] },
+    { symbol: "maj13", intervals: [0, 2, 4, 5, 7, 9, 11] },
+    { symbol: "maj6", intervals: [0, 4, 7, 9] },
   ],
   minor: [
     { symbol: "min", intervals: [0, 3, 7] },
     { symbol: "min6", intervals: [0, 3, 7, 9] },
     { symbol: "min7", intervals: [0, 3, 7, 10] },
-    { symbol: "min9", intervals: [0, 3, 7, 10, 14] },
-    { symbol: "min11", intervals: [0, 3, 7, 10, 14, 17] },
-    { symbol: "min13", intervals: [0, 3, 7, 10, 14, 17, 21] },
+    { symbol: "min9", intervals: [0, 2, 3, 7, 10] },
+    { symbol: "min11", intervals: [0, 2, 3, 5, 7, 10] },
+    { symbol: "min13", intervals: [0, 2, 3, 5, 7, 9, 10] },
     { symbol: "mMaj7", intervals: [0, 3, 7, 11] },
   ],
   diminished: [
     { symbol: "dim", intervals: [0, 3, 6] },
     { symbol: "dim7", intervals: [0, 3, 6, 9] },
-    { symbol: "dim9", intervals: [0, 3, 6, 9, 14] },
-    { symbol: "dim11", intervals: [0, 3, 6, 9, 14, 17] },
+    { symbol: "dim9", intervals: [0, 2, 3, 6, 9] },
+    { symbol: "dim11", intervals: [0, 2, 3, 5, 6, 9] },
   ],
   augmented: [
     { symbol: "aug", intervals: [0, 4, 8] },
     { symbol: "maj7(#5)", intervals: [0, 4, 8, 11] },
     { symbol: "aug7", intervals: [0, 4, 8, 10] },
-    { symbol: "aug9", intervals: [0, 4, 8, 10, 14] },
-    { symbol: "aug11", intervals: [0, 4, 8, 10, 14, 17] },
-    { symbol: "aug13", intervals: [0, 4, 8, 10, 14, 17, 21] },
+    { symbol: "aug9", intervals: [0, 2, 4, 8, 10] },
+    { symbol: "aug11", intervals: [0, 2, 4, 5, 8, 10] },
+    { symbol: "aug13", intervals: [0, 2, 4, 5, 8, 9, 10] },
   ],
   extended: [
+    { symbol: "5", intervals: [0, 7] },
+    { symbol: "6", intervals: [0, 9] },
     { symbol: "sus2", intervals: [0, 2, 7] },
     { symbol: "sus(b2)", intervals: [0, 1, 7] },
     { symbol: "sus4", intervals: [0, 5, 7] },
-    { symbol: "sus(#4)", intervals: [0, 5, 7] },
-    { symbol: "(b6)", intervals: [0, 4, 7, 11, 15] },
-    { symbol: "m(b6)", intervals: [0, 3, 7, 11, 15] },
-    { symbol: "6/9", intervals: [0, 4, 7, 9, 14] },
-    { symbol: "m6/9", intervals: [0, 3, 7, 9, 14] },
-    { symbol: "#9", intervals: [0, 4, 7, 10, 15] },
-    { symbol: "add9", intervals: [0, 4, 7, 14] },
-    { symbol: "b9", intervals: [0, 4, 7, 10, 13] },
-    { symbol: "#11", intervals: [0, 4, 7, 11, 18] },
-    { symbol: "b13", intervals: [0, 4, 7, 10, 21] },
+    // { symbol: "sus(#4)", intervals: [0, 5, 7] },
+    { symbol: "b5", intervals: [0, 4, 6] },
+    { symbol: "(b6)", intervals: [0, 3, 4, 7, 11] },
+    { symbol: "m(b6)", intervals: [0, 3, 7, 11] },
+    { symbol: "6/9", intervals: [0, 2, 4, 7, 9] },
+    { symbol: "m6/9", intervals: [0, 2, 3, 7, 9] },
+    { symbol: "#9", intervals: [0, 3, 4, 7, 10] },
+    { symbol: "add9", intervals: [0, 2, 4, 7] },
+    { symbol: "b9", intervals: [0, 1, 4, 7, 10] },
+    { symbol: "#11", intervals: [0, 4, 6, 7, 11] },
+    { symbol: "b13", intervals: [0, 4, 7, 9, 10] },
   ],
 };
 
@@ -102,6 +109,7 @@ function getIntervalsFrom(notes) {
   let intervals = [];
   let previous, current;
   let rootIndex = notesMap.indexOf(notes[0]);
+  console.log(rootIndex);
 
   for (let i = 0; i < notes.length; i++) {
     current = notesMap.indexOf(notes[i]) - rootIndex;
@@ -109,68 +117,86 @@ function getIntervalsFrom(notes) {
       current += 12;
     }
     previous = current; // 16
-    intervals.push(current);
+    if (current > 12) current -= 12;
+
+    if (!intervals.includes(current)) intervals.push(current);
   }
 
-  // console.log("selected intervals: " + intervals);
+  // sort numerically
+  intervals = intervals.sort((a, b) => a - b);
   return intervals;
 }
+//messy, should this return a chord object or just chord symols?
+function getChordsFrom(rootNote, notes) {
+  let intervals = getIntervalsFrom(notes);
+  let chords = [];
+  let missingNotes = 12;
+  let lookingForChords = true;
+  let foundCloseMatch = false;
 
-function getChordQualitiesFrom(intervals) {
-  console.log(intervals);
-  let chordQualities = [];
+  let no3,
+    no5,
+    isDim,
+    isAug = false;
 
-  // Look for exact matches (all intervals and amount of intervals match)
-  for (let chord of chordsMap.chords) {
-    if (intervals.toString() === chord.intervals.toString()) {
-      console.log("exact match");
-      return chord.symbol;
+  if (!intervals.includes(3) && !intervals.includes(4)) no3 = true;
+  if (intervals.includes(6)) isDim = true;
+  if (intervals.includes(8)) isAug = true;
+  if (!intervals.includes(7) && !isDim && !isAug) no5 = true;
+
+  while (lookingForChords) {
+    for (let chordType in chordsMap) {
+      for (let chord of chordsMap[chordType]) {
+        if (intervals.every((interval) => chord.intervals.includes(interval))) {
+          if (chord.intervals.length === intervals.length) {
+            console.log("Exact match: " + chord.symbol);
+            chords.push({
+              symbol: rootNote + chord.symbol,
+              notes,
+              intervals: chord.intervals,
+            });
+            lookingForChords = false;
+          } else if (chord.intervals.length - intervals.length === 1) {
+            console.log(
+              "good match: (" +
+                intervals.length +
+                "/" +
+                chord.intervals.length +
+                ") | " +
+                chord.symbol
+            );
+            chords.push({
+              symbol: rootNote + chord.symbol,
+              notes,
+              intervals: chord.intervals,
+            });
+          } else if (chord.intervals.length - intervals.length === 2) {
+            console.log(
+              "okay match: (" +
+                intervals.length +
+                "/" +
+                chord.intervals.length +
+                ") | " +
+                chord.symbol
+            );
+            chords.push({
+              symbol: rootNote + chord.symbol,
+              notes,
+              intervals: chord.intervals,
+            });
+          }
+        }
+      }
     }
+    lookingForChords = false;
   }
 
-  // if no exact match is found, find all matching qualities
-  for (let chordQuality of chordsMap.chordQualities) {
-    let isMatch = true;
-    for (let i = 0; i < chordQuality.intervals.length; i++) {
-      if (!intervals.includes(chordQuality.intervals[i])) isMatch = false;
-    }
-    if (isMatch) {
-      console.log("match found. Adding: " + chordQuality.symbol);
-      chordQualities.push(chordQuality.symbol);
-    }
-  }
-  // for (let chordQuality of chordsMap) {
-  //   // Look for exact match
-  //   // console.log(intervals.toString());
-  //   console.log(chordQuality.intervals.toString());
-  //   if (intervals.toString() === chordQuality.intervals.toString()) {
-  //     console.log("exact match");
-  //     chordQualities.push(chordQuality.symbol);
-  //     break;
-  //   }
+  // need to add notes arr to chords thats derived from rootNote and intervals.
 
-  //   // look for partial matches
-  //   let isMatch = true;
-  //   for (let i = 0; i < chordQuality.intervals.length; i++) {
-  //     if (!intervals.includes(chordQuality.intervals[i])) isMatch = false;
-  //   }
-  //   if (isMatch) {
-  //     console.log("match found. Adding: " + chordQuality.symbol);
-  //     chordQualities.push(chordQuality.symbol);
-  //   }
-  // }
+  // add root note to chord
 
-  if (
-    !intervals.includes(3) &&
-    !intervals.includes(4) &&
-    !intervals.includes(15) &&
-    !intervals.includes(16)
-  ) {
-    console.log("adding (no3)");
-    chordQualities.push("(no3)");
-  }
-
-  return chordQualities;
+  // sort chord qualities of all found chords
+  return chords;
 }
 
 function getSortedChordQualities(chordQualities) {
@@ -178,20 +204,21 @@ function getSortedChordQualities(chordQualities) {
   return chordQualities.toString();
 }
 
-export function getChord(notes, context) {
-  if (notes.length === 0) return { symbol: "", notes: [], intervals: [] };
+export function getChords(notes, context) {
+  let chords = [];
+  if (notes.length === 0) {
+    chords.push({ symbol: "N.C.", notes: [], intervals: [] });
+  } else if (notes.length === 1) {
+    chords.push({ symbol: notes[0], notes, intervals: [] });
+  } else {
+    let rootNote = notes[0];
+    let identifiedChords = getChordsFrom(rootNote, notes);
+    console.log("identifiedChords");
+    console.log(identifiedChords);
+    for (let chord of identifiedChords) chords.push(chord);
+  }
 
-  let rootNote = notes[0];
-  let intervals = getIntervalsFrom(notes);
-  let chordQualities = getChordQualitiesFrom(intervals);
-  let sortedChordQualities = getSortedChordQualities(chordQualities);
-  let chord = {
-    symbol: rootNote + sortedChordQualities,
-    notes,
-    intervals,
-  };
-
-  return chord;
+  return chords;
 }
 
 const intervalMap = {

@@ -12,6 +12,11 @@ function IdentifierChordFiltersModal() {
       onClose={() => dispatch(closeModal())}
     >
       <div className="identifierChordFilters">
+        <p>□ Show notes</p>
+        <p>□ Only show exact chords</p>
+        <p>□ Show chords that are 1 note off</p>
+        <p>□ Show chords that are 2 note off</p>
+        <p>□ Show all possible chords, closest first</p>
         -Intervals on/off + intervals style -Notes in chord -Aliases
       </div>
     </Modal>
