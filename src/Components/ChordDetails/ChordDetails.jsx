@@ -2,10 +2,14 @@ import "./ChordDetails.scss";
 import ChordNotes from "./ChordNotes";
 import Intervals from "../Intervals/Intervals";
 
+// TODO:
+// - Highlight intervals/notes when hovered.
+// - Highlight (all) chord notes when chord is hovered.
+
 function ChordDetails({ chord, showNotes, showIntervals, intervalSettings }) {
-  console.log(chord);
+  // console.log(chord);
   if (chord.symbol && chord.notes && chord.intervals) {
-    console.log("yes");
+    // console.log("yes");
     return (
       <div className="chordDetails">
         <p className="chordSymbol">{chord.symbol}</p>
@@ -30,7 +34,7 @@ function ChordDetails({ chord, showNotes, showIntervals, intervalSettings }) {
       </div>
     );
   } else {
-    console.log("no");
+    // console.log("no");
     return null;
   }
 }

@@ -5,6 +5,7 @@ const UserSlice = createSlice({
   name: "user",
   initialState: {
     username: undefined,
+    globalSettings: undefined,
     key: undefined,
     tonality: undefined,
     accidental: undefined,
@@ -25,11 +26,13 @@ const UserSlice = createSlice({
     labelNotes: undefined,
     fretPosition: undefined,
     highlightNotes: undefined,
+    chordScaleIdentifierMenu: undefined,
   },
   reducers: {
     loginUser(state, action) {
       const user = action.payload;
       state.username = user.username;
+      state.globalSettings = user.globalSettings;
       state.key = user.key;
       state.tonality = user.tonality;
       state.accidental = user.accidental;
@@ -50,6 +53,7 @@ const UserSlice = createSlice({
       state.labelNotes = user.labelNotes;
       state.fretPosition = user.fretPosition;
       state.highlightNotes = user.highlightNotes;
+      state.chordScaleIdentifierMenu = user.chordScaleIdentifierMenu;
     },
     // setInstrumentSound(state, action) {
     //   state.instrumentSound = action.payload;

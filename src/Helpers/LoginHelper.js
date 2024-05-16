@@ -7,6 +7,18 @@ he can create a user that will then be saved in the database as a user. */
 export function getGuestUser() {
   let guestUser = {
     username: "Guest",
+    globalSettings: {
+      chordScaleIdentifier: {
+        identify: {
+          chord: false,
+          scale: false,
+          displayOnInstrument: false,
+          highlight: false,
+          matchChordsBy: "closest", // closest, all
+          allowedToOmitNotes: false,
+        },
+      },
+    },
     key: Key.majorKey("C"),
     scale: "major",
     tonality: "todo",
@@ -159,7 +171,7 @@ export function getGuestUser() {
             scale: false,
             displayOnInstrument: false,
             highlight: false,
-            select: false,
+            showChordsDeviatingByNotes: 0,
           },
         },
         chordScaleDictionary: {
@@ -170,6 +182,7 @@ export function getGuestUser() {
         },
       },
     },
+
     projects: [
       {
         title: "dance with the devil in Am",
@@ -186,6 +199,17 @@ export function getGuestUser() {
         fretboardMenu: { showing: false },
         settingsMenu: { showing: false },
         soundPlayerMenu: { showing: false },
+        chordScaleIdentifierMenu: {
+          identify: {
+            chords: {
+              showNotes: true,
+              filterByMatchingNotes: "all", // 1, 2, 3, "exact"
+            },
+            scales: {},
+          },
+          dictionary: {},
+          progression: {},
+        },
       },
     ],
   };
