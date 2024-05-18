@@ -12,39 +12,7 @@ import Collapsible from "./Collapsible";
 import ChordIntervals from "./ChordIntervals";
 import ChordInversions from "./ChordInversions";
 import ChordDetails from "../ChordDetails/ChordDetails";
-import { getChords } from "../../Helpers/ChordHelper";
-
-/* Chord identification: 
-The root note is determined to be the lowest note picked♥
-User selected notes will be converted to intervals. 
-Intervals will be matched against a collection of chords, based on their intervals.
-
-- - - Chord section
-- highlight chords on fretboard when interval or note of a chord 
-is being hovered, even if interval/note is not selected on the fretboard
--
-
-
-
-
-
-
-- Inversions
-
-- Context
-
-- Intervals (not sure to include)
-
-- Possible chords (No need to keep if i sometimes need to display more than one chord 
-  in the chord section anyways?)
-
-  -
-
-Tests MIGHT be written.
-
-- - - Scales section
-
-*/
+import { getChords } from "../../Helpers/Chords/ChordFunctions";
 
 function ChordScaleIdentifier() {
   const [activeSettings, setActiveSettings] = useState(["chord"]);
@@ -58,11 +26,11 @@ function ChordScaleIdentifier() {
   let chords = getChords(
     selectedNotes,
     context,
-    identifySettings.matchChordsBy,
-    identifySettings.allowedToOmitNotes
+    identifySettings.onlyShowExactMatches,
+    identifySettings.allowedToOmitNotes,
+    identifySettings.allowAbstractChords
   ); // should provide more than one in case there are several chords it could be.
   // use testing to ensure accuracy
-  console.log("chords:");
   console.log(chords);
 
   if (activeSettings.includes("chord")) {

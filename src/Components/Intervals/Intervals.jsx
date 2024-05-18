@@ -11,17 +11,15 @@ function Intervals({ intervals, simplified, canChangeChord }) {
       return null;
     } else {
       const handleClick = canChangeChord
-        ? () => toggleInterval(interval)
+        ? () => toggleInterval(interval.number)
         : undefined;
       return (
         <button
-          className={`intervalButton ${
-            interval.length > 0 ? "interval_" + index : ""
-          }`}
-          key={index + interval}
+          className={`intervalButton `}
+          key={index + interval.number}
           onClick={handleClick}
         >
-          {interval}
+          {interval.number}
         </button>
       );
     }

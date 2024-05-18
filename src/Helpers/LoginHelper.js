@@ -14,8 +14,9 @@ export function getGuestUser() {
           scale: false,
           displayOnInstrument: false,
           highlight: false,
-          matchChordsBy: "closest", // closest, all
+          onlyShowExactMatches: false, // closest, all
           allowedToOmitNotes: false,
+          allowAbstractChords: false,
         },
       },
     },
