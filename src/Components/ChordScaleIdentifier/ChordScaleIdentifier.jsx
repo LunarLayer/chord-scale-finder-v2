@@ -23,13 +23,7 @@ function ChordScaleIdentifier() {
 
   let context;
   let selectedNotes = getSelectedNotes(allNotes);
-  let chords = getChords(
-    selectedNotes,
-    context,
-    identifySettings.onlyShowExactMatches,
-    identifySettings.allowedToOmitNotes,
-    identifySettings.allowAbstractChords
-  ); // should provide more than one in case there are several chords it could be.
+  let chords = getChords(selectedNotes, context); // should provide more than one in case there are several chords it could be.
   // use testing to ensure accuracy
   console.log(chords);
 

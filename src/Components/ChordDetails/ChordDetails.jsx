@@ -1,42 +1,53 @@
 import "./ChordDetails.scss";
 import ChordNotes from "./ChordNotes";
 import Intervals from "../Intervals/Intervals";
+import { v4 as uuidv4 } from "uuid";
 
 // TODO:
 // - Highlight intervals/notes when hovered.
 // - Highlight (all) chord notes when chord is hovered.
 
 function ChordDetails({ chord, showNotes, showIntervals, intervalSettings }) {
-  // console.log(chord);
-  if (chord.symbol && chord.notes && chord.intervals) {
-    // console.log("yes");
-    return (
-      <div className="chordDetails">
-        <p className="chordSymbol">{chord.symbol}</p>
-        <div className="chordNotes">
-          (
-          {chord.notes.map((note, index) => {
-            if (index !== chord.notes.length - 1) {
-              return (
-                <p key={note + index + chord.symbol}>
-                  {note}
-                  <span>,&nbsp;</span>
-                </p>
-              );
-            } else {
-              return <p key={note + index}>{note}</p>;
-            }
-          })}
-          )
-        </div>
+  console.log("received:");
+  console.log(chord);
+  return (
+    <div className={`chordDetails ${chord.isExactMatch ? "exactMatch" : ""}`}>
+      <p className="chordSymbol">
+        {chord.root + chord.quality}
 
-        <Intervals intervals={chord.intervals} />
+        {chord.additionalQuality && (
+          <span className="suspension">
+            (addyQual{chord.additionalQuality})
+          </span>
+        )}
+        {chord.suspension && (
+          <span className="suspension">sussy({chord.suspension})</span>
+        )}
+
+        {chord.alteration && (
+          <span className="alteration">(Alterations{chord.alteration})</span>
+        )}
+      </p>
+      <div className="chordNotes">
+        (
+        {chord.notes.map((note, index) => {
+          if (index !== chord.notes.length - 1) {
+            return (
+              <p key={uuidv4()}>
+                {note}
+                <span>,&nbsp;</span>
+              </p>
+            );
+          } else {
+            return <p key={uuidv4()}>{note}</p>;
+          }
+        })}
+        )
       </div>
-    );
-  } else {
-    // console.log("no");
-    return null;
-  }
+
+      <Intervals intervals={chord.intervals} />
+    </div>
+  );
 }
 
 export default ChordDetails;

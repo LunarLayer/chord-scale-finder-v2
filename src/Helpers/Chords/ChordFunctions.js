@@ -1,96 +1,87 @@
 import { ChordMaps } from "./ChordMaps";
 import { Chord } from "./Chord";
 
-export function getChords(
-  selectedNotes,
-  context,
-  onlyShowExactMatches,
-  allowedToOmitNotes,
-  allowAbstractChords
-) {
-  let possibleChords = [];
+export function getChords(selectedNotes, context) {
+  console.log("getChord()");
+  let possibleChords,
+    validChords = [];
 
   if (selectedNotes.length === 0) {
-    return [new Chord({ symbol: "N.C. (no chord)" })];
+    return [new Chord({ root: "N.C. (no chord)" })];
   } else if (selectedNotes.length === 1) {
-    return [new Chord({ symbol: selectedNotes[0] })]; // intervals: [{number: 0, isOmittable: false}]?
+    return [
+      new Chord({
+        root: selectedNotes[0],
+        quality: "maj",
+        notes: [selectedNotes[0]],
+        intervals: [0],
+      }),
+    ]; // intervals: [{number: 0, isOmittable: false}]?
   }
 
-  let rootNote = selectedNotes[0];
   let selectedIntervals = getIntervalsFrom(selectedNotes);
+  let root = selectedNotes[0];
+  console.log("selected intervals: ", selectedIntervals);
 
-  for (let chordType in ChordMaps.chordTypes) {
-    for (let chord of ChordMaps.chordTypes[chordType]) {
+  for (let quality in ChordMaps.chordQualities) {
+    for (let chord of ChordMaps.chordQualities[quality]) {
       let possibleChord = new Chord({
-        symbol: rootNote + chord.symbol,
+        root,
+        quality: chord.quality,
         intervals: chord.intervals,
       });
+      console.log(possibleChord);
 
-      if (onlyShowExactMatches) {
-        if (possibleChord.intervalsMatchExactly(selectedIntervals))
-          return [possibleChord];
-      } else {
-        handleMissingIntervals(
-          possibleChord,
-          selectedIntervals,
-          allowedToOmitNotes
-        );
-
-        if (
-          !possibleChord.isAbstract ||
-          (possibleChord.isAbstract && allowAbstractChords)
-        ) {
-          console.log(possibleChord.isAbstract);
-          possibleChords.push(possibleChord);
+      if (possibleChord.intervalsMatchExactly(selectedIntervals)) {
+        possibleChord.isExactMatch = true;
+        validChords.push(possibleChord);
+      } else if (quality !== "unique") {
+        // get all selected intervals that the chord doesn't have
+        let missingIntervals =
+          possibleChord.getMissingIntervals(selectedIntervals);
+        console.log("Found missing intervals: " + missingIntervals);
+        for (let interval of missingIntervals) {
+          console.log("adding missing interval: " + interval);
+          // while (possibleChord.isValid) {
+          addOrAlter(possibleChord, interval);
+          // }
         }
+        if (possibleChord.isValid) validChords.push(possibleChord);
       }
     }
   }
 
-  // for (let chord of possibleChords) {
-  //   chord.prepareForDisplay();
-  // }
+  for (let chord of validChords) {
+    chord.prepareForUse();
+  }
 
-  possibleChords.sort(
-    (chordA, chordB) => chordA.missingIntervals - chordB.missingIntervals
+  // sort by abstract too?
+  validChords.sort(
+    (chordA, chordB) =>
+      chordA.intervals.length -
+      selectedIntervals.length -
+      (chordB.intervals.length - selectedIntervals.length)
   );
-  return possibleChords;
+  return validChords;
 }
 
-function handleMissingIntervals(
-  possibleChord,
-  selectedIntervals,
-  allowedToOmitNotes
-) {
-  let missingIntervals = possibleChord.getMissingIntervals(selectedIntervals);
-  for (let interval of missingIntervals) {
-    if (allowedToOmitNotes) {
-      processAllowedOmission(possibleChord, interval);
-    } else {
-      addAlteration(possibleChord, interval);
-    }
-  }
-}
-
-function processAllowedOmission(possibleChord, interval) {
-  if (possibleChord.hasSimilarInterval(interval)) {
-    if (possibleChord.canAlterSimilar(interval)) {
-      possibleChord.alterSimilar(interval);
-    } else {
-      addAlteration(possibleChord, interval);
-    }
+function addOrAlter(possibleChord, interval) {
+  if (possibleChord.canModifySimilar(interval)) {
+    console.log("modifying");
+    possibleChord.modify(interval);
   } else {
-    addAlteration(possibleChord, interval);
+    console.log("extending");
+    possibleChord.extend(interval);
   }
 }
 
-function addAlteration(possibleChord, interval) {
-  let alteration = ChordMaps.addChords[interval];
-  possibleChord.alterations.push(alteration);
-  if (!alteration.includes("b") && !alteration.includes("#")) {
-    possibleChord.isAbstract = true;
-  }
-}
+// function addAlteration(possibleChord, interval) {
+//   let alteration = ChordMaps.addChords[interval];
+//   possibleChord.alterations.push(alteration);
+//   if (!alteration.includes("b") && !alteration.includes("#")) {
+//     possibleChord.isAbstract = true;
+//   }
+// }
 
 // function identifyPossibleChords(rootNote, intervals) {
 //   let possibleChords = [];

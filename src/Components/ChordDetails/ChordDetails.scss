@@ -3,10 +3,30 @@
   flex-direction: column;
   align-items: center;
   gap: 2px;
+  background-color: red;
+
+  &.exactMatch {
+    background-color: green;
+  }
+
+  &.closeMatch {
+    background-color: yellow;
+  }
 
   .chordSymbol {
+    display: inline-flex;
     color: orange;
     font-weight: bold;
+
+    .additionalQuality,
+    .suspension,
+    .alteration {
+      font-size: 0.7rem;
+    }
+
+    .suspension {
+      margin-top: auto;
+    }
   }
 
   .chordNotes {

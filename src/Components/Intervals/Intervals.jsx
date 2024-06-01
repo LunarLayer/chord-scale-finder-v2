@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import "./Intervals.scss";
 
@@ -16,7 +17,7 @@ function Intervals({ intervals, simplified, canChangeChord }) {
       return (
         <button
           className={`intervalButton `}
-          key={index + interval.number}
+          key={uuidv4()}
           onClick={handleClick}
         >
           {interval.number}
