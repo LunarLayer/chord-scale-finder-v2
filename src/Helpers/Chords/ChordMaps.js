@@ -30,18 +30,9 @@ export const ChordMaps = {
   },
 
   chordQualities: {
-    unique: [
-      {
-        quality: "5",
-        intervals: [
-          { number: 0, isOmittable: false },
-          { number: 7, isOmittable: false },
-        ],
-      },
-    ],
     default: [
       {
-        quality: "7",
+        extension: 7,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 4, isOmittable: false },
@@ -50,7 +41,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "9",
+        extension: 9,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: false },
@@ -60,7 +51,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "11",
+        extension: 11,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: true },
@@ -71,7 +62,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "13",
+        extension: 13,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: true },
@@ -85,7 +76,14 @@ export const ChordMaps = {
     ],
     major: [
       {
-        quality: "",
+        extension: 5,
+        intervals: [
+          { number: 0, isOmittable: false },
+          { number: 7, isOmittable: false },
+        ],
+      },
+      {
+        extension: null,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 4, isOmittable: false },
@@ -93,7 +91,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "maj7",
+        extension: 7,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 4, isOmittable: false },
@@ -102,7 +100,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "maj9",
+        extension: 9,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: false },
@@ -112,7 +110,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "maj11",
+        extension: 11,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: true },
@@ -123,7 +121,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "maj13",
+        extension: 13,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: true },
@@ -137,7 +135,7 @@ export const ChordMaps = {
     ],
     minor: [
       {
-        quality: "min",
+        extension: null,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 3, isOmittable: false },
@@ -145,7 +143,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "min7",
+        extension: 7,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 3, isOmittable: false },
@@ -154,7 +152,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "min9",
+        extension: 9,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: false },
@@ -164,7 +162,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "min11",
+        extension: 11,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: true },
@@ -175,7 +173,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "min13",
+        extension: 13,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: true },
@@ -189,7 +187,7 @@ export const ChordMaps = {
     ],
     diminished: [
       {
-        quality: "dim",
+        extension: null,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 3, isOmittable: false },
@@ -197,7 +195,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "dim7",
+        extension: 7,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 3, isOmittable: false },
@@ -206,7 +204,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "dim9",
+        extension: 9,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: false },
@@ -216,7 +214,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "dim11",
+        extension: 11,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: true },
@@ -229,7 +227,7 @@ export const ChordMaps = {
     ],
     augmented: [
       {
-        quality: "aug",
+        extension: null,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 4, isOmittable: false },
@@ -237,7 +235,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "aug7",
+        extension: 7,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 4, isOmittable: false },
@@ -246,7 +244,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "aug9",
+        extension: 9,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: false },
@@ -256,7 +254,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "aug11",
+        extension: 11,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: true },
@@ -267,7 +265,7 @@ export const ChordMaps = {
         ],
       },
       {
-        quality: "aug13",
+        extension: 13,
         intervals: [
           { number: 0, isOmittable: false },
           { number: 2, isOmittable: true },

@@ -4,6 +4,7 @@ export class Chord {
   constructor({
     root = "",
     quality = "",
+    extension = "",
     additionalQuality = "",
     suspension = "",
     alteration = "",
@@ -20,6 +21,7 @@ export class Chord {
   } = {}) {
     this.root = root;
     this.quality = quality;
+    this.extension = extension;
     this.additionalQuality = additionalQuality;
     this.suspension = suspension;
     this.alteration = alteration;
@@ -43,7 +45,34 @@ export class Chord {
   // Is it feasible to merge the 'extend' and 'modify' functions?
 
   prepareForUse() {
-    // TODO Sort alterations
+    switch (this.quality) {
+      case "default":
+        this.quality = "";
+        break;
+      case "major":
+        if (this.extension === 5 || this.extension === null) {
+          this.quality = "";
+        } else {
+          this.quality = "maj";
+        }
+        break;
+      case "minor":
+        if (this.extension === null) {
+          this.quality = "";
+        } else {
+          this.quality = "min";
+        }
+        break;
+      case "diminished":
+        this.quality = "dim";
+        break;
+      case "augmented":
+        this.quality = "aug";
+        break;
+      default:
+        break;
+    }
+
     this.alteration = this.alterations.toString();
 
     if (this.notes.length === 0) this.notes = this.generateNotes();
@@ -61,7 +90,7 @@ export class Chord {
       notes.push(ChordMaps.notes[current]);
     }
 
-    console.log("generated notes: ", notes);
+    // console.log("generated notes: ", notes);
     return notes;
   }
 
@@ -74,84 +103,122 @@ export class Chord {
     );
   }
 
-  modify(modificationInterval) {
-    let modification = "";
-    switch (modificationInterval) {
-      case 2: // sus2
-        console.log("sus2");
-        // if (this.quality === "TODO") modification = "maj7";
-        break;
-
-      case 5: // sus4
-        console.log("sus4");
-        // if (this.quality === "TODO") modification = "maj7";
-        break;
-
-      case 6: // sus4
-        console.log("sus4");
-        modification = "b5";
-        // if (this.quality === "TODO") modification = "maj7";
-        break;
-
-      case 8: // sus4
-        modification = "#5";
-        // if (this.quality === "TODO") modification = "maj7";
-        break;
-
-      default:
-        this.isValid = false;
-        return;
+  // possibleChord.canModifySimilar(interval)
+  extendOrAlter(extensionInterval) {
+    if (this.extension === 5) {
+      this.isValid = false;
+      return;
     }
 
-    // remove interval to be replaced/modified
-    this.intervals = this.intervals.filter(
-      (interval) =>
-        !ChordMaps.similarIntervals[modificationInterval].includes(
-          interval.number
-        )
-    );
+    let replaceSimilarInterval = false;
+    // console.log("extending " + this.quality);
 
-    // add the modified interval
-    this.intervals.push({ number: modificationInterval, isOmittable: false });
-
-    // add the modification
-    this.modifications.push(modification);
-  }
-
-  extend(extensionInterval) {
-    let extension = null;
-    console.log("extending " + this.quality);
-    // add the extended interval
-    // extension might change name based on the quality
     switch (extensionInterval) {
-      case 8: // 7, maj7
-        extension = "b13";
+      case 1:
+        if (this.extension >= 9) {
+          this.isValid = false;
+        } else {
+          this.alterations.push("b9");
+        }
+        break;
+
+      case 2:
+        if (this.hasThird()) {
+          if (this.extension === "7") {
+            this.isValid = false;
+          } else {
+            this.alterations.push("9");
+          }
+        } else {
+          this.suspension = "sus2";
+        }
+        break;
+
+      case 3:
+        if (this.extension >= 9) {
+          this.isValid = false;
+        } else {
+          this.alterations.push("#9");
+        }
+        break;
+
+      case 4:
+        if (this.quality === "minor" || this.quality === "diminished") {
+          this.isValid = false;
+        } // always false?
+        break;
+
+      case 5:
+        if (this.hasThird()) {
+          if (this.extension >= 9) {
+            this.isValid = false;
+          } else {
+            this.alterations.push("9");
+          }
+        } else {
+          this.suspension = "sus4";
+        }
+        break;
+
+      case 6:
+        if (this.canModifySimilar(extensionInterval)) {
+          this.alterations.push("b5");
+          replaceSimilarInterval = true;
+        } else if (this.extension >= 11) {
+          this.isValid = false;
+        } else {
+          this.alterations.push("#11");
+        }
+        break;
+
+      case 7:
+        this.isValid = false;
+        break;
+
+      case 8:
+        if (this.canModifySimilar(extensionInterval)) {
+          this.alterations.push("#5");
+          replaceSimilarInterval = true;
+        } else if (this.extension === 13) {
+          this.isValid = false;
+        } else {
+          this.alterations.push("b13");
+        }
         break;
 
       case 9: // 6
-        extension = "6";
+        this.extension = "6";
+        break;
+
+      case 10:
+        if (this.extension >= 7) {
+          this.isValid = false;
+        } else {
+          this.alterations.push("b7");
+        }
         break;
 
       case 11: // 7, maj7
-        console.log("case 7, maj7");
-        if (this.quality === "7") extension = "maj7";
-        if (this.quality === "maj") this.isValid = false;
-        break;
-
-      // case 9: // 6, 13
-      //   console.log(
-      //     "case 6, 13 - do nothing for now, 6 and 13 needs implementation"
-      //   );
-      //   // extension = "6";
-      //   break;
-
-      default:
+        if (this.extension >= 7) {
+          this.isValid = false;
+        } else if (this.quality === "minor") {
+          console.log("mMaj7 found");
+          this.quality = "mMaj7";
+        }
         break;
     }
 
-    if (extension) {
+    if (replaceSimilarInterval) {
+      // replace the modified interval
+      this.intervals = this.intervals.filter(
+        (interval) =>
+          !ChordMaps.similarIntervals[extensionInterval].includes(
+            interval.number
+          )
+      );
+    } else {
+      // add the modified interval
       this.intervals.push({ number: extensionInterval, isOmittable: false });
-      this.extensions.push(extension);
     }
   }
 
@@ -195,7 +262,7 @@ export class Chord {
     }
   }
 
-  chordSymbol() {}
+  // chordSymbol() {}
 
   getMissingIntervals(selectedIntervals) {
     let missingIntervals = [];
@@ -270,7 +337,7 @@ export class Chord {
       this.intervals.splice(this.intervals.indexOf(fifths[0]), 1);
       this.intervals.push(newFifth);
     } else {
-      console.log("trying to remove more than one fifth, not yet implemented");
+      // console.log("trying to remove more than one fifth, not yet implemented");
     }
   }
 

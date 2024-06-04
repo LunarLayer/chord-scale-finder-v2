@@ -8,24 +8,24 @@ import { v4 as uuidv4 } from "uuid";
 // - Highlight (all) chord notes when chord is hovered.
 
 function ChordDetails({ chord, showNotes, showIntervals, intervalSettings }) {
-  console.log("received:");
-  console.log(chord);
+  // console.log("received:");
+  // console.log(chord);
   return (
     <div className={`chordDetails ${chord.isExactMatch ? "exactMatch" : ""}`}>
       <p className="chordSymbol">
         {chord.root + chord.quality}
-
-        {chord.additionalQuality && (
+        <span>{chord.extension}</span>
+        {/* {chord.additionalQuality && (
           <span className="suspension">
             (addyQual{chord.additionalQuality})
           </span>
-        )}
+        )} */}
         {chord.suspension && (
           <span className="suspension">sussy({chord.suspension})</span>
         )}
 
         {chord.alteration && (
-          <span className="alteration">(Alterations{chord.alteration})</span>
+          <span className="alteration">({chord.alteration})</span>
         )}
       </p>
       <div className="chordNotes">
