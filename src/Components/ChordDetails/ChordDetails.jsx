@@ -21,7 +21,7 @@ function ChordDetails({ chord, showNotes, showIntervals, intervalSettings }) {
           </span>
         )} */}
         {chord.suspension && (
-          <span className="suspension">sussy({chord.suspension})</span>
+          <span className="suspension">{chord.suspension}</span>
         )}
 
         {chord.alteration && (
@@ -45,7 +45,10 @@ function ChordDetails({ chord, showNotes, showIntervals, intervalSettings }) {
         )
       </div>
 
-      <Intervals intervals={chord.intervals} />
+      <Intervals
+        intervals={chord.intervals}
+        missingChordIntervals={chord.missingChordIntervals}
+      />
     </div>
   );
 }

@@ -3,11 +3,18 @@ import { v4 as uuidv4 } from "uuid";
 
 import "./Intervals.scss";
 
-function Intervals({ intervals, simplified, canChangeChord }) {
+function Intervals({
+  intervals,
+  missingChordIntervals,
+  simplified,
+  canChangeChord,
+}) {
   const [isSimplified, setIsSimplified] = useState(simplified);
   // add a way to hover on an interval and it will light up that note on the fretboard
 
   function renderIntervalButton(interval, index) {
+    console.log(interval);
+    console.log(interval.isMissing);
     if (isSimplified && !interval) {
       return null;
     } else {
@@ -16,7 +23,9 @@ function Intervals({ intervals, simplified, canChangeChord }) {
         : undefined;
       return (
         <button
-          className={`intervalButton `}
+          className={`intervalButton ${
+            missingChordIntervals.includes(interval.number) ? "missing" : ""
+          }`}
           key={uuidv4()}
           onClick={handleClick}
         >

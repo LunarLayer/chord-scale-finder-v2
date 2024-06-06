@@ -33,4 +33,12 @@
     display: flex;
     font-weight: 600;
   }
+
+  .intervals {
+    .intervalButton {
+      &.missing {
+        background-color: red;
+      }
+    }
+  }
 }

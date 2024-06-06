@@ -15,16 +15,21 @@ import ChordDetails from "../ChordDetails/ChordDetails";
 import { getChords } from "../../Helpers/Chords/ChordFunctions";
 
 function ChordScaleIdentifier() {
-  console.log("ChordScaleIdentifier() refresh");
+  // console.log("ChordScaleIdentifier() refresh");
   const [activeSettings, setActiveSettings] = useState(["chord"]);
   const allNotes = useSelector((store) => store.musicTheory.allNotes);
   const identifySettings = useSelector(
     (store) => store.user.globalSettings.chordScaleIdentifier.identify
   );
-
+  // let chords = [];
   let context;
   let selectedNotes = getSelectedNotes(allNotes);
-  let chords = getChords(selectedNotes, context); // should provide more than one in case there are several chords it could be.
+
+  let chords = getChords(selectedNotes, context);
+  console.log(chords);
+
+  // let chords = getChords(selectedNotes, context); // should provide more than one in case there are several chords it could be.
+  // console.log(chords);
   // use testing to ensure accuracy
   // console.log(chords);
 
@@ -76,6 +81,7 @@ function ChordScaleIdentifier() {
       </div>
 
       <div className="content">
+        {selectedNotes}
         {activeSettings.includes("chord") && (
           <>
             <Collapsible title="Chord" settingsModal="identifyChordFilters">

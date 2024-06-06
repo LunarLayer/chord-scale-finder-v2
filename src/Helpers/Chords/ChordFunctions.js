@@ -3,8 +3,8 @@ import { Chord } from "./Chord";
 
 export function getChords(selectedNotes, context) {
   // console.log("getChord()");
-  let possibleChords,
-    validChords = [];
+  const possibleChords = [];
+  const validChords = [];
 
   if (selectedNotes.length === 0) {
     return [new Chord({ root: "N.C. (no chord)" })];
@@ -34,20 +34,27 @@ export function getChords(selectedNotes, context) {
       // console.log("chord: " + possibleChord);
 
       // get all selected intervals that the chord doesn't have
-      let missingIntervals =
-        possibleChord.getMissingIntervals(selectedIntervals);
-      // console.log("Found missing intervals: " + missingIntervals);
+      let missingFromSelected =
+        possibleChord.getMissingIntervalsFromSelected(selectedIntervals);
 
-      for (let interval of missingIntervals) {
-        // console.log("trying to add missing interval: " + interval);
+      for (let interval of missingFromSelected) {
         possibleChord.extendOrAlter(interval);
       }
+
+      let missingChordIntervals =
+        possibleChord.getMissingChordIntervals(selectedIntervals);
+
+      for (let missingChordInterval of missingChordIntervals) {
+        possibleChord.checkForNo3AndNo5(missingChordInterval);
+      }
+
       if (possibleChord.isValid) validChords.push(possibleChord);
     }
   }
 
   for (let chord of validChords) {
     chord.prepareForUse();
+    // possibleChord.handleMissingChordIntervals(selectedIntervals); ?
 
     if (chord.intervalsMatchExactly(selectedIntervals)) {
       chord.isExactMatch = true;
