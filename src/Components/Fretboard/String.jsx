@@ -23,6 +23,7 @@ const String = memo(function String({ notes, stringNumber }) {
             labelWidth={notesLabelWidth}
             selected={selected}
             highlighted={note.highlighted}
+            focused={note.focused}
             stringNumber={stringNumber}
           />
         );

@@ -218,6 +218,7 @@ export function getGuestUser() {
   for (let note of guestUser.allNotes) {
     note.selected = false;
     note.selectedOnStrings = [];
+    note.focused = false;
     note.highlighted = false;
     note.highlightedOnStrings = [];
     note.appearsOnStrings = [];

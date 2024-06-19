@@ -8,11 +8,11 @@ export function rotateArray(array) {
 
 export function getSelectedNotes(allNotes) {
   let selectedNotes = [];
-  selectedNotes = allNotes.reduce((sum, note) => {
-    if (note.selected && !sum.includes(note.pc)) {
-      sum.push(note.pc);
+  selectedNotes = allNotes.reduce((arr, note) => {
+    if (note.selected && !arr.includes(note)) {
+      arr.push(note);
     }
-    return sum;
+    return arr;
   }, []);
   return selectedNotes;
 }

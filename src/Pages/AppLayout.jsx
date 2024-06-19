@@ -22,7 +22,7 @@ import TabMenu from "../Components/TabMenu/TabMenu";
 import ChordScaleIdentifier from "../Components/ChordScaleIdentifier/ChordScaleIdentifier";
 import ChordScaleDictionary from "../Components/Dictionary/ChordScaleDictionary";
 import ChordProgressionMaker from "../Components/ChordProgressionMaker/ChordProgressionMaker";
-import { Chord, ChordType, Tonal } from "tonal";
+import { Chord, ChordType, Tonal, Note } from "tonal";
 import InstrumentMenu from "../Components/InstrumentMenu/InstrumentMenu";
 import Modals from "../Components/Modals/ModalsManager";
 import ModalsManager from "../Components/Modals/ModalsManager";
@@ -66,7 +66,7 @@ function AppLayout() {
         <Navbar />
         <Toolbar />
         <ModalsManager />
-        <InstrumentMenu showing={true} />
+        <InstrumentMenu showing={false} />
 
         {/* {menus.keyChange.showing ? <KeyChangeModal /> : null} */}
         {/* {menus.keyChange.showing ? <KeyChangeModal /> : null} */}

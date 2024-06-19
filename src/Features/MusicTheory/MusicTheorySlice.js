@@ -1,6 +1,6 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 import { loginUser } from "../User/UserSlice";
-import { Chord, Note, Scale } from "tonal";
+import { Note } from "tonal";
 
 const MusicTheorySlice = createSlice({
   name: "musicTheory",
@@ -16,6 +16,48 @@ const MusicTheorySlice = createSlice({
     assumePerfectFifth: undefined,
   },
   reducers: {
+    focusNotes(state, action) {
+      console.log("focusingNotes");
+      let notesToFocus = action.payload;
+      if (notesToFocus) {
+        for (let i = 0; i < state.allNotes.length; i++) {
+          for (let note of notesToFocus) {
+            console.log("let note of notesToFocus: " + note);
+            if (
+              note === state.allNotes[i].pc ||
+              note === Note.enharmonic(state.allNotes[i].pc) ||
+              Note.enharmonic(note) === state.allNotes[i].pc
+            ) {
+              state.allNotes[i].focused = true;
+              break;
+            } else {
+              state.allNotes[i].focused = false;
+            }
+          }
+        }
+      } else {
+        for (let i = 0; i < state.allNotes.length; i++) {
+          state.allNotes[i].focused = false;
+        }
+      }
+    },
+    unfocusNotes(state, action) {
+      let notesToUnfocus = action.payload;
+      if (notesToUnfocus) {
+        for (let i = 0; i < state.allNotes.length; i++) {
+          for (let note of notesToUnfocus) {
+            if (
+              note === state.allNotes[i].pc ||
+              note === Note.enharmonic(state.allNotes[i].pc) ||
+              Note.enharmonic(note) === state.allNotes[i].pc
+            ) {
+              state.allNotes[i].focused = false;
+              break;
+            }
+          }
+        }
+      }
+    },
     toggleAssumePerfectFifth(state) {
       state.assumePerfectFifth = !state.assumePerfectFifth;
     },
@@ -216,6 +258,8 @@ function getAccidental(state, notesInScale) {
 }
 
 export const {
+  focusNotes,
+  unfocusNotes,
   deselectNotes,
   highlightNotes,
   selectNotesInKey,

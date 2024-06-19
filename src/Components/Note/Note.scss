@@ -60,4 +60,10 @@
       }
     }
   }
+  &.focused {
+    span {
+      border: 4px solid hotpink;
+      opacity: 1;
+    }
+  }
 }

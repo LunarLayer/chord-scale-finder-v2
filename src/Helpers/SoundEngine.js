@@ -60,16 +60,3 @@ export const soundEngine = {
     }, 2850);
   },
 };
-
-// in appLayout
-// useEffect(() => {
-//   const checkSoundIsReady = setInterval(() => {
-//     if (soundEngine.state() === "loaded") {
-//       setSoundIsReady(true);
-//       clearInterval(checkSoundIsReady);
-//     }
-//   }, 10);
-//   return () => {
-//     clearInterval(checkSoundIsReady);
-//   };
-// }, []);

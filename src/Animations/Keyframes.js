@@ -40,4 +40,7 @@ export function addKeyframeStringVibration(vibrationLength, fretboardWidth) {
       transform: skewY(${skewY}deg);
     }`;
   }
+  89405504;
 }
+
+// Could try with transform matrix3d for (only possibly) smoother animations

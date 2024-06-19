@@ -4,8 +4,9 @@ export class Chord {
   constructor({
     root = "",
     quality = "",
-    extension = "",
+    shortenedQuality = "",
     additionalQuality = "",
+    extension = "",
     suspension = "",
     alteration = "",
     alterations = [],
@@ -14,16 +15,17 @@ export class Chord {
     intervals = [],
     extensions = [],
     modifications = [],
-    missingIntervals = [],
+    missingFromSelected = [],
     missingChordIntervals = [],
     isAbstract = false,
     isValid = true,
     isExactMatch = false,
   } = {}) {
     this.root = root;
-    this.quality = quality;
-    this.extension = extension;
+    this._quality = quality;
+    this.shortenedQuality = shortenedQuality;
     this.additionalQuality = additionalQuality;
+    this.extension = extension;
     this.suspension = suspension;
     this.alteration = alteration;
     this.alterations = alterations;
@@ -32,33 +34,30 @@ export class Chord {
     this.intervals = intervals;
     this.extensions = extensions;
     this.modifications = modifications;
-    this.missingIntervals = missingIntervals;
+    this.missingFromSelected = missingFromSelected;
     this.missingChordIntervals = missingChordIntervals;
     this.isAbstract = isAbstract;
     this.isValid = isValid;
     this.isExactMatch = isExactMatch;
   }
 
-  // 1:
-  // separate into additionalQuality, suspension and alteration?
-  // or give that responsibility to ChordDetails?
+  get quality() {
+    return this._quality;
+  }
 
-  // 2:
-  // Is it feasible to merge the 'extend' and 'modify' functions?
+  set quality(newQuality) {
+    this._quality = newQuality;
+    this.updateShortenedQuality();
+  }
 
   generateNotes() {
     let notes = [];
     let rootIndex = ChordMaps.notes.indexOf(this.root);
-    // console.log(this.intervals);
-    for (let i = 0; i < this.intervals.length; i++) {
-      // console.log(this.intervals[i].number);
-      let current = this.intervals[i].number + rootIndex;
+    for (let interval of this.intervals) {
+      let current = interval.number + rootIndex;
       while (current >= 12) current -= 12;
-
       notes.push(ChordMaps.notes[current]);
     }
-
-    // console.log("generated notes: ", notes);
     return notes;
   }
 
@@ -71,157 +70,187 @@ export class Chord {
     );
   }
 
+  addAlteration(alteration, intervalNumber) {
+    this.alterations.push(alteration);
+    this.intervals.push({
+      number: intervalNumber,
+      isOmittable: false,
+      wasAdded: true,
+    });
+  }
+
+  replaceAlteration(alteration, intervalNumber) {
+    // remove interval to be replaced
+    this.intervals = this.intervals.filter(
+      (interval) =>
+        !ChordMaps.similarIntervals[intervalNumber].includes(interval.number)
+    );
+    this.addAlteration(alteration, intervalNumber);
+  }
+
+  changeQuality(quality, intervalNumber) {
+    this.quality = quality;
+    this.intervals.push({
+      number: intervalNumber,
+      isOmittable: false,
+      wasAdded: true,
+    });
+  }
+
+  addAdditionalQuality(quality, intervalNumber) {
+    this.additionalQuality = quality;
+    this.intervals.push({
+      number: intervalNumber,
+      isOmittable: false,
+      wasAdded: true,
+    });
+  }
+
+  replaceThird(suspension, intervalNumber) {
+    this.suspension = suspension;
+    this.intervals.push({
+      number: intervalNumber,
+      isOmittable: false,
+      wasAdded: true,
+    });
+    this.intervals = this.intervals.filter((interval) => interval.number !== 4);
+  }
+
+  addExtension(extension, intervalNumber) {
+    this.extension = extension;
+    this.intervals.push({
+      number: intervalNumber,
+      isOmittable: false,
+      wasAdded: true,
+    });
+  }
+
   // possibleChord.canModifySimilar(interval)
-  extendOrAlter(extensionInterval) {
+  extendOrAlter(interval) {
     if (this.extension === 5) {
       this.isValid = false;
       return;
     }
 
-    let operation = ""; // replace // discard
-    // console.log("extending " + this.quality);
-
-    switch (extensionInterval) {
+    switch (interval) {
       case 1:
         if (this.extension >= 9) {
-          operation = "discard";
+          this.isValid = false;
         } else {
-          this.alterations.push("b9");
-          operation = "add";
+          this.addAlteration("addb9", interval);
         }
         break;
 
       case 2:
-        if (this.quality === "major" || this.quality === "default") {
-          // if a third is not selected by the user,
-          // replace this chords' third with a sus2
+        if (this.isMajor() || this.isDefault()) {
           if (this.missingChordIntervals.includes(4)) {
-            this.suspension = "sus2";
-            operation = "replaceThird";
+            this.replaceThird("sus2", interval);
           } else if (this.extension === null) {
-            // if a third has already been selected
-            this.alterations.push("9");
-            operation = "add";
+            this.addAlteration("add9", interval);
           } else {
-            operation = "discard";
+            this.isValid = false;
           }
+        } else if (this.isMinor() || this.isDim()) {
+          this.addAlteration("add9", interval);
         }
         break;
 
       case 3:
         if (this.extension >= 9) {
-          operation = "discard";
+          this.isValid = false;
         } else {
-          this.alterations.push("#9");
-          operation = "add";
+          this.addAlteration("add#9", interval);
         }
         break;
 
       case 4:
-        if (this.quality === "minor" || this.quality === "diminished") {
-          operation = "discard";
+        if (this.isMinor() || this.isDim()) {
+          this.isValid = false;
         } // always false?
         break;
 
       case 5:
-        if (this.quality === "major" || this.quality === "default") {
+        if (this.isMajor() || this.isDefault()) {
           if (this.suspension === "sus2") {
             this.suspension = "sus4";
-            this.alterations.push("9");
-            operation = "add";
-          } else if (this.missingIntervals.includes(4)) {
-            this.suspension = "sus4";
-            operation = "replaceThird";
+            this.addAlteration("add9", interval);
+          } else if (this.missingChordIntervals.includes(4)) {
+            this.replaceThird("sus4", interval);
           } else if (this.extension === null || this.extension === 7) {
             // if a third has already been selected
-            this.alterations.push("11");
-            operation = "add";
+            this.addAlteration("add11", interval);
           } else {
-            operation = "discard";
+            this.isValid = false;
           }
         }
         break;
 
       case 6:
-        if (this.canModifySimilar(extensionInterval)) {
-          this.alterations.push("b5");
-          operation = "replace";
-        } else if (this.extension >= 11) {
-          operation = "discard";
+        if (this.isDim()) {
+          this.isValid = false;
+        } else if (this.isAug()) {
+          this.addAlteration("add#11", interval);
+        } else if (this.missingChordIntervals.includes(7)) {
+          this.replaceAlteration("b5", interval);
         } else {
-          this.alterations.push("#11");
-          operation = "add";
+          this.addAlteration("add#11", interval);
         }
         break;
 
       case 7:
-        operation = "discard";
+        this.isValid = false;
         break;
 
       case 8:
-        if (this.canModifySimilar(extensionInterval)) {
-          this.alterations.push("#5");
-          operation = "replace";
-        } else if (this.extension === 13) {
-          operation = "discard";
+        if (this.isAug()) {
+          // is this ever used?
+          this.isValid = false;
+        } else if (this.isDim()) {
+          this.addAlteration("addb13", interval);
+        } else if (this.missingChordIntervals.includes(7)) {
+          this.replaceAlteration("#5", interval);
+        } else if (this.hasFifth()) {
+          this.addAlteration("b6", interval);
         } else {
-          this.alterations.push("b13");
-          operation = "add";
+          this.addAlteration("addb13", interval);
         }
         break;
 
       case 9: // 6
-        this.extension = "6";
-        operation = "add";
+        if (this.isDim()) {
+          this.isValid = false;
+        } else if (this.extension >= 7) {
+          this.addAlteration("add13", interval);
+        } else {
+          this.addExtension(6, interval);
+        }
         break;
 
       case 10:
         if (
           this.extension >= 7 ||
-          (this.quality === "major" && this.extension === null)
+          this.extension === 6 ||
+          this.isMajorTriad() ||
+          this.isMinorTriad() ||
+          this.isAug()
         ) {
-          operation = "discard";
+          this.isValid = false;
         } else {
-          this.alterations.push("b7");
-          operation = "add";
+          this.addAlteration("b7", interval);
         }
         break;
 
       case 11: // 7, maj7
-        if (this.quality === "major" && this.extension === null) {
-          operation = "discard";
-        } else if (this.quality === "minor") {
-          this.quality = "mMaj7";
-          operation = "add";
+        if (this.isMajorTriad()) {
+          this.isValid = false;
+        } else if (this.isMinorTriad()) {
+          this.changeQuality("mMaj7", interval);
+        } else if (
+          (this.isMinor() && this.extension >= 7) ||
+          this.isDefault()
+        ) {
+          this.addAdditionalQuality(",maj7", interval);
         }
-        break;
-    }
-
-    switch (operation) {
-      case "add":
-        this.intervals.push({ number: extensionInterval, isOmittable: false });
-        break;
-
-      case "replace":
-        this.intervals = this.intervals.filter(
-          (interval) =>
-            !ChordMaps.similarIntervals[extensionInterval].includes(
-              interval.number
-            )
-        );
-        break;
-
-      case "replaceThird":
-        this.intervals.push({ number: extensionInterval, isOmittable: false });
-        console.log(this.intervals);
-        this.intervals = this.intervals.filter(
-          (interval) => interval.number !== 4
-        );
-        console.log(this.intervals);
-        break;
-
-      case "discard":
-        this.isValid = false;
         break;
     }
   }
@@ -294,176 +323,224 @@ export class Chord {
       }
     }
 
-    // console.log(this.root + this.quality + this.extension);
-    // console.log("missingChordIntervals: " + missingChordIntervals);
-
     this.missingChordIntervals = missingChordIntervals;
     return missingChordIntervals;
   }
 
-  checkForNo3AndNo5(interval) {
-    switch (this.quality) {
-      case "default":
-      case "major":
+  handleMissingChordIntervals(missingChordIntervals) {
+    for (let interval of missingChordIntervals) {
+      if (this.isMajor() || this.isDefault()) {
         if (interval === 4) this.no3 = true;
-        if (interval === 7) this.no5 = true;
-        break;
-
-      case "minor":
+        if (
+          interval === 7 &&
+          !this.alterations.includes("b5") &&
+          !this.alterations.includes("#5")
+        )
+          this.no5 = true;
+      } else if (this.isMinor()) {
         if (interval === 3) this.no3 = true;
-        if (interval === 7) this.no5 = true;
-        break;
-
-      case "diminished":
+        if (
+          interval === 7 &&
+          !this.alterations.includes("b5") &&
+          !this.alterations.includes("#5")
+        )
+          this.no5 = true;
+      } else if (this.isDim()) {
         if (interval === 3) this.no3 = true;
-        // if (interval === 6) this.isValid = false;
-        break;
-
-      case "augmented":
+        if (interval === 6) this.no5 = true;
+      } else if (this.isAug()) {
         if (interval === 4) this.no3 = true;
-        // if (interval === 8) this.isValid = false;
-        break;
-
-      default:
-        break;
+        if (interval === 8) this.no5 = true;
+      }
     }
   }
 
-  prepareForUse() {
+  updateShortenedQuality() {
+    console.log("shortening");
+    let shortenedQuality = "";
     switch (this.quality) {
       case "default":
-        this.quality = "";
+        shortenedQuality = "";
         break;
+
       case "major":
-        if (this.extension === 5 || this.extension === null) {
-          this.quality = "";
+        if (
+          this.extension === 5 ||
+          this.extension === 6 ||
+          this.extension === null
+        ) {
+          shortenedQuality = "";
         } else {
-          this.quality = "maj";
+          shortenedQuality = "maj";
         }
         break;
-      case "minor":
-        this.quality = "min";
 
+      case "minor":
+        shortenedQuality = "min";
         break;
+
       case "diminished":
-        this.quality = "dim";
+        shortenedQuality = "dim";
         break;
+
       case "augmented":
-        this.quality = "aug";
+        shortenedQuality = "aug";
         break;
+
+      case "mMaj7":
+        shortenedQuality = "mMaj7";
+        break;
+
       default:
         break;
     }
 
-    if (this.hasNo3) this.alterations.push("no3");
-    if (this.hasNo5) this.alterations.push("no5");
-    // for (let interval of this.intervals) {
-    //   if (this.missingChordIntervals.includes(interval)) {
-    //     interval.isMissing = true;
-    //   } else {
-    //     interval.isMissing = false;
-    //   }
-    // }
+    this.shortenedQuality = shortenedQuality;
+  }
+
+  prepareForDisplay() {
+    if (this.no3 && this.suspension !== "sus2" && this.suspension !== "sus4") {
+      this.alterations.push("no3");
+    }
+    if (this.no5) this.alterations.push("no5");
+
+    this.sortAlterations();
+    this.updateShortenedQuality();
+    this.updateIntervalTypes();
+
     this.alteration = this.alterations.toString();
     if (this.notes.length === 0) this.notes = this.generateNotes();
   }
 
-  // getMissingIntervals(selectedIntervals) {
-  //   let missingIntervals = { missingFromSelected: [], missingFromChord: [] };
-
-  //   let chordIntervalNumbers = this.intervals.map(
-  //     (interval) => interval.number
-  //   );
-
-  //   for (let interval of selectedIntervals) {
-  //     if (!chordIntervalNumbers.includes(interval)) {
-  //       missingIntervals.missingFromSelected.push(interval);
-  //     }
-  //   }
-
-  //   for (let interval of chordIntervalNumbers) {
-  //     if (!selectedIntervals.includes(interval)) {
-  //       missingIntervals.missingFromChord.push(interval);
-  //     }
-  //   }
-
-  //   // console.log(this.root + this.quality + this.extension);
-  //   // console.log("missingFromSelected: " + missingIntervals.missingFromSelected);
-  //   // console.log("missingFromChord: " + missingIntervals.missingFromChord);
-  //   // console.log("found missing intervals: " + missingIntervals);
-  //   this.missingIntervals = missingIntervals;
-  //   return missingIntervals;
-  // }
-
-  isAug() {
-    return this.intervals.includes(8);
-  }
-
-  isDim() {
-    return this.intervals.includes(6);
-  }
-
-  hasSecond() {
-    return this.intervals.includes(1) || this.intervals.includes(2);
+  updateIntervalTypes() {
+    for (let interval of this.intervals) {
+      switch (interval.number) {
+        case 0:
+          interval.type = "1";
+          break;
+        case 1:
+          interval.type = "b9";
+          break;
+        case 2:
+          if (this.hasThird()) {
+            interval.type = "9";
+          } else {
+            interval.type = "sus2";
+          }
+          break;
+        case 3:
+          interval.type = "b3";
+          break;
+        case 4:
+          interval.type = "3";
+          break;
+        case 5:
+          interval.type = "4";
+          break;
+        case 6:
+          interval.type = "b5";
+          break;
+        case 7:
+          interval.type = "5";
+          break;
+        case 8:
+          interval.type = "#5";
+          break;
+        case 9:
+          interval.type = "6";
+          break;
+        case 10:
+          interval.type = "b7";
+          break;
+        case 11:
+          interval.type = "7";
+          break;
+      }
+    }
   }
 
   hasThird() {
-    return this.intervals.includes(3) || this.intervals.includes(4);
+    let hasThird = false;
+    for (let interval of this.intervals) {
+      if (interval.number === 3 || interval.number === 4) hasThird = true;
+    }
+    return hasThird;
   }
 
-  hasFourth() {
-    return this.intervals.includes(5);
+  sortAlterations() {
+    function getAlterationType(alteration) {
+      if (alteration.startsWith("add")) {
+        return "add";
+      } else if (alteration.startsWith("no")) {
+        return "no";
+      } else if (alteration.includes("b") || alteration.includes("#")) {
+        return alteration[0]; // 'b' for flat, '#' for sharp
+      } else {
+        return ""; // Default for non-standard alterations
+      }
+    }
+    const alterationPriority = {
+      b: 1, // Flats
+      "#": 1, // Sharps
+      add: 2, // Additions
+      no: 3, // Omissions
+    };
+
+    this.alterations.sort((a, b) => {
+      const aType = getAlterationType(a);
+      const bType = getAlterationType(b);
+
+      if (alterationPriority[aType] < alterationPriority[bType]) {
+        return -1;
+      } else if (alterationPriority[aType] > alterationPriority[bType]) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
   }
+
   hasFifth() {
+    for (let interval of this.intervals) {
+      if (
+        interval.number === 6 ||
+        interval.number === 7 ||
+        interval.number === 8
+      )
+        return true;
+    }
+    return false;
+  }
+
+  isDefault() {
+    return this.quality === "default";
+  }
+
+  isMajor() {
+    return this.quality === "major";
+  }
+  isMajorTriad() {
     return (
-      this.intervals.includes(6) ||
-      this.intervals.includes(7) ||
-      this.intervals.includes(8)
+      this.quality === "major" &&
+      this.intervals.filter((interval) => !interval.wasAdded).length === 3
     );
   }
 
-  hasSixth() {
-    return this.intervals.includes(9);
+  isMinor() {
+    return this.quality === "minor";
   }
-
-  hasSeventh() {
-    return this.intervals.includes(10) || this.intervals.includes(11);
-  }
-
-  removeFifths(specificFifthInterval) {
-    if (specificFifthInterval) {
-      this.intervals.splice(this.intervals.indexOf(specificFifthInterval), 1);
-    } else {
-      this.intervals = this.intervals.filter(
-        (interval) => interval < 6 || interval > 8
-      );
-    }
-  }
-
-  alterFifthTo(newFifth) {
-    let fifths = this.getFifths();
-    if (fifths.length === 1) {
-      this.intervals.splice(this.intervals.indexOf(fifths[0]), 1);
-      this.intervals.push(newFifth);
-    } else {
-      // console.log("trying to remove more than one fifth, not yet implemented");
-    }
-  }
-
-  addExtension(interval) {
-    switch (interval) {
-      case 1:
-        // if ()
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  getFifths() {
-    return this.intervals.filter(
-      (interval) => interval === 6 || interval === 7 || interval === 8
+  isMinorTriad() {
+    return (
+      this.quality === "minor" &&
+      this.intervals.filter((interval) => !interval.wasAdded).length === 3
     );
+  }
+
+  isAug() {
+    return this.quality === "augmented";
+  }
+
+  isDim() {
+    return this.quality === "diminished";
   }
 }

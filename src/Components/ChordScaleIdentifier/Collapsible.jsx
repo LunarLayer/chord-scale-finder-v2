@@ -10,7 +10,7 @@ import {
 import { useDispatch } from "react-redux";
 import { showModal } from "../../Features/UI/UISlice";
 
-function Collapsible({ title, settingsModal, children }) {
+function Collapsible({ identifier, title, settingsModal, children }) {
   const dispatch = useDispatch();
   const [collapsibleIsOpen, setCollapsibleIsOpen] = useState(false);
   const [collapsibleIcon, setCollapsibleIcon] = useState(HollowArrowRight);
@@ -40,8 +40,12 @@ function Collapsible({ title, settingsModal, children }) {
   }
 
   return (
-    <div className={`collapsible ${collapsibleIsOpen ? "open" : "closed"}`}>
-      <div className="collapsibleHeader" onClick={(e) => handleClick(e)}>
+    <div
+      className={`collapsible ${identifier} ${
+        collapsibleIsOpen ? "open" : "closed"
+      }`}
+    >
+      <div className="header" onClick={(e) => handleClick(e)}>
         {collapsibleIcon}
         <p className="title">{title}</p>
         {settingsModal && (

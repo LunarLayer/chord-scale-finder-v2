@@ -1,23 +1,15 @@
-.chordDetails {
+.chord {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  background-color: red;
 
-  &.exactMatch {
-    background-color: green;
-  }
-
-  &.closeMatch {
-    background-color: yellow;
-  }
-
-  .chordSymbol {
+  > .symbol {
     display: inline-flex;
-    color: orange;
+    color: #d49900;
     font-weight: bold;
 
+    .extension,
     .additionalQuality,
     .suspension,
     .alteration {
@@ -27,18 +19,27 @@
     .suspension {
       margin-top: auto;
     }
-  }
 
-  .chordNotes {
-    display: flex;
-    font-weight: 600;
-  }
-
-  .intervals {
-    .intervalButton {
-      &.missing {
-        background-color: red;
-      }
+    .alteration {
     }
+  }
+
+  > .notes {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    gap: 2px;
+    font-weight: 600;
+
+    p {
+      display: flex;
+      justify-content: center;
+      flex: 1;
+    }
+  }
+
+  > .intervals {
+    display: flex;
+    gap: 2px;
   }
 }

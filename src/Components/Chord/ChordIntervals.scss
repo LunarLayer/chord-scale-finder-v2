@@ -1,0 +1,15 @@
+.chordIntervals {
+  .intervalButton {
+    &.no3 {
+      opacity: 0.5;
+    }
+
+    &.no5 {
+      opacity: 0.5;
+    }
+
+    &.missing {
+      background-color: red;
+    }
+  }
+}

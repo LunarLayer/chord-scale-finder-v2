@@ -10,6 +10,7 @@ const Note = memo(function Note({
   labelWidth,
   selected,
   highlighted,
+  focused,
   stringNumber,
 }) {
   const labelNotes = useSelector((store) => store.musicTheory.labelNotes);
@@ -21,7 +22,7 @@ const Note = memo(function Note({
     <button
       className={`note ${selected ? "selected" : ""} ${
         highlighted ? "highlighted" : ""
-      }`}
+      } ${focused ? "focused" : ""}`}
       data-pitchclass={pitchClass}
       data-octave={octave}
       data-stringnumber={stringNumber}

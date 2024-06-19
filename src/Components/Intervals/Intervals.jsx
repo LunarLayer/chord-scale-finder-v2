@@ -2,20 +2,30 @@ import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import "./Intervals.scss";
+import { useDispatch } from "react-redux";
+import {
+  focusNotes,
+  unfocusNotes,
+} from "../../Features/MusicTheory/MusicTheorySlice";
 
-function Intervals({
-  intervals,
-  missingChordIntervals,
-  simplified,
-  canChangeChord,
-}) {
+function Intervals({ chord, simplified, canChangeChord }) {
+  const dispatch = useDispatch();
   const [isSimplified, setIsSimplified] = useState(simplified);
-  // add a way to hover on an interval and it will light up that note on the fretboard
+
+  const {
+    no3,
+    no5,
+    missingChordIntervals,
+    additionalQuality,
+    notes,
+    intervals,
+  } = chord;
 
   function renderIntervalButton(interval, index) {
-    console.log(interval);
-    console.log(interval.isMissing);
+    let intervalType = "";
+
     if (isSimplified && !interval) {
+      console.log("nulling");
       return null;
     } else {
       const handleClick = canChangeChord
@@ -23,11 +33,11 @@ function Intervals({
         : undefined;
       return (
         <button
-          className={`intervalButton ${
-            missingChordIntervals.includes(interval.number) ? "missing" : ""
-          }`}
+          className={`intervalButton ${intervalType}`}
           key={uuidv4()}
           onClick={handleClick}
+          onMouseEnter={() => dispatch(focusNotes(notes[index]))}
+          onMouseLeave={() => dispatch(unfocusNotes(notes[index]))}
         >
           {interval.number}
         </button>
@@ -46,18 +56,6 @@ function Intervals({
           .slice(0, 12)
           .map((interval, index) => renderIntervalButton(interval, index))}
       </div>
-      <div className="row">
-        {intervals.includes("has intervals bigger than 7") &&
-          intervals
-            .slice(12)
-            .map((interval, index) =>
-              renderIntervalButton(interval, index + 12)
-            )}
-      </div>
-
-      {/* <button onClick={() => setIsSimplified(!isSimplified)}>
-        {isSimplified ? "☑" : "☐"} simplify
-      </button> */}
     </div>
   );
 }

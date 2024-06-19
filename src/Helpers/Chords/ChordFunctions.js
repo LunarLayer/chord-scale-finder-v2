@@ -3,57 +3,60 @@ import { Chord } from "./Chord";
 
 export function getChords(selectedNotes, context) {
   // console.log("getChord()");
+  // console.log("selectedNotes: ");
+  // console.log(selectedNotes);
   const possibleChords = [];
   const validChords = [];
+  let chordQualities = ChordMaps.chordQualities;
 
   if (selectedNotes.length === 0) {
     return [new Chord({ root: "N.C. (no chord)" })];
   } else if (selectedNotes.length === 1) {
     return [
       new Chord({
-        root: selectedNotes[0],
+        root: selectedNotes[0].pc,
         quality: "major",
-        notes: [selectedNotes[0]],
-        intervals: [0],
+        notes: [selectedNotes[0].pc],
+        intervals: [{ number: 0, isOmittable: false }],
       }),
     ];
   }
 
   let selectedIntervals = getIntervalsFrom(selectedNotes);
-  let root = selectedNotes[0];
+  let root = selectedNotes[0].pc;
   // console.log("selected intervals: ", selectedIntervals);
 
-  for (let chordQuality in ChordMaps.chordQualities) {
-    for (let chord of ChordMaps.chordQualities[chordQuality]) {
+  for (let chordQuality in chordQualities) {
+    for (let chord of chordQualities[chordQuality]) {
+      const quality = chordQuality;
+      const extension = chord.extension;
+      const intervals = chord.intervals.slice(); // make a copy to avoid mutating
+
       let possibleChord = new Chord({
         root,
-        quality: chordQuality,
-        extension: chord.extension,
-        intervals: chord.intervals,
+        quality,
+        extension,
+        intervals,
       });
-      // console.log("chord: " + possibleChord);
 
-      // get all selected intervals that the chord doesn't have
       let missingFromSelected =
         possibleChord.getMissingIntervalsFromSelected(selectedIntervals);
+
+      let missingChordIntervals =
+        possibleChord.getMissingChordIntervals(selectedIntervals);
 
       for (let interval of missingFromSelected) {
         possibleChord.extendOrAlter(interval);
       }
 
-      let missingChordIntervals =
-        possibleChord.getMissingChordIntervals(selectedIntervals);
-
-      for (let missingChordInterval of missingChordIntervals) {
-        possibleChord.checkForNo3AndNo5(missingChordInterval);
-      }
+      possibleChord.handleMissingChordIntervals(missingChordIntervals);
 
       if (possibleChord.isValid) validChords.push(possibleChord);
     }
   }
 
   for (let chord of validChords) {
-    chord.prepareForUse();
+    chord.prepareForDisplay();
     // possibleChord.handleMissingChordIntervals(selectedIntervals); ?
 
     if (chord.intervalsMatchExactly(selectedIntervals)) {
@@ -62,6 +65,8 @@ export function getChords(selectedNotes, context) {
     }
   }
 
+  // upon sorting, consider ranking no3 or no5 higher than alterations.
+  // least missing notes + most matching notes
   validChords.sort(
     (chordA, chordB) =>
       chordA.intervals.length -
@@ -83,12 +88,14 @@ function getPossibleChordExtensions(intervals) {
 }
 
 function getIntervalsFrom(notes) {
+  // console.log("getIntervalsFrom(notes):");
+  // console.log(notes);
   let intervals = [];
   let previous, current;
-  let rootIndex = ChordMaps.notes.indexOf(notes[0]);
+  let rootIndex = ChordMaps.notes.indexOf(notes[0].pc);
 
   for (let i = 0; i < notes.length; i++) {
-    current = ChordMaps.notes.indexOf(notes[i]) - rootIndex;
+    current = ChordMaps.notes.indexOf(notes[i].pc) - rootIndex;
     while (current < previous) {
       current += 12;
     }
@@ -116,115 +123,7 @@ function getChordNotesFrom(rootNote, intervals) {
   return chordNotes;
 }
 
-// export function getIntervalsDifference(chordIntervals, selectedIntervals) {
-//   let difference = 0;
-//   let biggestArr, smallestArr;
-
-//   if (chordIntervals.length > selectedIntervals.length) {
-//     biggestArr = chordIntervals;
-//     smallestArr = selectedIntervals;
-//   } else {
-//     biggestArr = selectedIntervals;
-//     smallestArr = chordIntervals;
-//   }
-
-//   for (let interval of biggestArr) {
-//     if (!smallestArr.includes(interval)) {
-//       difference++;
-//     }
-//   }
-//   return difference;
-// }
-
 function getSortedChordQualities(chordQualities) {
   // sorting logic
   return chordQualities.toString();
 }
-// let missingIntervals =
-//   possibleChord.getMissingIntervals(selectedIntervals);
-//
-// for (let interval of missingIntervals) {
-//   if (allowedToOmitNotes) {
-//     if (chord.hasSimilarInterval(interval)) {
-//       if (chord.canAlterSimilar(interval)) {
-//         chord.alterSimilar(interval);
-//       } else {
-//         let alteration = ChordMaps.addChords(interval);
-//         possibleChord.alterations.push(alteration);
-//         if (!alteration.includes("b") && !alteration.includes("#"))
-//           possibleChord.isAbstract = true;
-//       }
-//     } else {
-//       let alteration = ChordMaps.addChords(interval);
-//       possibleChord.alterations.push(alteration);
-//       if (!alteration.includes("b") && !alteration.includes("#"))
-//         possibleChord.isAbstract = true;
-//     }
-//   } else {
-//     // not allowed to omit notes
-//     if (chord.hasSimilarInterval(interval)) {
-//       let alteration = ChordMaps.addChords(interval);
-//       possibleChord.alterations.push(alteration);
-//       if (!alteration.includes("b") && !alteration.includes("#"))
-//         possibleChord.isAbstract = true;
-//     } else {
-//       let alteration = ChordMaps.addChords(interval);
-//       possibleChord.alterations.push(alteration);
-//     }
-//   }
-// }
-// generate chord symbol
-// generate notes array from chord.intervals
-
-// function addAlteration(possibleChord, interval) {
-//   let alteration = ChordMaps.addChords[interval];
-//   possibleChord.alterations.push(alteration);
-//   if (!alteration.includes("b") && !alteration.includes("#")) {
-//     possibleChord.isAbstract = true;
-//   }
-// }
-
-// function identifyPossibleChords(rootNote, intervals) {
-//   let possibleChords = [];
-//   let possibleChordExtensions = "";
-
-//   let no3,
-//     no5,
-//     isDim,
-//     isAug = false;
-
-//   if (!intervals.includes(3) && !intervals.includes(4)) no3 = true;
-//   if (intervals.includes(6)) isDim = true;
-//   if (intervals.includes(8)) isAug = true;
-//   if (!intervals.includes(7) && !isDim && !isAug) no5 = true;
-
-//   for (let chordType in chordTypesMap) {
-//     for (let chord of chordTypesMap[chordType]) {
-//       // chord has all intervals or more than the selected intervals
-//       if (intervals.every((interval) => chord.intervals.includes(interval))) {
-//         possibleChords.push({
-//           symbol: rootNote + chord.symbol,
-//           notes: [],
-//           intervals: chord.intervals,
-//         });
-//       }
-//     }
-//   }
-
-//   for (let chord of possibleChords) {
-//     let no3no5 = "";
-//     // add correct notes to all chord
-//     chord.notes = getChordNotesFrom(rootNote, chord.intervals);
-
-//     if (!isDim && !isAug) {
-//       if (no3) no3no5 += "no3";
-//       if (no5) no3no5 += "no5";
-//     }
-
-//     // add "no3" & "no5" to chord
-//     chord.symbol += no3no5;
-//   }
-
-//   // sort chord qualities of all found chords
-//   return possibleChords;
-// }

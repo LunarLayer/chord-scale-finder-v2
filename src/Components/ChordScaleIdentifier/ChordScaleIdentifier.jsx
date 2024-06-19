@@ -8,15 +8,19 @@ import {
   getSelectedNotes,
 } from "../../Helpers/MusicTheoryHelper";
 
+import { PadlockLocked, PadlockUnlocked } from "../../../public/svgs/SvgIcons";
+
 import Collapsible from "./Collapsible";
-import ChordIntervals from "./ChordIntervals";
-import ChordInversions from "./ChordInversions";
-import ChordDetails from "../ChordDetails/ChordDetails";
+import Chord from "../Chord/Chord";
 import { getChords } from "../../Helpers/Chords/ChordFunctions";
 
 function ChordScaleIdentifier() {
   // console.log("ChordScaleIdentifier() refresh");
   const [activeSettings, setActiveSettings] = useState(["chord"]);
+  const [chordLocked, setChordLocked] = useState(false);
+  const [chordLockIcon, setChordLockIcon] = useState(PadlockUnlocked);
+  const [possibleChordsLocked, setPossibleChordsLocked] = useState(false);
+
   const allNotes = useSelector((store) => store.musicTheory.allNotes);
   const identifySettings = useSelector(
     (store) => store.user.globalSettings.chordScaleIdentifier.identify
@@ -27,15 +31,6 @@ function ChordScaleIdentifier() {
 
   let chords = getChords(selectedNotes, context);
   console.log(chords);
-
-  // let chords = getChords(selectedNotes, context); // should provide more than one in case there are several chords it could be.
-  // console.log(chords);
-  // use testing to ensure accuracy
-  // console.log(chords);
-
-  if (activeSettings.includes("chord")) {
-    // chord = identifyChordFrom(selectedNotes);
-  }
 
   // let detectedChords = Chord.detect(["D", "A", "C", "F"]);
   // console.log(detectedChords);
@@ -81,32 +76,30 @@ function ChordScaleIdentifier() {
       </div>
 
       <div className="content">
-        {selectedNotes}
         {activeSettings.includes("chord") && (
           <>
-            <Collapsible title="Chord" settingsModal="identifyChordFilters">
-              {chords.map((chord, index) => {
-                return (
-                  <ChordDetails key={chord.symbol + index} chord={chord} />
-                );
-              })}
+            <Collapsible
+              identifier="chord"
+              title="Chord"
+              settingsModal="identifyChordFilters"
+            >
+              <div className="filters">Filters</div>
+              <div className="chordMatch">
+                <div className="chordMatchMenu">{chordLockIcon}</div>
+                <Chord chord={chords[0]} />
+              </div>
+              <div className="intervalsOverview">IntervalsOverview</div>
             </Collapsible>
 
-            {/* <Collapsible title="Inversions">
-              <ChordInversions invertedChords={chordInversions} />
-            </Collapsible> */}
-            {/* 
-            <Collapsible title="Context">
-              <p>Select context (could be a bass note)</p>
-            </Collapsible> */}
-
-            {/* <Collapsible title="Intervals">
-              <ChordIntervals intervals={chordIntervals} />
-            </Collapsible> */}
-
-            {/* <Collapsible title={`Scales containing ${chords?.symbol}`}>
-              <ChordDetails chord={chords} />
-            </Collapsible> */}
+            <Collapsible
+              identifier="possibleChords"
+              title="Possible chords"
+              settingsModal="identifyChordFilters"
+            >
+              {chords.map((chord, index) => {
+                return <Chord key={chord.symbol + index} chord={chord} />;
+              })}
+            </Collapsible>
           </>
         )}
         {activeSettings.includes("scale") && (
