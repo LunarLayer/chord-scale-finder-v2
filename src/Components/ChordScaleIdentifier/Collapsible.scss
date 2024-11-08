@@ -1,13 +1,14 @@
 .collapsible {
   > .header {
     cursor: pointer;
+    width: 100%;
     display: flex;
+    justify-content: flex-start;
     align-items: center;
     gap: 5px;
     background-color: white;
     border: none;
     font-weight: 600;
-    margin-right: auto;
 
     .title {
       text-wrap: nowrap;

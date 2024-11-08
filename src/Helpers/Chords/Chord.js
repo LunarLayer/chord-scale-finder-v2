@@ -327,7 +327,7 @@ export class Chord {
     return missingChordIntervals;
   }
 
-  handleMissingChordIntervals(missingChordIntervals) {
+  checkForNo3AndNo5(missingChordIntervals) {
     for (let interval of missingChordIntervals) {
       if (this.isMajor() || this.isDefault()) {
         if (interval === 4) this.no3 = true;
@@ -356,6 +356,7 @@ export class Chord {
   }
 
   updateShortenedQuality() {
+    // could be generated in a .getChordSymbol()
     console.log("shortening");
     let shortenedQuality = "";
     switch (this.quality) {
@@ -402,7 +403,7 @@ export class Chord {
     if (this.no3 && this.suspension !== "sus2" && this.suspension !== "sus4") {
       this.alterations.push("no3");
     }
-    if (this.no5) this.alterations.push("no5");
+    if (this.no5) this.alterations.push("no5"); // could be done when setting no3 or no5 on chord
 
     this.sortAlterations();
     this.updateShortenedQuality();
@@ -425,7 +426,7 @@ export class Chord {
           if (this.hasThird()) {
             interval.type = "9";
           } else {
-            interval.type = "sus2";
+            interval.type = "2";
           }
           break;
         case 3:

@@ -19,44 +19,44 @@
   > .content {
     padding: 10px 20px;
 
-    .collapsible {
-      &.chord {
-        .header {
-        }
-        .content {
-          display: flex;
-          justify-content: space-between;
-          flex-wrap: wrap;
-          border: 1px solid seagreen;
+    // .collapsible {
+    //   &.chord {
+    //     .header {
+    //     }
+    //     .content {
+    //       display: flex;
+    //       justify-content: space-between;
+    //       flex-wrap: wrap;
+    //       border: 1px solid seagreen;
 
-          .filters,
-          .chordMatch,
-          .intervalsOverview {
-            flex: 1;
-          }
+    //       .filters,
+    //       .chordMatch,
+    //       .intervalsOverview {
+    //         flex: 1;
+    //       }
 
-          .filters {
-          }
-          .chordMatch {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
+    //       .filters {
+    //       }
+    //       .chordMatch {
+    //         display: flex;
+    //         flex-direction: column;
+    //         justify-content: center;
+    //         align-items: center;
+    //         margin: 0 auto;
 
-            > .chordMatchMenu {
-            }
+    //         > .chordMatchMenu {
+    //         }
 
-            > .chord {
-              border: 1px solid red;
-            }
-          }
-          .intervalsOverview {
-          }
-        }
-      }
-      .possibleChords {
-      }
-    }
+    //         > .chord {
+    //           border: 1px solid red;
+    //         }
+    //       }
+    //       .intervalsOverview {
+    //       }
+    //     }
+    //   }
+    //   .possibleChords {
+    //   }
+    // }
   }
 }

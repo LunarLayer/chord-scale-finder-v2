@@ -10,7 +10,7 @@ export function getSelectedNotes(allNotes) {
   let selectedNotes = [];
   selectedNotes = allNotes.reduce((arr, note) => {
     if (note.selected && !arr.includes(note)) {
-      arr.push(note);
+      arr.push(note.pc);
     }
     return arr;
   }, []);

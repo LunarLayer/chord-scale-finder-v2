@@ -1,0 +1,40 @@
+#ChordIdentifier {
+  .collapsible.chord {
+    .header {
+    }
+    .content {
+      display: flex;
+      justify-content: space-between;
+
+      .filters,
+      .chordsMatch,
+      .intervalsOverview {
+        flex: 1;
+      }
+
+      .chordMatch {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .chordMatchMenu {
+          display: flex;
+
+          .previousChord {
+            svg {
+              width: 20px;
+              height: 20px;
+            }
+          }
+          .lockIcon {
+            margin: 0 30px;
+            svg {
+              width: 20px;
+              height: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

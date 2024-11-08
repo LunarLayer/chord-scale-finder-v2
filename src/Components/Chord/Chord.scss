@@ -4,23 +4,34 @@
   align-items: center;
   gap: 2px;
 
-  > .symbol {
-    display: inline-flex;
-    color: #d49900;
-    font-weight: bold;
-
-    .extension,
-    .additionalQuality,
-    .suspension,
-    .alteration {
-      font-size: 0.7rem;
+  .header {
+    display: flex;
+    .playButton {
+      padding: 0;
+      border: none;
+      height: 25px;
+      width: 25px;
+      cursor: pointer;
     }
 
-    .suspension {
-      margin-top: auto;
-    }
+    > .symbol {
+      display: inline-flex;
+      color: #d49900;
+      font-weight: bold;
 
-    .alteration {
+      .extension,
+      .additionalQuality,
+      .suspension,
+      .alteration {
+        font-size: 0.7rem;
+      }
+
+      .suspension {
+        margin-top: auto;
+      }
+
+      .alteration {
+      }
     }
   }
 
